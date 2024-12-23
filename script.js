@@ -64,10 +64,6 @@ $('#swapLanguages').click(function () {
     translate();
 });
 
-// Çeviri işlemi
-$('#sourceText').on('input', function () {
-    translate();
-});
 
 // Silme butonuna tıklama işlevi
 $('.delete-icon').click(function () {
@@ -187,7 +183,7 @@ function closeRecognizing() {
 }
 
 // Çeviri sonucunu panoya kopyala
-$('#resultContainer .icon-row2 img[src="images/paste1.png"]').click(function () {
+$('#copy').click(function () {
     const resultText = $('#resultText').val();
     if (resultText.trim()) {
         navigator.clipboard.writeText(resultText).then(() => {
@@ -200,7 +196,7 @@ $('#resultContainer .icon-row2 img[src="images/paste1.png"]').click(function () 
 });
 
 // sourceText'i seslendir (Google Translate TTS)
-$('#sourceContainer .icon-row1 img[src="images/volume.png"]').click(function () {
+$('#volume1').click(function () {
     const text = $('#sourceText').val();
     if (text.trim()) {
         playTTS(text, $('#sourceLanguage').val());
@@ -210,7 +206,7 @@ $('#sourceContainer .icon-row1 img[src="images/volume.png"]').click(function () 
 });
 
 // resultText'i seslendir (Google Translate TTS)
-$('#resultContainer .icon-row2 img[src="images/volume.png"]').click(function () {
+$('#volume2').click(function () {
     const text = $('#resultText').val();
     if (text.trim()) {
         playTTS(text, $('#targetLanguage').val());
@@ -274,10 +270,14 @@ $('#sourceLanguage, #targetLanguage').change(function () {
 });
 
 
-// Yazı alanına yeni metin girildiğinde yıldız sıfırla
+// Yazı alanına yeni metin girildiğinde
 $('#sourceText').on('input', function () {
+    translate();
     resetStarIcon();
 });
+
+
+//------------------------Veri tabanı------------------------
 
 
 function openPopup(id) {
@@ -302,10 +302,6 @@ function closePopup(id) {
 document.getElementById("savedIcon").addEventListener("click", () => {
     window.location.href = "saved.html";
 });
-
-
-
-
 
 function submitLogin() {
     const email = document.getElementById("email").value;
