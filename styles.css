@@ -7,7 +7,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
 .popup {
@@ -86,6 +85,7 @@ main {
     padding: 40px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
+    margin: 108px 0;
 }
 
 .language-selection {
@@ -104,6 +104,7 @@ select {
     border: 1px solid #ccc;
     outline: none;
     width: 50%;
+    cursor: pointer;
 }
 
 #swapLanguages {
@@ -167,7 +168,7 @@ header button {
     margin-left: 20px;
     padding: 10px 15px;
     background-color: white;
-    color: #4CAF50;
+    color: #3b9b3e;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -176,6 +177,7 @@ header button {
 
 header button:hover {
     background-color: #f3f4f6;
+    color: #de3f0f;
 }
 
 .header-container {
@@ -191,10 +193,11 @@ header button:hover {
     z-index: 1000;
     top: 0;
     left: 0;
-    background-color: #02c23b;
+    background-color: #689bce;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
+    text-align: center;
     display: none;
 }
 
@@ -208,7 +211,7 @@ header button:hover {
 }
 
 .politikalar a:hover {
-    background-color: #3e8e41;
+    background-color: #2b2bbb;
 }
 
 .side-menu .closebtn {
@@ -221,6 +224,10 @@ header button:hover {
 
 .politikalar{
     margin-top: 40px;
+}
+
+.politikalar a{
+    font-size: 20px;
 }
 
 /* Menü Açma Butonu */
@@ -243,7 +250,7 @@ header button:hover {
 
 /* Sosyal Medya Alanı */
 .social-icons {
-    margin-top: 380px;
+    margin-top: 340px;
     margin-right: 20px;
     display: grid;
     grid-template-columns: repeat(3, auto); /* 3 sütun */
@@ -252,8 +259,8 @@ header button:hover {
 }
 
 .social-icons img {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     cursor: pointer;
 }
 
@@ -274,6 +281,7 @@ header button:hover {
     border-radius: 8px;
     padding: 10px;
     width: 100%;
+    min-height: 200px;
 }
 
 .text-container textarea {
@@ -327,8 +335,8 @@ header button:hover {
     position: absolute;
     top: 10px;
     right: 10px;
-    width: 25px;
-    height: 25px;
+    width: 26px;
+    height: 26px;
     cursor: pointer;
 }
 
@@ -338,6 +346,14 @@ header button:hover {
     justify-content: flex-start; /* Sola hizala */
     gap: 10px;
     margin-top: 10px;
+}
+
+#resultContainer{
+    background-color: #F8F9FA;
+}
+
+#resultText{
+    background-color: #F8F9FA;
 }
 
 /* Sadece resultContainer içindeki icon-row2 için */
