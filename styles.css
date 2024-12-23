@@ -211,9 +211,7 @@ header button:hover {
     transition: 0.3s;
 }
 
-.politikalar a:hover {
-    background-color: #2b2bbb;
-}
+
 
 .side-menu .closebtn {
     position: absolute;
@@ -224,12 +222,19 @@ header button:hover {
 }
 
 .politikalar{
-    margin-top: 40px;
+    display: grid;
+    margin-top: 30px;
+    
 }
-
 .politikalar a{
     font-size: 20px;
 }
+
+.politikalar a:hover {
+    background-color: #2b2bbb;
+}
+
+
 
 /* Menü Açma Butonu */
 .menu-toggle {

@@ -25,6 +25,8 @@ function openMenu() {
     document.getElementById("sideMenu").style.width = "250px";
     document.getElementById("sideMenu").style.display="block";
     document.querySelector(".menu-toggle").style.display = "none"; // Açma butonunu gizle
+    document.querySelector(".politikalar").style.display = "grid"; 
+    document.querySelector(".social-icons").style.display = "grid";
     const menuToggle = document.querySelector(".menu-toggle");
     menuToggle.classList.add("hidden"); // Açma butonunu gizle
 }
@@ -32,6 +34,8 @@ function openMenu() {
 function closeMenu() {
     document.getElementById("sideMenu").style.width = "0";
     document.querySelector(".menu-toggle").style.display = "block"; // Açma butonunu göster
+    document.querySelector(".politikalar").style.display = "none"; //fecade tasarım
+    document.querySelector(".social-icons").style.display = "none"; //ekran kapanırken bloklaşma gösterilmiyor
     setTimeout(() => {
         const menuToggle = document.querySelector(".menu-toggle");
         menuToggle.classList.remove("hidden"); // Açma butonunu yavaşça göster
