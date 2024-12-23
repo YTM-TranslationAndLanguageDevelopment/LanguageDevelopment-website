@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Dillerin ve metinlerin yer değiştirilmesi
 $('#swapLanguages').click(function () {
+    closeRecognizing();
     resetStarIcon();
     const sourceLang = $('#sourceLanguage').val();
     const targetLang = $('#targetLanguage').val();
@@ -46,6 +47,7 @@ $('#sourceText').on('input', function () {
 $('.delete-icon').click(function () {
     $('#sourceText').val(''); // Kaynak metni temizle
     $('#resultText').val(''); // Çeviri metnini temizle
+    closeRecognizing();
 });
 
 function translate() {
@@ -71,7 +73,6 @@ function translate() {
 // Ses tanıma API'sini başlat
 let recognition;
 let recognizing = false;
-let finalTranscript = ''; // Toplam metin için değişken
 
 if ('webkitSpeechRecognition' in window) {
     recognition = new webkitSpeechRecognition();
@@ -80,7 +81,7 @@ if ('webkitSpeechRecognition' in window) {
     recognition.lang = document.getElementById("sourceLanguage").value; // Varsayılan dil
 
     recognition.onstart = () => {
-        console.log($('#sourceLanguage').val()+" "+recognition.lang);
+        console.log($('#sourceLanguage').val() + " " + recognition.lang);
         console.log('Ses tanıma başladı.');
     };
 
@@ -95,17 +96,22 @@ if ('webkitSpeechRecognition' in window) {
 
     recognition.onresult = (event) => {
         let interimTranscript = '';
+        let finalText = '';
 
         for (let i = event.resultIndex; i < event.results.length; ++i) {
             if (event.results[i].isFinal) {
-                finalTranscript += event.results[i][0].transcript; // Tamamlanmış metni ekle
+                finalText += event.results[i][0].transcript; // Tamamlanmış metni ekle
             } else {
                 interimTranscript += event.results[i][0].transcript; // Geçici metni al
             }
         }
 
         // Mevcut metni güncelle
-        $('#sourceText').val(finalTranscript + interimTranscript);
+        const currentText = $('#sourceText').val();
+        const newText = currentText + finalText;
+        $('#sourceText').val(newText);
+
+        translate();
     };
 } else {
     alert('Tarayıcınız ses tanımayı desteklemiyor.');
@@ -117,8 +123,6 @@ $('#sourceContainer .icon-row1 img[src="images/microfon.png"]').on('click', () =
         recognition.stop(); // Ses tanımayı durdur
     } else {
         recognition.lang = document.getElementById("sourceLanguage").value;
-        finalTranscript = ''; // İlk tıklamada metni sıfırla
-        $('#sourceText').val(''); // Textarea'yı temizle
         recognition.start(); // Ses tanımayı başlat
         recognizing = true;
     }
@@ -127,14 +131,21 @@ $('#sourceContainer .icon-row1 img[src="images/microfon.png"]').on('click', () =
 // Dil değişikliği işlevi
 function handleLanguageChange() {
     translate();
-    if (recognizing) {
-        recognition.stop(); // Ses tanımayı durdur
-        recognizing = false;
-    }
+    console.log('dil değişti');
+    closeRecognizing();
 
     const selectedLanguage = document.getElementById("sourceLanguage").value;
     recognition.lang = selectedLanguage; // Yeni dili ayarla
     console.log(`Dil ayarlandı: ${selectedLanguage}`);
+}
+
+function closeRecognizing(){
+    if (recognizing) { //ses tanıma açıksa
+        recognition.stop(); // Ses tanımayı durdur
+        recognizing = false;
+        return true;
+    }
+    return false;
 }
 
 // Çeviri sonucunu panoya kopyala
@@ -198,6 +209,16 @@ $('.star-icon').click(function () {
         starIcon.attr('src', 'images/doluyıldız.png'); // Doluyıldız.png yap
     } else {
         starIcon.attr('src', 'images/bosyıldız.png'); // Bosyıldız.png yap
+    }
+});
+
+// Mikrofon simgesi tıklama olayları
+$('.microfon').click(function () {
+    const starIcon = $(this);
+    if (starIcon.attr('src') === 'images/microfon.png') {
+        starIcon.attr('src', 'images/stopmicrofon.png');
+    } else {
+        starIcon.attr('src', 'images/microfon.png'); 
     }
 });
 
