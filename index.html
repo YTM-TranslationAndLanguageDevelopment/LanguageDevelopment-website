@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Çeviri ve Dil Gelişimi</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    
+    <!-- Üst Kısım (Header) -->
+    <header>
+        <!-- Giriş Yap Popup -->
+    <div id="girisPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup('girisPopup')">&times;</span>
+            <h2>Giriş Yap</h2>
+            <form>
+                <label for="email">E-posta:</label>
+                <input type="email" id="email" name="email" placeholder="E-posta adresinizi girin">
+                <label for="password">Şifre:</label>
+                <input type="password" id="password" name="password" placeholder="Şifrenizi girin">
+                <button type="button" onclick="submitLogin()">Giriş Yap</button>
+            </form>
+            <p>Hesabınız yok mu? <a href="#" id="signupFromLogin">Kayıt Ol</a></p>
+        </div>
+    </div>
+
+    <!-- Kayıt Ol Popup -->
+    <div id="kayitPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup('kayitPopup')">&times;</span>
+            <h2>Kayıt Ol</h2>
+            <form>
+                <label for="newUsername">Kullanıcı Adı:</label>
+                <input type="text" id="newUsername" name="newUsername" placeholder="Kullanıcı adınızı girin">
+                <label for="newPassword">Şifre:</label>
+                <input type="password" id="newPassword" name="newPassword" placeholder="Şifrenizi girin">
+                <label for="newEmail">E-posta:</label>
+                <input type="email" id="newEmail" name="newEmail" placeholder="E-posta adresinizi girin">
+                <button type="button" onclick="submitRegistration()">Kayıt Ol</button>
+            </form>
+        </div>
+    </div>
+        <div class="header-container">
+            <button onclick="openPopup('girisPopup')">Giriş Yap</button>
+        <button onclick="openPopup('kayitPopup')">Kayıt Ol</button>
+        </div>
+
+         <!-- Yan Menü -->
+    <aside id="sideMenu" class="side-menu">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
+        <div class="politikalar">
+            <a href="images/GizlilikPolitikası.html">Gizlilik Politikası</a>
+            <a href="images/ÇerezPolitikası.html">Çerez Politikası</a>
+            <a href="images/Hakkımızda.html">Hakkımızda</a>
+        </div>
+        <div class="social-icons">
+            <a href="https://github.com/AliKacarr" target="_blank"><img src="images/github.png" alt="GitHub"></a>
+            <a href="https://www.linkedin.com/in/ali-ka%C3%A7ar-6878ab251/" target="_blank"><img src="images/linkedin.png" alt="LinkedIn"></a>
+            <a href="https://youtube.com/channel/kullaniciAdi" target="_blank"><img src="images/youtube.png" alt="YouTube"></a>
+            <a href="https://m.facebook.com/profile.php/?id=100027508234162" target="_blank"><img src="images/facebook.png" alt="Facebook"></a>
+            <a href="https://twitter.com/alikacar23" target="_blank"><img src="images/x.png" alt="X"></a>
+            <a href="https://www.instagram.com/alikacar23/" target="_blank"><img src="images/instagram.png" alt="X"></a>
+        </div>
+    </aside>
+    </header>
+    <div class="menu-toggle" onclick="openMenu()">☰</div>
+   
+
+    <!-- Ana İçerik -->
+    <main>
+        <div class="translation-container">
+            <!-- Dil Seçim Kutuları -->
+            <div class="language-selection">
+                <select id="sourceLanguage" onchange="handleLanguageChange()">
+                    <option value="en" selected>İngilizce</option>
+                    <option value="tr">Türkçe</option>
+                    <option value="fr">Fransızca</option>
+                    <option value="de">Almanca</option>
+                    <option value="es">İspanyolca</option>
+                    <option value="it">İtalyanca</option>
+                    <option value="ru">Rusça</option>
+                    <option value="zh-CN">Çince</option>
+                    <option value="ja">Japonca</option>
+                </select>
+                <img src="images/arrow.png" alt="Dil Değiştir" id="swapLanguages">
+                <select id="targetLanguage" onchange="handleLanguageChange()">
+                    <option value="tr" selected>Türkçe</option>
+                    <option value="en">İngilizce</option>
+                    <option value="fr">Fransızca</option>
+                    <option value="de">Almanca</option>
+                    <option value="es">İspanyolca</option>
+                    <option value="it">İtalyanca</option>
+                    <option value="ru">Rusça</option>
+                    <option value="zh-CN">Çince</option>
+                    <option value="ja">Japonca</option>
+                </select>
+            </div>
+
+            <!-- Çeviri Alanları -->
+            <div class="translation-areas">
+                <div class="text-container" id="sourceContainer">
+                    <textarea id="sourceText"></textarea>
+                    <img src="images/delete.png" class="delete-icon" alt="delete">
+                    <div class="icon-row1">
+                        <img src="images/microfon.png" alt="microphone">
+                        <img src="images/volume.png" alt="volume">
+                        <img src="images/random.png" alt="random">
+                        <img src="images/dictionary.png" alt="dictionary">
+                    </div>
+                </div>
+                <div class="text-container" id="resultContainer">
+                    <textarea id="resultText"></textarea>
+                    <img src="images/bosyıldız.png" class="star-icon" alt="star">
+                    <div class="icon-row2">
+                        <img src="images/volume.png" alt="volume">
+                        <img src="images/paste1.png" alt="paste">
+                        <img src="images/derecele.png" alt="rate">
+                        <img src="images/share.png" alt="share">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alt İkonlar -->
+            <div class="icons-container">
+                <img src="images/history.png" alt="Geçmiş" title="Geçmiş" id="historyIcon" class="icon-small">
+                <img src="images/saved.png" alt="Kaydedilenler" title="Kaydedilenler" id="savedIcon" class="icon-small">
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
