@@ -1,3 +1,25 @@
+function adjustHeight() {
+    const sourceTextarea = document.getElementById('sourceText');
+    const resultTextarea = document.getElementById('resultText');
+
+    sourceTextarea.style.height = 'auto';
+    resultTextarea.style.height = 'auto';
+
+    const maxHeight = Math.max(sourceTextarea.scrollHeight, resultTextarea.scrollHeight);
+
+    // Her iki textarea'nın yüksekliğini eşit yap
+    sourceTextarea.style.height = resultTextarea.style.height = maxHeight + 'px';
+
+     // Sayfanın en altına kaydır
+     window.scrollTo(0, document.body.scrollHeight);
+}
+
+// sourceText için metin girişi olduğunda yüksekliği ayarla
+document.getElementById('sourceText').addEventListener('input', adjustHeight);
+
+// resultText için metin girişi olduğunda yüksekliği ayarla
+document.getElementById('resultText').addEventListener('input', adjustHeight);
+
 
 function openMenu() {
     document.getElementById("sideMenu").style.width = "250px";
@@ -47,6 +69,7 @@ $('#sourceText').on('input', function () {
 $('.delete-icon').click(function () {
     $('#sourceText').val(''); // Kaynak metni temizle
     $('#resultText').val(''); // Çeviri metnini temizle
+    adjustHeight();
     closeRecognizing();
     resetStarIcon();
 });

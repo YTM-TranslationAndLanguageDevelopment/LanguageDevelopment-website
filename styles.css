@@ -85,7 +85,8 @@ main {
     padding: 40px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
-    margin: 108px 0;
+    margin-top: 108px;
+    margin-bottom: 50px;
 }
 
 .language-selection {
@@ -281,7 +282,6 @@ header button:hover {
     border-radius: 8px;
     padding: 10px;
     width: 100%;
-    min-height: 200px;
 }
 
 .text-container textarea {
@@ -294,6 +294,10 @@ header button:hover {
     resize: none;
     box-shadow: none;
     font-size: 23px;
+    min-height: 150px; /* Başlangıç yüksekliği */
+    overflow-y: hidden; /* Dikey kaydırma çubuğunu gizle */
+    transition: height 0.2s ease-in-out;
+    
 }
 
 .icon-row1 {
