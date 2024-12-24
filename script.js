@@ -2,17 +2,32 @@ function adjustHeight() {
     const sourceTextarea = document.getElementById('sourceText');
     const resultTextarea = document.getElementById('resultText');
 
+    // Yüksekliği sıfırla ve yeniden hesapla
     sourceTextarea.style.height = 'auto';
     resultTextarea.style.height = 'auto';
 
-    const maxHeight = Math.max(sourceTextarea.scrollHeight, resultTextarea.scrollHeight);
+    // Her iki metin alanı için gereken maksimum yüksekliği hesapla
+    let maxHeight = Math.max(sourceTextarea.scrollHeight, resultTextarea.scrollHeight);
+
+    // Minimum yüksekliği kontrol et
+    maxHeight = Math.max(maxHeight, 200); // Yükseklik 200px'den küçükse, 200px yap
 
     // Her iki textarea'nın yüksekliğini eşit yap
     sourceTextarea.style.height = resultTextarea.style.height = maxHeight + 'px';
 
-     // Sayfanın en altına kaydır
-     window.scrollTo(0, document.body.scrollHeight);
+    // Sayfanın en altına kaydır
+    window.scrollTo(0, document.body.scrollHeight);
+
+    // Sayfa yüklendiğinde mevcut içeriğe göre yüksekliği ayarla
+    document.addEventListener('DOMContentLoaded', adjustHeight);    
 }
+
+// sourceText için metin girişi olduğunda yüksekliği ayarla
+document.getElementById('sourceText').addEventListener('input', adjustHeight);
+
+// resultText için metin girişi olduğunda yüksekliği ayarla
+document.getElementById('resultText').addEventListener('input', adjustHeight);
+
 
 // sourceText için metin girişi olduğunda yüksekliği ayarla
 document.getElementById('sourceText').addEventListener('input', adjustHeight);
@@ -282,10 +297,6 @@ $('#sourceText').on('input', function () {
     resetStarIcon();
 });
 
-
-//------------------------Veri tabanı------------------------
-
-
 function openPopup(id) {
     document.getElementById(id).style.display = 'flex';
 
@@ -309,62 +320,6 @@ document.getElementById("savedIcon").addEventListener("click", () => {
     window.location.href = "saved.html";
 });
 
-function submitLogin() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    fetch("http://localhost:3000/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.message === "Giriş başarılı!") {
-                // Kullanıcı e-postasını localStorage'a kaydet
-                localStorage.setItem("userEmail", email);
-
-                alert(data.message);
-                closePopup("girisPopup");
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch((error) => {
-            console.error("Hata:", error);
-        });
-}
-
-
-function submitRegistration() {
-    const name = document.getElementById("newUsername").value;
-    const email = document.getElementById("newEmail").value;
-    const password = document.getElementById("newPassword").value;
-
-    fetch("http://localhost:3000/register", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.message === "Kayıt başarılı!") {
-                 // Kullanıcı e-postasını localStorage'a kaydet
-                localStorage.setItem("userEmail", email);
-                alert(data.message);
-                closePopup("kayitPopup");
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch((error) => {
-            console.error("Hata:", error);
-        });
-}
 
 
 

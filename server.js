@@ -91,6 +91,7 @@ app.post("/register", async (req, res) => {
     }
 });
 
+//sesle çeviri
 app.get('/tts', async (req, res) => {
     const text = req.query.text;
     const lang = req.query.lang;
