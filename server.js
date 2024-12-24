@@ -22,7 +22,6 @@ app.get("/", (req, res) => {
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 const dbName = "translate";
-const collectionName = "user";
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -34,7 +33,7 @@ app.get("/user", async (req, res) => {
     try {
         await client.connect();
         const db = client.db(dbName);
-        const collection = db.collection(collectionName);
+        const collection = db.collection('user');
 
         const user = await collection.findOne({ email });
         if (user) {
@@ -52,24 +51,41 @@ app.get("/user", async (req, res) => {
 
 
 // Giriş İşlemi
-app.post("/login", async (req, res) => {
-    const { email, password } = req.body;
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body; // İstemciden gelen email ve şifre bilgilerini al
 
     try {
         await client.connect();
         const db = client.db(dbName);
-        const collection = db.collection(collectionName);
+        const usersCollection = db.collection('user');
 
-        const user = await collection.findOne({ email, password });
-        if (user) {
-            res.status(200).send({ message: "Giriş başarılı!" });
-        } else {
-            res.status(401).send({ message: "Geçersiz e-posta veya şifre!" });
+        const user = await usersCollection.findOne({ email }); // Bu eposta ile bir kayıt olup olmadığını kontrol et
+        if (!user) {
+            return res.json({ success: false, message: 'Kullanıcı bulunamadı.' });
         }
-    } catch (err) {
-        res.status(500).send({ message: "Bir hata oluştu.", error: err.message });
+
+        const isPasswordValid = await bcrypt.compare(password, user.password); // Gelen şifre ile veritabanındaki şifreyi karşılaştır
+        if (!isPasswordValid) {
+            return res.json({ success: false, message: 'Şifre yanlış.' });
+        }
+
+        // Kullanıcının yetkisini kontrol et
+        const authority = user.authority;
+
+        if (authority === 'admin') {
+            return res.json({ success: true, redirect: 'admin.html', message: 'Admin olarak giriş yapıldı.' });
+        } else if (authority === 'user') {
+            return res.json({ success: true, redirect: null, message: 'Giriş başarılı!' });
+        } else {
+            return res.json({ success: false, message: 'Yetkisiz giriş.' });
+        }
+
+    } catch (error) {
+        console.error('Giriş sırasında bir hata oluştu:', error);
+        res.json({ success: false, message: 'Giriş sırasında bir hata oluştu.' });
     }
 });
+
 
 // Kayıt İşlemi
 app.post("/register", async (req, res) => {
@@ -78,7 +94,7 @@ app.post("/register", async (req, res) => {
     try {
         await client.connect();
         const db = client.db(dbName);
-        const collection = db.collection(collectionName);
+        const collection = db.collection('user');
 
         // Kullanıcı var mı kontrolü
         const existingUser = await collection.findOne({ email });
