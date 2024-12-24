@@ -49,20 +49,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Dillerin ve metinlerin yer değiştirilmesi
 $('#swapLanguages').click(function () {
-    closeRecognizing();
-    resetStarIcon();
+    // sourceLanguage değeri "auto" değilse işlemleri gerçekleştir
     const sourceLang = $('#sourceLanguage').val();
     const targetLang = $('#targetLanguage').val();
 
-    // Dilleri değiştir
-    $('#sourceLanguage').val(targetLang);
-    $('#targetLanguage').val(sourceLang);
+    if (sourceLang !== 'auto') {
+        closeRecognizing();  // (Varsayılan olarak tanımlı bir fonksiyon olmalı)
+        resetStarIcon();     // (Varsayılan olarak tanımlı bir fonksiyon olmalı)
 
-    // Çeviriyi yeniden başlat
-    $('#sourceText').val($('#resultText').val());
-    console.log($('#sourceLanguage').val());
-    translate();
+        // Dilleri değiştir
+        $('#sourceLanguage').val(targetLang);
+        $('#targetLanguage').val(sourceLang);
+
+        // Çeviriyi yeniden başlat
+        $('#sourceText').val($('#resultText').val());
+        console.log($('#sourceLanguage').val()); // Yeni source dilini yazdır
+
+        translate(); // Çeviriyi yeniden başlat
+    }
 });
+
 
 
 // Silme butonuna tıklama işlevi

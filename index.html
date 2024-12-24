@@ -76,6 +76,7 @@
             <!-- Dil Seçim Kutuları -->
             <div class="language-selection">
                 <select id="sourceLanguage" onchange="handleLanguageChange()">
+                    <option value="auto">Dili algıla</option>
                     <option value="en" selected>İngilizce</option>
                     <option value="tr">Türkçe</option>
                     <option value="fr">Fransızca</option>
@@ -86,7 +87,7 @@
                     <option value="zh-CN">Çince</option>
                     <option value="ja">Japonca</option>
                 </select>
-                <img src="images/arrow.png" title="Dil Değiştir" id="swapLanguages">
+                <img id="swapLanguages" src="images/arrow.png" title="Dil Değiştir">
                 <select id="targetLanguage" onchange="handleLanguageChange()">
                     <option value="tr" selected>Türkçe</option>
                     <option value="en">İngilizce</option>
