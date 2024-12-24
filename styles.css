@@ -60,6 +60,17 @@ body {
     color: #f1eaea;
 }
 
+/* profil butonu*/
+#profilbutton{
+    display: none;
+    padding: 10px 20px;
+}
+
+/* ayarlar butonu*/
+#settingsbutton{
+    display: none;
+}
+
 .input-group {
     display: flex;
     flex-direction: column;

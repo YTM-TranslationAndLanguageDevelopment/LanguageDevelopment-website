@@ -43,7 +43,9 @@ function submitLogin() {
                 if (data.redirect === 'admin.html') {
                     window.location.href = data.redirect; // Admin sayfasına yönlendir
                 } else {
+                    islogin=email;
                     closePopup("girisPopup"); // Giriş popup'ını kapat
+                    setVisibility(true);
                 }
             } else {
                 alert(data.message); // Kullanıcı bulunamadı veya şifre yanlış

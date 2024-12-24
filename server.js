@@ -23,6 +23,7 @@ const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 const dbName = "translate";
 
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -47,6 +48,32 @@ app.get("/user", async (req, res) => {
     }
 });
 
+app.get('/get-user-info', async (req, res) => {
+    const { email } = req.query;
+
+    if (!email) {
+        return res.status(400).json({ error: "E-posta bilgisi gerekli." });
+    }
+
+    try {
+        await client.connect();
+        const db = client.db(dbName);
+        const usersCollection = db.collection('user');
+
+        // E-posta ile kullanıcıyı bulun
+        const user = await usersCollection.findOne({ email });
+
+        if (user) {
+            // Kullanıcı bilgilerini döndür
+            res.status(200).json({ username: user.username, email: user.email });
+        } else {
+            res.status(404).json({ error: "Kullanıcı bulunamadı." });
+        }
+    } catch (error) {
+        console.error("Kullanıcı bilgisi alınırken hata oluştu:", error);
+        res.status(500).json({ error: "Sunucu hatası." });
+    }
+});
 
 
 

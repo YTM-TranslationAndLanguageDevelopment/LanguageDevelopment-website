@@ -1,3 +1,5 @@
+let islogin = ""; //giriş-kayıt yaparsa epostası tutulacak
+
 function adjustHeight() {
     const sourceTextarea = document.getElementById('sourceText');
     const resultTextarea = document.getElementById('resultText');
@@ -309,15 +311,42 @@ function openPopup(id) {
         document.getElementById("newEmail").value = ""; // Kayıt için eposta
         document.getElementById("newPassword").value = ""; // Kayıt için şifre
     }else if (id === 'profilPopup') {
-        document.getElementById("profilUsername").value = ""; // Profil için kullanıcı adı
+        document.getElementById("profilUserName").value = ""; // Profil için kullanıcı adı
         document.getElementById("profilEmail").value = ""; // Profil için eposta
+        profilbilgileriayarla();
+    }
+}
+
+/* Giriş yapılınca butonları ayarlama */
+function setVisibility(isLoggedIn) {
+    const profilButton = document.getElementById('profilbutton');
+    const settingsButton = document.getElementById('settingsbutton');
+    const loginButton = document.getElementById('loginbutton');
+    const registerButton = document.getElementById('registerbutton');
+
+    if (isLoggedIn) {
+        profilButton.style.display = 'inline-block'; // Profil butonu görünür
+        settingsButton.style.display = 'inline-block'; // Ayarlar butonu görünür
+        loginButton.style.display = 'none'; // Giriş butonu gizli
+        registerButton.style.display = 'none'; // Kayıt ol butonu gizli
+    } else {
+        profilButton.style.display = 'none'; // Profil butonu gizli
+        settingsButton.style.display = 'none'; // Ayarlar butonu görünür
+        loginButton.style.display = 'inline-block'; // Giriş butonu görünür
+        registerButton.style.display = 'inline-block'; // Kayıt ol butonu görünür
     }
 }
 
 function closePopup(id) {
     document.getElementById(id).style.display = 'none';
 }
-
+/* Kullanıcı hesaptan çıkışı */
+document.getElementById('exitProfil').addEventListener('click', (event) => {
+    event.preventDefault(); // Link varsayılan davranışını engelle
+    closePopup('profilPopup'); // Popup'ı kapat
+    setVisibility(false); // Kullanıcı çıkış yaptı, görünürlük ayarla
+    islogin=""; //Kullanıcı çıkış yaptı
+});
 
 document.getElementById("savedIcon").addEventListener("click", () => {
     window.location.href = "saved.html";

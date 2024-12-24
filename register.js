@@ -63,9 +63,11 @@ function submitRegistration() {
             if (data.message === "Kayıt başarılı!") {
                 // Kullanıcı e-postasını localStorage'a kaydet
                 localStorage.setItem("userEmail", email);
+                islogin=email;
 
                 alert(data.message);
                 closePopup("kayitPopup");
+                setVisibility(true);
             } else {
                 alert(data.message);
             }

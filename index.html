@@ -9,6 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="login.js"></script>
     <script src="register.js"></script>
+    <script src="profile.js"></script>
 </head>
 <body>
     
@@ -24,7 +25,7 @@
                 <p id="profilUserName">Kullanıcı adı:</p>
             </div>
             <div class="input-group">
-                <p id="profilUserEmail">Kullanıcı email:</p>
+                <p id="profilEmail">Kullanıcı email:</p>
             </div>
                 <p><a href="#" id="exitProfil" class="exit-link">⮪ Çıkış Yap</a></p>
         </div>
@@ -69,9 +70,10 @@
         </div>
     </div>
         <div class="header-container">
-        <button onclick="openPopup('profilPopup')">Profil</button>
-        <button onclick="openPopup('girisPopup')">Giriş Yap</button>
-        <button onclick="openPopup('kayitPopup')">Kayıt Ol</button>
+        <button type="button" id="profilbutton" onclick="openPopup('profilPopup')">Profil</button>
+        <button type="button" id="settingsbutton"  onclick="openPopup('settingsPopup')" >Ayarlar</button>
+        <button type="button" id="loginbutton" onclick="openPopup('girisPopup')">Giriş Yap</button>
+        <button type="button" id="registerbutton" onclick="openPopup('kayitPopup')">Kayıt Ol</button>
         </div>
 
          <!-- Yan Menü -->
