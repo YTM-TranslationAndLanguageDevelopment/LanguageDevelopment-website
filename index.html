@@ -14,19 +14,37 @@
     
     <!-- Üst Kısım (Header) -->
     <header>
+
+    <!-- Profil Popup -->
+    <div id="profilPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup('profilPopup')">&times;</span>
+            <h2>Profil Ekranı</h2>
+            <div class="input-group">
+                <p id="profilUserName">Kullanıcı adı:</p>
+            </div>
+            <div class="input-group">
+                <p id="profilUserEmail">Kullanıcı email:</p>
+            </div>
+                <p><a href="#" id="exitProfil" class="exit-link">⮪ Çıkış Yap</a></p>
+        </div>
+    </div>
+
         <!-- Giriş Yap Popup -->
     <div id="girisPopup" class="popup">
         <div class="popup-content">
             <span class="close" onclick="closePopup('girisPopup')">&times;</span>
             <h2>Giriş Yap</h2>
-            <form>
+            <div class="input-group">
                 <label for="email">E-posta:</label>
                 <input type="email" id="email" name="email" placeholder="E-posta adresinizi girin">
+            </div>
+            <div class="input-group">
                 <label for="password">Şifre:</label>
                 <input type="password" id="password" name="password" placeholder="Şifrenizi girin">
+            </div>
                 <button type="button" onclick="submitLogin()">Giriş Yap</button>
-            </form>
-            <p>Hesabınız yok mu? <a href="#" id="signupFromLogin">Kayıt Ol</a></p>
+            <p>Hesabınız yok mu? <a href="#" id="signupFromLogin" onclick="closePopup('girisPopup'); openPopup('kayitPopup');">Kayıt Ol</a></p>
         </div>
     </div>
 
@@ -35,19 +53,24 @@
         <div class="popup-content">
             <span class="close" onclick="closePopup('kayitPopup')">&times;</span>
             <h2>Kayıt Ol</h2>
-            <form>
+            <div class="input-group">
                 <label for="newUsername">Kullanıcı Adı:</label>
                 <input type="text" id="newUsername" name="newUsername" placeholder="Kullanıcı adınızı girin">
-                <label for="newPassword">Şifre:</label>
-                <input type="password" id="newPassword" name="newPassword" placeholder="Şifrenizi girin">
+            </div>
+            <div class="input-group">
                 <label for="newEmail">E-posta:</label>
                 <input type="email" id="newEmail" name="newEmail" placeholder="E-posta adresinizi girin">
-                <button type="button" onclick="submitRegistration()">Kayıt Ol</button>
-            </form>
+            </div>
+            <div class="input-group">
+                <label for="newPassword">Şifre:</label>
+                <input type="password" id="newPassword" name="newPassword" placeholder="Şifrenizi girin">
+            </div>
+                <button class="submit-button" onclick="submitRegistration()">Kayıt Ol</button>
         </div>
     </div>
         <div class="header-container">
-            <button onclick="openPopup('girisPopup')">Giriş Yap</button>
+        <button onclick="openPopup('profilPopup')">Profil</button>
+        <button onclick="openPopup('girisPopup')">Giriş Yap</button>
         <button onclick="openPopup('kayitPopup')">Kayıt Ol</button>
         </div>
 

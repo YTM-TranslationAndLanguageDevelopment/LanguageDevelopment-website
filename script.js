@@ -308,6 +308,9 @@ function openPopup(id) {
         document.getElementById("newUsername").value = ""; // Kayıt için kullanıcı adı
         document.getElementById("newEmail").value = ""; // Kayıt için eposta
         document.getElementById("newPassword").value = ""; // Kayıt için şifre
+    }else if (id === 'profilPopup') {
+        document.getElementById("profilUsername").value = ""; // Profil için kullanıcı adı
+        document.getElementById("profilEmail").value = ""; // Profil için eposta
     }
 }
 

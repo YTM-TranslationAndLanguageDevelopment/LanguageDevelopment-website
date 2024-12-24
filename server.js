@@ -1,5 +1,6 @@
 const bodyParser = require("body-parser");
 const { MongoClient } = require("mongodb");
+const bcrypt = require('bcrypt');
 const cors = require("cors");
 const axios = require('axios');
 
@@ -72,24 +73,59 @@ app.post("/login", async (req, res) => {
 
 // Kayıt İşlemi
 app.post("/register", async (req, res) => {
-    const { name, email, password } = req.body;
+    const { username, email, password } = req.body;
 
     try {
         await client.connect();
         const db = client.db(dbName);
         const collection = db.collection(collectionName);
 
+        // Kullanıcı var mı kontrolü
         const existingUser = await collection.findOne({ email });
         if (existingUser) {
-            res.status(409).send({ message: "Bu e-posta ile kayıtlı bir kullanıcı zaten var!" });
-        } else {
-            await collection.insertOne({ name, email, password });
-            res.status(201).send({ message: "Kayıt başarılı!" });
+            return res.status(409).send({ message: "Bu e-posta ile kayıtlı bir kullanıcı zaten var!" });
         }
+
+        // Şifreyi hashle
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Tarih bilgileri
+        const currentDate = new Date().toISOString();
+
+        // Yeni kullanıcıyı oluştur
+        const newUser = {
+            email,
+            username,
+            password: hashedPassword, // Şifre yerine hashlenmiş şifre
+            totalScore: 0,
+            fireDay: 0,
+            studiedTime: 0,
+            createDate: { $date: currentDate },
+            lastLoginDay: { $date: currentDate },
+            studiedDays: {
+                monday: false,
+                tuesday: false,
+                wednesday: false,
+                thursday: false,
+                friday: false,
+                saturday: false,
+                sunday: false,
+            },
+            authority: "user",
+        };
+
+        // Kullanıcıyı koleksiyona ekle
+        await collection.insertOne(newUser);
+
+
+        res.status(201).send({ message: "Kayıt başarılı!" });
     } catch (err) {
+        console.error("Kayıt hatası:", err.message);
         res.status(500).send({ message: "Bir hata oluştu.", error: err.message });
     }
 });
+
 
 //sesle çeviri
 app.get('/tts', async (req, res) => {
