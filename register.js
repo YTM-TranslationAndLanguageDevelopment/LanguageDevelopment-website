@@ -64,7 +64,6 @@ function submitRegistration() {
                 // Kullanıcı e-postasını localStorage'a kaydet
                 localStorage.setItem("userEmail", email);
                 localStorage.setItem('authority', 'user');
-                islogin=email;
 
                 closePopup("kayitPopup");
                 setVisibility(true);

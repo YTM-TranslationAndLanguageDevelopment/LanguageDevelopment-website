@@ -54,7 +54,6 @@ function submitLogin() {
                     setVisibility(true);
                 }
                 localStorage.setItem('userEmail', email);
-                islogin=email;
             } else {
                 alert(data.message); // Kullanıcı bulunamadı veya şifre yanlış
             }

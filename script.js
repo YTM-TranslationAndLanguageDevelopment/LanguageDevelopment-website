@@ -1,5 +1,3 @@
-let islogin = ""; //giriş-kayıt yaparsa epostası tutulacak
-
 document.addEventListener("DOMContentLoaded", () => { //DOMContentLoaded
     // localStorage'daki tüm bilgileri belli bir zamandan sonra temizle diye değiştirilecek
     localStorage.clear();
@@ -479,7 +477,6 @@ document.getElementById('exitProfil').addEventListener('click', (event) => {
     event.preventDefault(); // Link varsayılan davranışını engelle
     closePopup('profilPopup'); // Popup'ı kapat
     setVisibility(false); // Kullanıcı çıkış yaptı, görünürlük ayarla
-    islogin=""; //Kullanıcı çıkış yaptı
 });
 
 document.getElementById("savedIcon").addEventListener("click", () => {
