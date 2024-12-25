@@ -159,6 +159,25 @@ textarea:focus {
     justify-content: center;
     gap: 30px;
 }
+.icons-container-area{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.icon-small {
+    width: 55px; /* İkon boyutu */
+    height: 55px;
+    margin-bottom: 10px; /* Resim ile yazı arasındaki boşluk */
+}
+
+.icons-container-area p {
+    margin: 0;
+    font-size: 15px; /* Yazı boyutu */
+    color: #333; /* Yazı rengi */
+    cursor: pointer;
+}
+
 
 img {
     width: 50px;
