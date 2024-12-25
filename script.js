@@ -341,37 +341,40 @@ document.getElementById("dictionary").addEventListener("click", () => {
     }
 });
 
+// DictionaryText görünürlüğünü kontrol eden yardımcı fonksiyon
+function toggleDictionaryTextVisibility() {
+    const dictionaryText = document.getElementById("dictionaryText");
+
+    if (dictionaryText.style.display === "none" || dictionaryText.style.display === "") {
+        dictionaryText.style.display = "block"; // Görünürlüğü aç
+    } else {
+        dictionaryText.style.display = "none"; // Görünürlüğü kapat
+    }
+}
+
+// DictionaryText ögesini kapatan fonksiyon
+function hideDictionaryText() {
+    const dictionaryText = document.getElementById("dictionaryText");
+    dictionaryText.style.display = "none"; // Görünürlüğü kapat
+}
+
 // Dictionary ögesine tıklama olayını kontrol et
 document.getElementById("dictionary").addEventListener("click", (event) => {
     event.stopPropagation(); // Tıklama olayını yukarıya iletme
-    toggleDictionaryVisibility();
+    toggleDictionaryTextVisibility();
 });
 
-// Belirtilen ögelere tıklanınca dictionary görünürlüğünü kapat
-["microfon", "random", "delete-icon", "sourceText"].forEach((id) => {
+// Belirtilen ögelere tıklanınca dictionaryText görünürlüğünü kapat
+["microfon", "random", "delete-icon"].forEach((id) => {
     const element = document.getElementById(id);
 
     if (element) {
         element.addEventListener("click", () => {
-            hideDictionary();
+            hideDictionaryText();
         });
     }
 });
-function toggleDictionaryVisibility() {
-    const dictionary = document.getElementById("dictionary");
 
-    if (dictionary.style.display === "none" || dictionary.style.display === "") {
-        dictionary.style.display = "block"; // Görünürlüğü aç
-    } else {
-        dictionary.style.display = "none"; // Görünürlüğü kapat
-    }
-}
-
-// Dictionary ögesini kapatan fonksiyon
-function hideDictionary() {
-    const dictionary = document.getElementById("dictionary");
-    dictionary.style.display = "none"; // Görünürlüğü kapat
-}
 
 // Yıldız simgesini değiştirme fonksiyonu
 function resetStarIcon() {
@@ -401,9 +404,9 @@ $('#sourceLanguage, #targetLanguage').change(function () {
 });
 
 
-// Yazı alanına yeni metin girildiğinde
-$('#sourceText').on('input', function () {
-    hideDictionary();
+
+document.getElementById("sourceText").addEventListener("input", () => {
+    hideDictionaryText();
     translate();
     resetStarIcon();
 });
