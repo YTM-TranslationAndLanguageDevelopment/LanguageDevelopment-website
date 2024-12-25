@@ -1,3 +1,4 @@
+require('dotenv').config();
 const bodyParser = require("body-parser");
 const { MongoClient } = require("mongodb");
 const bcrypt = require('bcrypt');
@@ -5,12 +6,12 @@ const cors = require("cors");
 const axios = require('axios');
 const express = require("express");
 const path = require("path");
+
 const app = express();
 const port = 3000;
+
 app.use(cors());
 app.use(bodyParser.json());
-
-// Statik dosyalar için dizin ayarla
 app.use(express.static(path.join(__dirname)));
 
 // Ana sayfayı yönlendirme
@@ -18,21 +19,32 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
 
+//Api bilgisi
+const apiKey = process.env.WORDNIK_API_KEY
 
 // MongoDB bağlantı bilgileri
-const uri = "mongodb://localhost:27017";
+const uri = process.env.MONGO_URI;
+const dbName = process.env.DB_NAME;
 const client = new MongoClient(uri);
-const dbName = "translate";
+
+//Koleksiyona bağlanma
+async function getCollection(collectionName) {
+    try {
+        await client.connect();
+        const db = client.db(dbName);
+        return db.collection(collectionName);
+    } catch (err) {
+        console.error("Veritabanı bağlantı hatası:", err.message);
+        throw new Error("Veritabanına bağlanılamadı.");
+    }
+}
 
 // Kullanıcı ismini getirme - deneme için saved.html ve admin.html de kullanıldı sonradan silinebilir
 app.get("/user", async (req, res) => {
     const { email } = req.query;
 
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection('user');
-
+        const collection = await getCollection("user");
         const user = await collection.findOne({ email });
         if (user) {
             res.status(200).send({ username: user.username, email: user.email });
@@ -54,9 +66,7 @@ app.get('/get-user-info', async (req, res) => {
     }
 
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const usersCollection = db.collection('user');
+        const usersCollection = await getCollection("user");
 
         // E-posta ile kullanıcıyı bulun
         const user = await usersCollection.findOne({ email });
@@ -80,9 +90,7 @@ app.post('/login', async (req, res) => {
     const { email, password } = req.body; // İstemciden gelen email ve şifre bilgilerini al
 
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const usersCollection = db.collection('user');
+        const usersCollection = await getCollection("user");
 
         const user = await usersCollection.findOne({ email }); // Bu eposta ile bir kayıt olup olmadığını kontrol et
         if (!user) {
@@ -119,9 +127,7 @@ app.post("/register", async (req, res) => {
     const { username, email, password } = req.body;
 
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection('user');
+        const collection = await getCollection("user");
 
         // Kullanıcı var mı kontrolü
         const existingUser = await collection.findOne({ email });
@@ -196,6 +202,24 @@ app.get('/tts', async (req, res) => {
         res.status(500).send('TTS hizmeti kullanılamıyor.');
     }
 });
+
+app.get('/random-word', async (req, res) => {
+    const url = `https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&api_key=${apiKey}`;
+
+    try {
+        const response = await axios.get(url);
+        if (response.data && response.data.word) {
+            res.status(200).json({ word: response.data.word }); // Rastgele kelimeyi döndür
+        } else {
+            res.status(404).json({ error: 'Rastgele kelime alınamadı.' });
+        }
+    } catch (error) {
+        console.error('Wordnik API Hatası:', error.message);
+        res.status(500).json({ error: 'Wordnik API çağrısında hata oluştu.' });
+    }
+});
+
+
 
 // Sunucuyu başlat
 app.listen(port, () => {

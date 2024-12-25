@@ -67,6 +67,17 @@ function translate() {
     });
 }
 
+function translateText(sourceText, sourceLang, targetLang, callback) {
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(sourceText)}`;
+
+    $.getJSON(url, function (data) {
+        const translatedText = data[0][0][0];
+        callback(translatedText); // Çevrilen metni geri döndür
+    }).fail(function () {
+        callback(null); // Çeviri başarısız olursa null döndür
+    });
+}
+
 // Dillerin ve metinlerin yer değiştirilmesi
 $('#swapLanguages').click(function () {
     // sourceLanguage değeri "auto" değilse işlemleri gerçekleştir
@@ -139,9 +150,9 @@ if ('webkitSpeechRecognition' in window) {
 
         for (let i = event.resultIndex; i < event.results.length; ++i) {
             if (event.results[i].isFinal) {
-                finalText += event.results[i][0].transcript; // Tamamlanmış metni ekle
+                finalText += event.results[i][0].transcript+'.'; // Tamamlanmış metni ekle
             } else {
-                interimTranscript += event.results[i][0].transcript; // Geçici metni al
+                interimTranscript += event.results[i][0].transcript+'.'; // Geçici metni al
             }
         }
 
@@ -248,6 +259,36 @@ function playTTS(text, lang) {
     });
 }
 
+//Random kelime getirme
+document.getElementById("random").addEventListener("click", () => {
+    const sourceTextarea = document.getElementById("sourceText");
+    const targetLang = document.getElementById("sourceLanguage").value; // Hedef dil
+
+    // Rastgele kelime almak için fetch isteği
+    fetch("/random-word")
+        .then((response) => response.json())
+        .then((data) => {
+            if (data && data.word) {
+                const word = data.word; // Rastgele kelime
+                // İngilizce kelimeyi seçili hedef dile çevir
+                translateText(word, "en", targetLang, (translatedText) => {
+                    if (translatedText) {
+                        sourceTextarea.value = ""; // Kaynak metni temizle
+                        sourceTextarea.value = translatedText; // Çevrilen metni sourceText alanına yaz
+                        translate();
+                    } else {
+                        alert("Çeviri yapılamadı.");
+                    }
+                });
+            } else {
+                alert("Rastgele kelime alınamadı.");
+            }
+        })
+        .catch((error) => {
+            console.error("Rastgele kelime alınırken hata oluştu:", error);
+            alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+        });
+});
 
 // Yıldız simgesini değiştirme fonksiyonu
 function resetStarIcon() {
