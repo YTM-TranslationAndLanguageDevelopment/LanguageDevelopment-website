@@ -341,6 +341,38 @@ document.getElementById("dictionary").addEventListener("click", () => {
     }
 });
 
+// Dictionary ögesine tıklama olayını kontrol et
+document.getElementById("dictionary").addEventListener("click", (event) => {
+    event.stopPropagation(); // Tıklama olayını yukarıya iletme
+    toggleDictionaryVisibility();
+});
+
+// Belirtilen ögelere tıklanınca dictionary görünürlüğünü kapat
+["microfon", "random", "delete-icon", "sourceText"].forEach((id) => {
+    const element = document.getElementById(id);
+
+    if (element) {
+        element.addEventListener("click", () => {
+            hideDictionary();
+        });
+    }
+});
+function toggleDictionaryVisibility() {
+    const dictionary = document.getElementById("dictionary");
+
+    if (dictionary.style.display === "none" || dictionary.style.display === "") {
+        dictionary.style.display = "block"; // Görünürlüğü aç
+    } else {
+        dictionary.style.display = "none"; // Görünürlüğü kapat
+    }
+}
+
+// Dictionary ögesini kapatan fonksiyon
+function hideDictionary() {
+    const dictionary = document.getElementById("dictionary");
+    dictionary.style.display = "none"; // Görünürlüğü kapat
+}
+
 // Yıldız simgesini değiştirme fonksiyonu
 function resetStarIcon() {
     const starIcon = $('.star-icon');
@@ -371,6 +403,7 @@ $('#sourceLanguage, #targetLanguage').change(function () {
 
 // Yazı alanına yeni metin girildiğinde
 $('#sourceText').on('input', function () {
+    hideDictionary();
     translate();
     resetStarIcon();
 });
