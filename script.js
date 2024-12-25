@@ -288,6 +288,7 @@ document.getElementById("random").addEventListener("click", () => {
                     if (translatedText) {
                         sourceTextarea.value = ""; // Kaynak metni temizle
                         sourceTextarea.value = translatedText; // Çevrilen metni sourceText alanına yaz
+                        toggleElementsVisibility();
                         translate();
                     } else {
                         alert("Çeviri yapılamadı.");
