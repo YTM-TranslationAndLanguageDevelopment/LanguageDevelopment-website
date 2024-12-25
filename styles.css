@@ -47,7 +47,7 @@ body {
 
 .popup-content button {
     padding: 10px 20px;
-    background-color: #4CAF50;
+    background-color: #2575cb;
     font-size: medium;
     color: white;
     border: none;
@@ -56,8 +56,20 @@ body {
 }
 
 .popup-content button:hover {
-    background-color: #3f9744;
+    background-color: #5c59b2;
     color: #f1eaea;
+}
+
+#signupFromLogin{
+    color: #2d2a75;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+#signupFromLogin:hover  {
+    color: #10105f;
+    text-decoration: underline;
 }
 
 /* profil butonu*/
@@ -157,7 +169,8 @@ textarea:focus {
 .icons-container {
     display: flex;
     justify-content: center;
-    gap: 30px;
+    margin-left: 25px;
+    gap: 33px;
 }
 .icons-container-area{
     display: flex;
@@ -209,20 +222,26 @@ header button {
     margin-left: 20px;
     padding: 10px 15px;
     background-color: white;
-    color: #3b9b3e;
+    color: #000000;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 16px;
 }
 
 header button:hover {
-    background-color: #f3f4f6;
-    color: #168b2b;
+    background-color: #e0eaff;
+    color: #000000;
 }
 
 .header-container {
     margin-right: 50px;
+}
+
+.logo{
+    margin-right: 50px;
+    width: 40px;
+    height: 40px;
 }
 
 
@@ -269,11 +288,26 @@ header button:hover {
 .politikalar a{
     font-size: 20px;
 }
+.politikadiv{
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    border-color: #ffffff;
+}
 
-.politikalar a:hover {
+.politikadiv img{
+    margin-left: 20px;
+}
+
+.politikadiv:hover {
     background-color: #2b2bbb;
 }
 
+.politikalar img{
+    width: 25px;
+    height: 25px;
+}
 
 
 /* Menü Açma Butonu */
@@ -283,7 +317,7 @@ header button:hover {
     left: 35px;
     font-size: 24px;
     cursor: pointer;
-    color: #3a3636;
+    color: #ffffff;
     z-index: 1100;
     display: block;
     opacity: 1; /* Başlangıçta tamamen görünür */
