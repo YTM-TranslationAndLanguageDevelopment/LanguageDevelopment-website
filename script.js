@@ -67,7 +67,7 @@ function translate() {
     });
 }
 
-function translateText(sourceText, sourceLang, targetLang, callback) {
+function translateText(sourceText, sourceLang, targetLang, callback) { //Çeviri sonucunu döndürür
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(sourceText)}`;
 
     $.getJSON(url, function (data) {
@@ -94,7 +94,6 @@ $('#swapLanguages').click(function () {
 
         // Çeviriyi yeniden başlat
         $('#sourceText').val($('#resultText').val());
-        console.log($('#sourceLanguage').val()); // Yeni source dilini yazdır
 
         translate(); // Çeviriyi yeniden başlat
     }
@@ -112,15 +111,6 @@ $('.delete-icon').click(function () {
     resetStarIcon();
 });
 
-function closeRecognizing() {
-    if (recognizing) {
-        recognition.stop(); // Ses tanımayı durdur
-        recognizing = false;
-        toggleMicrophoneState(false); // Mikrofonu sıfırla
-    }
-}
-
-
 // Ses tanıma API'sini başlat
 let recognition;
 let recognizing = false;
@@ -133,7 +123,7 @@ if ('webkitSpeechRecognition' in window) {
 
     recognition.onstart = () => {
         $('#sourceText').val("");
-        console.log($('#sourceLanguage').val() + " " + recognition.lang);
+        $('#resultText').val("");
         console.log('Ses tanıma başladı.');
     };
 
@@ -193,12 +183,11 @@ $('#microfon').on('click', () => {
 // Dil değişikliği işlevi
 function handleLanguageChange() {
     translate();
-    console.log('dil değişti');
     closeRecognizing();
 
     const selectedLanguage = document.getElementById("sourceLanguage").value;
     recognition.lang = selectedLanguage; // Yeni dili ayarla
-    console.log(`Dil ayarlandı: ${selectedLanguage}`);
+    console.log('dil değişti: ${selectedLanguage}');
 }
 
 function closeRecognizing() {
@@ -212,7 +201,6 @@ function closeRecognizing() {
 function toggleMicrophoneState(isListening) {
     const microphoneIcon = $('#microfon'); // Mikrofon simgesini doğrudan id ile seç
     const random = $('#random');
-    const deleteIcon = $('#delete-icon');
     const sourceText = $('#sourceText').val().trim();
 
     if (isListening) {
@@ -314,6 +302,9 @@ document.getElementById("random").addEventListener("click", () => {
 });
 
 document.getElementById("dictionary").addEventListener("click", () => {
+    if(toggleDictionaryTextVisibility()){ //dictionaryText görünür, kelime türü belli ise
+        return;
+    }
     const sourceTextarea = document.getElementById("sourceText");
     const dictionaryText = document.getElementById("dictionaryText"); // Sonuçları yazdıracağımız <p> elemanı
     const sourceLang = document.getElementById("sourceLanguage").value; // Girilen metnin dili
@@ -333,6 +324,7 @@ document.getElementById("dictionary").addEventListener("click", () => {
             .then((response) => response.json())
             .then((data) => {
                 if (data && data.type) {
+                    console.log(data.type);
                     // Kelime türünü İngilizce'den Türkçe'ye çevir
                     translateText(data.type, "en", "tr", (translatedType) => {
                         if (translatedType) {
@@ -364,14 +356,17 @@ document.getElementById("dictionary").addEventListener("click", () => {
     }
 });
 
+
 // DictionaryText görünürlüğünü kontrol eden yardımcı fonksiyon
 function toggleDictionaryTextVisibility() {
     const dictionaryText = document.getElementById("dictionaryText");
 
     if (dictionaryText.style.display === "none" || dictionaryText.style.display === "") {
         dictionaryText.style.display = "block"; // Görünürlüğü aç
+        return false;
     } else {
         dictionaryText.style.display = "none"; // Görünürlüğü kapat
+        return true;
     }
 }
 
@@ -381,14 +376,9 @@ function hideDictionaryText() {
     dictionaryText.style.display = "none"; // Görünürlüğü kapat
 }
 
-// Dictionary ögesine tıklama olayını kontrol et
-document.getElementById("dictionary").addEventListener("click", (event) => {
-    event.stopPropagation(); // Tıklama olayını yukarıya iletme
-    toggleDictionaryTextVisibility();
-});
 
 // Belirtilen ögelere tıklanınca dictionaryText görünürlüğünü kapat
-["microfon", "random", "delete-icon"].forEach((id) => {
+["microfon", "delete-icon"].forEach((id) => {
     const element = document.getElementById(id);
 
     if (element) {
@@ -445,7 +435,7 @@ function toggleElementsVisibility() {
     }
 }
 
-let debounceTimeout;
+let debounceTimeout;  //  Kaynak metin değiştiğinde
 document.getElementById("sourceText").addEventListener("input", () => {
     hideDictionaryText();
     toggleElementsVisibility();
@@ -454,7 +444,7 @@ document.getElementById("sourceText").addEventListener("input", () => {
     clearTimeout(debounceTimeout); // Önceki timeout'u temizle
     debounceTimeout = setTimeout(() => {
         const sourceTextValue = document.getElementById("sourceText").value;
-        if (sourceTextValue === "") {
+        if (sourceTextValue === "") {console.log('aa');
             document.getElementById("resultText").value = ""; // value ile içeriği temizle
         } else {
             translate(); // Çeviri işlemini sadece bir süre sonra yap

@@ -232,7 +232,7 @@ app.get('/wordnik-dictionary', async (req, res) => {
     try {
         const response = await axios.get(url);
         if (response.data && response.data.length > 0) {
-            const wordType = response.data[0].partOfSpeech || "Türü bulunamadı"; // Kelimenin türünü al
+            const wordType = response.data[0].partOfSpeech || "Type not found"; // Kelimenin türünü al
             res.status(200).json({ type: wordType });
         } else {
             res.status(404).json({ error: "Kelime bulunamadı." });
