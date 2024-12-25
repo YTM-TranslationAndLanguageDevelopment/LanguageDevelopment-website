@@ -32,10 +32,10 @@ function openMenu() {
     document.getElementById("sideMenu").style.width = "250px";
     document.getElementById("sideMenu").style.display="block";
     document.querySelector(".menu-toggle").style.display = "none"; // Açma butonunu gizle
-    document.querySelector(".politikalar").style.display = "grid"; 
-    document.querySelector(".social-icons").style.display = "grid";
     const menuToggle = document.querySelector(".menu-toggle");
     menuToggle.classList.add("hidden"); // Açma butonunu gizle
+    document.querySelector(".politikalar").style.display = "grid"; 
+    document.querySelector(".social-icons").style.display = "grid";
 }
 //yan menüyü kapatma
 function closeMenu() {
@@ -46,7 +46,7 @@ function closeMenu() {
     setTimeout(() => {
         const menuToggle = document.querySelector(".menu-toggle");
         menuToggle.classList.remove("hidden"); // Açma butonunu yavaşça göster
-    }, 600);
+    }, 300);
 }
 function translate() {
     const sourceText = $('#sourceText').val();
@@ -132,17 +132,20 @@ if ('webkitSpeechRecognition' in window) {
     recognition.lang = document.getElementById("sourceLanguage").value; // Varsayılan dil
 
     recognition.onstart = () => {
+        $('#sourceText').val("");
         console.log($('#sourceLanguage').val() + " " + recognition.lang);
         console.log('Ses tanıma başladı.');
     };
 
     recognition.onerror = (event) => {
+        toggleMicrophoneState(false);
         console.error('Hata oluştu:', event.error);
     };
 
     recognition.onend = () => {
         console.log('Ses tanıma durduruldu.');
         recognizing = false;
+        toggleMicrophoneState(false);
     };
 
     recognition.onresult = (event) => {
@@ -151,9 +154,13 @@ if ('webkitSpeechRecognition' in window) {
 
         for (let i = event.resultIndex; i < event.results.length; ++i) {
             if (event.results[i].isFinal) {
-                finalText += event.results[i][0].transcript+'.'; // Tamamlanmış metni ekle
+                let text = event.results[i][0].transcript.trim(); // Metni alın
+                text = text.charAt(0).toUpperCase() + text.slice(1); // İlk harfi büyük yap
+                finalText += text + '. '; // Nokta ekle
             } else {
-                interimTranscript += event.results[i][0].transcript+'.'; // Geçici metni al
+                let text = event.results[i][0].transcript.trim(); // Geçici metni alın
+                text = text.charAt(0).toUpperCase() + text.slice(1); // İlk harfi büyük yap
+                interimTranscript += text + '. '; // Nokta ekle
             }
         }
 
@@ -165,6 +172,7 @@ if ('webkitSpeechRecognition' in window) {
         translate();
     };
 } else {
+    toggleMicrophoneState(false);
     alert('Tarayıcınız ses tanımayı desteklemiyor.');
 }
 
@@ -204,23 +212,24 @@ function closeRecognizing() {
 function toggleMicrophoneState(isListening) {
     const microphoneIcon = $('#microfon'); // Mikrofon simgesini doğrudan id ile seç
     const random = $('#random');
+    const deleteIcon = $('#delete-icon');
     const sourceText = $('#sourceText').val().trim();
 
     if (isListening) {
         microphoneIcon.attr('src', 'images/stopmicrofon.png'); // Mikrofon simgesini "dinleme" durumuna değiştir
-        $('.star-icon, .icon-row2').hide(); // Yıldız ve icon-row2 sınıflarını gizle
+        $('.star-icon, .icon-row2, #delete-icon').hide(); // Yıldız, icon-row2 ve deleteIcon'u gizle
         $('.icon-row1').children().not(microphoneIcon).hide(); // icon-row1 içindeki mikrofon dışında kalanları gizle
     } else {
         microphoneIcon.attr('src', 'images/microfon.png'); // Mikrofon simgesini eski haline döndür
         
         if (sourceText) {
             // Eğer sourceText içinde metin varsa
-            $('.star-icon, .icon-row2').show(); // Yıldız ve icon-row2 sınıflarını göster
+            $('.star-icon, .icon-row2, #delete-icon').show(); // Yıldız, icon-row2 ve deleteIcon'u göster
             $('.icon-row1').children().not(random).show(); // random hariç diğer ögeleri göster
             random.hide(); // Random ögesini gizle
         } else {
             // Eğer sourceText içinde metin yoksa
-            $('.star-icon, .icon-row2').hide(); // Yıldız ve icon-row2 sınıflarını gizle
+            $('.star-icon, .icon-row2, #delete-icon').hide(); // Yıldız, icon-row2 ve deleteIcon'u gizle
             $('.icon-row1').children().not(microphoneIcon).hide(); // Tüm icon-row1 ögelerini gizle
             random.show(); // Random ögesini göster
         }
@@ -440,6 +449,7 @@ let debounceTimeout;
 document.getElementById("sourceText").addEventListener("input", () => {
     hideDictionaryText();
     toggleElementsVisibility();
+    closeRecognizing();
 
     clearTimeout(debounceTimeout); // Önceki timeout'u temizle
     debounceTimeout = setTimeout(() => {

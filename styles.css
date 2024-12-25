@@ -278,22 +278,33 @@ header button:hover {
     right: 25px;
     font-size: 50px;
     color: white;
+    transition: transform 0.2s;
+}
+.side-menu .closebtn:hover{
+    transform: scale(1.1);
 }
 
 .politikalar{
     display: grid;
-    margin-top: 30px;
+    margin-top: 45px;
     
 }
 .politikalar a{
     font-size: 20px;
 }
+
+.politikalar img{
+    width: 25px;
+    height: 25px;
+}
+
 .politikadiv{
     display: flex;
     align-items: center;
     padding: 5px;
     border-bottom: 1px solid #ccc;
     border-color: #ffffff;
+    cursor: pointer;
 }
 
 .politikadiv img{
@@ -304,10 +315,6 @@ header button:hover {
     background-color: #2b2bbb;
 }
 
-.politikalar img{
-    width: 25px;
-    height: 25px;
-}
 
 
 /* Menü Açma Butonu */
@@ -330,7 +337,7 @@ header button:hover {
 
 /* Sosyal Medya Alanı */
 .social-icons {
-    margin-top: 340px;
+    margin-top: 325px;
     margin-right: 20px;
     display: grid;
     grid-template-columns: repeat(3, auto); /* 3 sütun */
@@ -342,10 +349,11 @@ header button:hover {
     width: 38px;
     height: 38px;
     cursor: pointer;
+    transition: transform 0.2s,
 }
 
 .social-icons img:hover {
-    transform: scale(1.1);
+    transform: translateY(-5px);
 }
 .translation-areas {
     display: flex;
@@ -432,12 +440,20 @@ header button:hover {
     margin-right: auto; /* İlk resim sola */
 }
 
-.delete-icon, .star-icon {
+.delete-icon {
     position: absolute;
     top: 10px;
     right: 10px;
     width: 26px;
     height: 26px;
+    cursor: pointer;
+}
+.star-icon{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
     cursor: pointer;
 }
 
