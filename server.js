@@ -219,6 +219,29 @@ app.get('/random-word', async (req, res) => {
     }
 });
 
+app.get('/wordnik-dictionary', async (req, res) => {
+    const { word } = req.query;
+
+    if (!word) {
+        return res.status(400).send({ error: "Kelime gerekli." });
+    }
+
+    const apiKey = process.env.WORDNIK_API_KEY; // .env dosyasından API anahtarını alın
+    const url = `https://api.wordnik.com/v4/word.json/${word}/definitions?limit=1&includeRelated=false&useCanonical=false&includeTags=false&api_key=${apiKey}`;
+
+    try {
+        const response = await axios.get(url);
+        if (response.data && response.data.length > 0) {
+            const wordType = response.data[0].partOfSpeech || "Türü bulunamadı"; // Kelimenin türünü al
+            res.status(200).json({ type: wordType });
+        } else {
+            res.status(404).json({ error: "Kelime bulunamadı." });
+        }
+    } catch (error) {
+        console.error("Wordnik API hatası:", error.message);
+        res.status(500).json({ error: "Wordnik API çağrısında hata oluştu." });
+    }
+});
 
 
 // Sunucuyu başlat

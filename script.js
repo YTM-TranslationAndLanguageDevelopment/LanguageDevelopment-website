@@ -290,6 +290,57 @@ document.getElementById("random").addEventListener("click", () => {
         });
 });
 
+document.getElementById("dictionary").addEventListener("click", () => {
+    const sourceTextarea = document.getElementById("sourceText");
+    const dictionaryText = document.getElementById("dictionaryText"); // Sonuçları yazdıracağımız <p> elemanı
+    const sourceLang = document.getElementById("sourceLanguage").value; // Girilen metnin dili
+
+    let word = sourceTextarea.value.trim().toLowerCase(); // Metni trimle ve küçük harfe dönüştür
+    dictionaryText.textContent = ""; // Önceki sonuçları temizle
+
+    // Kelime geçerli mi kontrol et (boşluk, enter, noktalama işaretleri ve sayılar olmamalı)
+    if (/[\s\d.,;:'"!?(){}[\]-]/.test(word)) {
+        alert("Lütfen geçerli bir kelime girin.");
+        return;
+    }
+
+    // İngilizce değilse önce İngilizceye çevir
+    const processWord = (translatedWord) => {
+        fetch(`/wordnik-dictionary?word=${encodeURIComponent(translatedWord)}`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data && data.type) {
+                    // Kelime türünü İngilizce'den Türkçe'ye çevir
+                    translateText(data.type, "en", "tr", (translatedType) => {
+                        if (translatedType) {
+                            dictionaryText.textContent = `Kelimenin türü: ${translatedType}`;
+                        } else {
+                            dictionaryText.textContent = "Tür bilgisi alınamadı.";
+                        }
+                    });
+                } else {
+                    dictionaryText.textContent = "Kelimenin türü alınamadı.";
+                }
+            })
+            .catch((error) => {
+                console.error("Wordnik API hatası:", error);
+                dictionaryText.textContent = "Kelimenin türü alınamadı.";
+            });
+    };
+
+    if (sourceLang !== "en") {
+        translateText(word, sourceLang, "en", (translatedText) => {
+            if (translatedText) {
+                processWord(translatedText); // Çeviri başarılıysa türünü sorgula
+            } else {
+                alert("Kelimenin çevirisi yapılamadı.");
+            }
+        });
+    } else {
+        processWord(word); // İngilizce ise direkt türünü sorgula
+    }
+});
+
 // Yıldız simgesini değiştirme fonksiyonu
 function resetStarIcon() {
     const starIcon = $('.star-icon');
