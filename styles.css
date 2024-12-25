@@ -347,9 +347,14 @@ header button:hover {
     
 }
 
+.volume, .star-icon, #dictionary, #copy, #derecele, #share {
+    display: none; /* Varsayılan olarak gizle */
+}
+
 .icon-row1 {
     display: flex;
-    justify-content: center;
+    align-items: center; 
+    justify-content: flex-start; 
     gap: 10px;
     margin-top: 10px;
 }
@@ -361,12 +366,18 @@ header button:hover {
     transition: transform 0.2s;
 }
 
-.icon-row1 img:hover {
-    transform: scale(1.1);
+.icon-row1 p {
+    margin: 0;
+    margin-left: auto; /* En sağa hizala */
+    font-size: 17px; 
+    white-space: nowrap; /* Metni tek satırda tut */
+    overflow: hidden; /* Taşan metni gizle */
+    text-overflow: ellipsis; /* Uzun metni "..." olarak göster */
 }
+
+
 .icon-row2 {
     display: flex;
-    justify-content: center;
     gap: 10px;
     margin-top: 10px;
 }
@@ -382,6 +393,11 @@ header button:hover {
     transform: scale(1.1);
 }
 
+
+.icon-row2 img:first-child {
+    margin-right: auto; /* İlk resim sola */
+}
+
 .delete-icon, .star-icon {
     position: absolute;
     top: 10px;
@@ -391,13 +407,6 @@ header button:hover {
     cursor: pointer;
 }
 
-/* sourceContainer içindeki ögeler */
-#sourceContainer .icon-row1 {
-    display: flex;
-    justify-content: flex-start; /* Sola hizala */
-    gap: 10px;
-    margin-top: 10px;
-}
 
 /* resultContainer içindeki ögeler */
 #resultContainer{
@@ -408,25 +417,9 @@ header button:hover {
     background-color: #F8F9FA;
 }
 
-#resultContainer .icon-row2 {
-    display: flex;
-    justify-content: space-between; /* İlk resmi sola, diğerlerini sağa hizalamak için */
-    gap: 10px;
-    margin-top: 10px;
+#dictionaryText{
+    display: none;
 }
-
-#resultContainer .icon-row2 img {
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-#resultContainer .icon-row2 img:first-child {
-    margin-right: auto; /* İlk resim sola */
-}
-
-
 
 /* Global img hover efektleri */
 img:hover {

@@ -107,6 +107,7 @@ $('.delete-icon').click(function () {
     $('#sourceText').val(''); // Kaynak metni temizle
     $('#resultText').val(''); // Çeviri metnini temizle
     adjustHeight();
+    toggleElementsVisibility();
     closeRecognizing();
     resetStarIcon();
 });
@@ -202,6 +203,7 @@ function closeRecognizing() {
 
 function toggleMicrophoneState(isListening) {
     const microphoneIcon = $('#microfon'); // Mikrofon simgesini doğrudan id ile seç
+    const random = $('#random');
 
     if (isListening) {
         microphoneIcon.attr('src', 'images/stopmicrofon.png'); // Mikrofon simgesini "dinleme" durumuna değiştir
@@ -210,7 +212,7 @@ function toggleMicrophoneState(isListening) {
     } else {
         microphoneIcon.attr('src', 'images/microfon.png'); // Mikrofon simgesini eski haline döndür
         $('.star-icon, .icon-row2').show(); // Yıldız ve icon-row2 sınıflarını göster
-        $('.icon-row1').children().show(); // icon-row1 içindeki öğeleri geri getir
+        $('.icon-row1').children().not(random).show(); // icon-row1 içindeki öğeleri geri getir
     }
 }
 
@@ -402,11 +404,29 @@ $('#sourceLanguage, #targetLanguage').change(function () {
     closeRecognizing(); // Ses tanımayı durdur
     toggleMicrophoneState(false);
 });
+function toggleElementsVisibility() {
+    const sourceText = document.getElementById("sourceText").value.trim(); // sourceText içindeki metni al
+    const elementsToShow = document.querySelectorAll(".volume, .star-icon, #dictionary, #copy, #derecele, #share");
+    const randomElement = document.getElementById("random");
 
-
+    if (sourceText) {
+        // Metin varsa belirli ögeleri göster
+        elementsToShow.forEach((element) => {
+            element.style.display = "block"; // Görünür yap
+        });
+        randomElement.style.display = "none"; // Rastgele kelime ögesini gizle
+    } else {
+        // Metin yoksa tam tersi
+        elementsToShow.forEach((element) => {
+            element.style.display = "none"; // Gizle
+        });
+        randomElement.style.display = "block"; // Rastgele kelime ögesini göster
+    }
+}
 
 document.getElementById("sourceText").addEventListener("input", () => {
     hideDictionaryText();
+    toggleElementsVisibility();
     translate();
     resetStarIcon();
 });
