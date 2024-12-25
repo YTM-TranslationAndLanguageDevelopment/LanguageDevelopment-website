@@ -204,6 +204,7 @@ function closeRecognizing() {
 function toggleMicrophoneState(isListening) {
     const microphoneIcon = $('#microfon'); // Mikrofon simgesini doğrudan id ile seç
     const random = $('#random');
+    const sourceText = $('#sourceText').val().trim();
 
     if (isListening) {
         microphoneIcon.attr('src', 'images/stopmicrofon.png'); // Mikrofon simgesini "dinleme" durumuna değiştir
@@ -211,8 +212,18 @@ function toggleMicrophoneState(isListening) {
         $('.icon-row1').children().not(microphoneIcon).hide(); // icon-row1 içindeki mikrofon dışında kalanları gizle
     } else {
         microphoneIcon.attr('src', 'images/microfon.png'); // Mikrofon simgesini eski haline döndür
-        $('.star-icon, .icon-row2').show(); // Yıldız ve icon-row2 sınıflarını göster
-        $('.icon-row1').children().not(random).show(); // icon-row1 içindeki öğeleri geri getir
+        
+        if (sourceText) {
+            // Eğer sourceText içinde metin varsa
+            $('.star-icon, .icon-row2').show(); // Yıldız ve icon-row2 sınıflarını göster
+            $('.icon-row1').children().not(random).show(); // random hariç diğer ögeleri göster
+            random.hide(); // Random ögesini gizle
+        } else {
+            // Eğer sourceText içinde metin yoksa
+            $('.star-icon, .icon-row2').hide(); // Yıldız ve icon-row2 sınıflarını gizle
+            $('.icon-row1').children().not(microphoneIcon).hide(); // Tüm icon-row1 ögelerini gizle
+            random.show(); // Random ögesini göster
+        }
     }
 }
 
@@ -317,7 +328,7 @@ document.getElementById("dictionary").addEventListener("click", () => {
                         if (translatedType) {
                             dictionaryText.textContent = `Kelimenin türü: ${translatedType}`;
                         } else {
-                            dictionaryText.textContent = "Tür bilgisi alınamadı.";
+                            dictionaryText.textContent = "Kelimenin türü alınamadı.";
                         }
                     });
                 } else {
@@ -406,7 +417,7 @@ $('#sourceLanguage, #targetLanguage').change(function () {
 });
 function toggleElementsVisibility() {
     const sourceText = document.getElementById("sourceText").value.trim(); // sourceText içindeki metni al
-    const elementsToShow = document.querySelectorAll(".volume, .star-icon, #dictionary, #copy, #derecele, #share");
+    const elementsToShow = document.querySelectorAll(".volume, .star-icon, #dictionary, #copy, #derecele, #share, #delete-icon");
     const randomElement = document.getElementById("random");
 
     if (sourceText) {
@@ -424,10 +435,20 @@ function toggleElementsVisibility() {
     }
 }
 
+let debounceTimeout;
 document.getElementById("sourceText").addEventListener("input", () => {
     hideDictionaryText();
     toggleElementsVisibility();
-    translate();
+
+    clearTimeout(debounceTimeout); // Önceki timeout'u temizle
+    debounceTimeout = setTimeout(() => {
+        const sourceTextValue = document.getElementById("sourceText").value;
+        if (sourceTextValue === "") {
+            document.getElementById("resultText").value = ""; // value ile içeriği temizle
+        } else {
+            translate(); // Çeviri işlemini sadece bir süre sonra yap
+        }
+    }, 150); // 150ms sonra işlemi yap
     resetStarIcon();
 });
 

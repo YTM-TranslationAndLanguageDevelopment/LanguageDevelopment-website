@@ -347,7 +347,7 @@ header button:hover {
     
 }
 
-.volume, .star-icon, #dictionary, #copy, #derecele, #share {
+.volume, .star-icon, #dictionary, #copy, #derecele, #share ,#delete-icon{
     display: none; /* Varsayılan olarak gizle */
 }
 
