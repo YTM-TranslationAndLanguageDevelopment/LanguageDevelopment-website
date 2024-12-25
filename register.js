@@ -66,7 +66,6 @@ function submitRegistration() {
                 localStorage.setItem('authority', 'user');
                 islogin=email;
 
-                alert(data.message);
                 closePopup("kayitPopup");
                 setVisibility(true);
             } else {
