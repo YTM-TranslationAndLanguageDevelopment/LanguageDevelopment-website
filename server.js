@@ -3,12 +3,12 @@ const { MongoClient } = require("mongodb");
 const bcrypt = require('bcrypt');
 const cors = require("cors");
 const axios = require('axios');
-
 const express = require("express");
 const path = require("path");
-
 const app = express();
 const port = 3000;
+app.use(cors());
+app.use(bodyParser.json());
 
 // Statik dosyalar için dizin ayarla
 app.use(express.static(path.join(__dirname)));
@@ -18,16 +18,13 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
 
+
 // MongoDB bağlantı bilgileri
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 const dbName = "translate";
 
-
-app.use(cors());
-app.use(bodyParser.json());
-
-// Kullanıcı ismini getirme
+// Kullanıcı ismini getirme - deneme için saved.html ve admin.html de kullanıldı sonradan silinebilir
 app.get("/user", async (req, res) => {
     const { email } = req.query;
 
@@ -38,7 +35,7 @@ app.get("/user", async (req, res) => {
 
         const user = await collection.findOne({ email });
         if (user) {
-            res.status(200).send({ name: user.name, email: user.email });
+            res.status(200).send({ username: user.username, email: user.email });
         } else {
             res.status(404).send({ message: "Kullanıcı bulunamadı." });
         }
@@ -48,6 +45,7 @@ app.get("/user", async (req, res) => {
     }
 });
 
+// Kullanıcı ismini ve epostasını getirme - profil sayfası için ekstra veriler isteyip geliştirilecek
 app.get('/get-user-info', async (req, res) => {
     const { email } = req.query;
 
@@ -101,9 +99,11 @@ app.post('/login', async (req, res) => {
 
         if (authority === 'admin') {
             return res.json({ success: true, redirect: 'admin.html', message: 'Admin olarak giriş yapıldı.' });
-        } else if (authority === 'user') {
+        } 
+        else if (authority === 'user') {
             return res.json({ success: true, redirect: null, message: 'Giriş başarılı!' });
-        } else {
+        }
+        else {
             return res.json({ success: false, message: 'Yetkisiz giriş.' });
         }
 

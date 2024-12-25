@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('email'),
         document.getElementById('password')
     ];
-    const submitButton = document.getElementById('submitLoginButton');
 
     // Enter tuşu ile alanlar arasında geçiş ve giriş
     inputs.forEach((input, index) => {
@@ -40,13 +39,22 @@ function submitLogin() {
         .then((response) => response.json())
         .then((data) => {
             if (data.success) {
+                
+                // Kullanıcı e-postasını localStorage'a kaydet
+                localStorage.setItem("userEmail", email);
+                
                 if (data.redirect === 'admin.html') {
-                    window.location.href = data.redirect; // Admin sayfasına yönlendir
+                    localStorage.setItem('authority', 'admin');
+                    window.open(data.redirect, '_blank'); // Admin sayfasına yönlendir
+                    closePopup("girisPopup"); // Giriş popup'ını kapat
+                    setVisibility(true);
                 } else {
-                    islogin=email;
+                    localStorage.setItem('authority', 'user');
                     closePopup("girisPopup"); // Giriş popup'ını kapat
                     setVisibility(true);
                 }
+                localStorage.setItem('userEmail', email);
+                islogin=email;
             } else {
                 alert(data.message); // Kullanıcı bulunamadı veya şifre yanlış
             }

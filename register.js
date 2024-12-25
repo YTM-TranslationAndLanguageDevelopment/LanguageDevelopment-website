@@ -63,6 +63,7 @@ function submitRegistration() {
             if (data.message === "Kayıt başarılı!") {
                 // Kullanıcı e-postasını localStorage'a kaydet
                 localStorage.setItem("userEmail", email);
+                localStorage.setItem('authority', 'user');
                 islogin=email;
 
                 alert(data.message);

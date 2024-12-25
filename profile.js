@@ -5,7 +5,6 @@ function profilbilgileriayarla() {
             .then(response => response.json())
             .then(data => {
                 if (data && data.username && data.email) {
-                    console.log(data); // Gelen kullanıcı bilgilerini konsola yazdır
                     document.getElementById("profilUserName").textContent = `Kullanıcı adı: ${data.username}`;
                     document.getElementById("profilEmail").textContent = `Eposta: ${data.email}`;
                 } else {

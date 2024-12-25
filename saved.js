@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await response.json();
 
             if (response.ok) {
-                userNameLabel.textContent = `İsim: ${data.name}`;
+                userNameLabel.textContent = `İsim: ${data.username}`;
             } else {
                 console.error("Hata Mesajı:", data.message);
                 userNameLabel.textContent = "İsim: Bulunamadı";

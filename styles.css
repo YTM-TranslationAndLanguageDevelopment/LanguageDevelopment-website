@@ -72,27 +72,27 @@ body {
 }
 
 .input-group {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    margin-bottom: 20px;
-    width: 80%;
- }
- 
- .input-group label {
-    align-self: flex-start;
-    margin-bottom: 5px;
-    color: #555;
- }
- 
- .input-group input {
- width: 100%;
- padding: 10px;
- border: 1px solid #ccc;
- border-radius: 5px;
- }
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+position: relative;
+margin-bottom: 20px;
+width: 80%;
+}
+
+.input-group label {
+align-self: flex-start;
+margin-bottom: 5px;
+color: #555;
+}
+
+.input-group input {
+width: 100%;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
 
 .close {
     position: absolute;
@@ -372,7 +372,7 @@ header button:hover {
     cursor: pointer;
 }
 
-/* Sadece sourceContainer içindeki icon-row1 için */
+/* sourceContainer içindeki ögeler */
 #sourceContainer .icon-row1 {
     display: flex;
     justify-content: flex-start; /* Sola hizala */
@@ -380,6 +380,7 @@ header button:hover {
     margin-top: 10px;
 }
 
+/* resultContainer içindeki ögeler */
 #resultContainer{
     background-color: #F8F9FA;
 }
@@ -388,7 +389,6 @@ header button:hover {
     background-color: #F8F9FA;
 }
 
-/* Sadece resultContainer içindeki icon-row2 için */
 #resultContainer .icon-row2 {
     display: flex;
     justify-content: space-between; /* İlk resmi sola, diğerlerini sağa hizalamak için */

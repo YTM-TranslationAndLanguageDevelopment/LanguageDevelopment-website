@@ -1,5 +1,10 @@
 let islogin = ""; //giriş-kayıt yaparsa epostası tutulacak
 
+document.addEventListener("DOMContentLoaded", () => { //DOMContentLoaded
+    // localStorage'daki tüm bilgileri belli bir zamandan sonra temizle diye değiştirilecek
+    localStorage.clear();
+});
+
 function adjustHeight() {
     const sourceTextarea = document.getElementById('sourceText');
     const resultTextarea = document.getElementById('resultText');
@@ -8,13 +13,8 @@ function adjustHeight() {
     sourceTextarea.style.height = 'auto';
     resultTextarea.style.height = 'auto';
 
-    // Her iki metin alanı için gereken maksimum yüksekliği hesapla
     let maxHeight = Math.max(sourceTextarea.scrollHeight, resultTextarea.scrollHeight);
-
-    // Minimum yüksekliği kontrol et
-    maxHeight = Math.max(maxHeight, 200); // Yükseklik 200px'den küçükse, 200px yap
-
-    // Her iki textarea'nın yüksekliğini eşit yap
+    maxHeight = Math.max(maxHeight, 200);
     sourceTextarea.style.height = resultTextarea.style.height = maxHeight + 'px';
 
     // Sayfanın en altına kaydır
@@ -23,21 +23,11 @@ function adjustHeight() {
     // Sayfa yüklendiğinde mevcut içeriğe göre yüksekliği ayarla
     document.addEventListener('DOMContentLoaded', adjustHeight);    
 }
-
-// sourceText için metin girişi olduğunda yüksekliği ayarla
+// metin girişi olduğunda yüksekliği ayarla
 document.getElementById('sourceText').addEventListener('input', adjustHeight);
-
-// resultText için metin girişi olduğunda yüksekliği ayarla
 document.getElementById('resultText').addEventListener('input', adjustHeight);
 
-
-// sourceText için metin girişi olduğunda yüksekliği ayarla
-document.getElementById('sourceText').addEventListener('input', adjustHeight);
-
-// resultText için metin girişi olduğunda yüksekliği ayarla
-document.getElementById('resultText').addEventListener('input', adjustHeight);
-
-
+//yan menüyü açma 
 function openMenu() {
     document.getElementById("sideMenu").style.width = "250px";
     document.getElementById("sideMenu").style.display="block";
@@ -47,7 +37,7 @@ function openMenu() {
     const menuToggle = document.querySelector(".menu-toggle");
     menuToggle.classList.add("hidden"); // Açma butonunu gizle
 }
-
+//yan menüyü kapatma
 function closeMenu() {
     document.getElementById("sideMenu").style.width = "0";
     document.querySelector(".menu-toggle").style.display = "block"; // Açma butonunu göster
@@ -58,11 +48,24 @@ function closeMenu() {
         menuToggle.classList.remove("hidden"); // Açma butonunu yavaşça göster
     }, 600);
 }
+function translate() {
+    const sourceText = $('#sourceText').val();
+    const sourceLang = $('#sourceLanguage').val();
+    const targetLang = $('#targetLanguage').val();
 
-document.addEventListener("DOMContentLoaded", () => {
-    // localStorage'daki tüm bilgileri temizle
-    localStorage.clear();
-});
+    if (!sourceText.trim()) {
+        $('#resultText').val('');
+        return;
+    }
+
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(sourceText)}`;
+    
+    $.getJSON(url, function (data) {
+        $('#resultText').val(data[0][0][0]);
+    }).fail(function () {
+        $('#resultText').val('Çeviri yapılamadı.');
+    });
+}
 
 // Dillerin ve metinlerin yer değiştirilmesi
 $('#swapLanguages').click(function () {
@@ -103,25 +106,6 @@ function closeRecognizing() {
         recognizing = false;
         toggleMicrophoneState(false); // Mikrofonu sıfırla
     }
-}
-
-function translate() {
-    const sourceText = $('#sourceText').val();
-    const sourceLang = $('#sourceLanguage').val();
-    const targetLang = $('#targetLanguage').val();
-
-    if (!sourceText.trim()) {
-        $('#resultText').val('');
-        return;
-    }
-
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(sourceText)}`;
-    
-    $.getJSON(url, function (data) {
-        $('#resultText').val(data[0][0][0]);
-    }).fail(function () {
-        $('#resultText').val('Çeviri yapılamadı.');
-    });
 }
 
 
@@ -205,6 +189,20 @@ function closeRecognizing() {
     }
 }
 
+function toggleMicrophoneState(isListening) {
+    const microphoneIcon = $('#microfon'); // Mikrofon simgesini doğrudan id ile seç
+
+    if (isListening) {
+        microphoneIcon.attr('src', 'images/stopmicrofon.png'); // Mikrofon simgesini "dinleme" durumuna değiştir
+        $('.star-icon, .icon-row2').hide(); // Yıldız ve icon-row2 sınıflarını gizle
+        $('.icon-row1').children().not(microphoneIcon).hide(); // icon-row1 içindeki mikrofon dışında kalanları gizle
+    } else {
+        microphoneIcon.attr('src', 'images/microfon.png'); // Mikrofon simgesini eski haline döndür
+        $('.star-icon, .icon-row2').show(); // Yıldız ve icon-row2 sınıflarını göster
+        $('.icon-row1').children().show(); // icon-row1 içindeki öğeleri geri getir
+    }
+}
+
 // Çeviri sonucunu panoya kopyala
 $('#copy').click(function () {
     const resultText = $('#resultText').val();
@@ -271,20 +269,6 @@ $('.star-icon').click(function () {
 
 
 
-function toggleMicrophoneState(isListening) {
-    const microphoneIcon = $('#microfon'); // Mikrofon simgesini doğrudan id ile seç
-
-    if (isListening) {
-        microphoneIcon.attr('src', 'images/stopmicrofon.png'); // Mikrofon simgesini "dinleme" durumuna değiştir
-        $('.star-icon, .icon-row2').hide(); // Yıldız ve icon-row2 sınıflarını gizle
-        $('.icon-row1').children().not(microphoneIcon).hide(); // icon-row1 içindeki mikrofon dışında kalanları gizle
-    } else {
-        microphoneIcon.attr('src', 'images/microfon.png'); // Mikrofon simgesini eski haline döndür
-        $('.star-icon, .icon-row2').show(); // Yıldız ve icon-row2 sınıflarını göster
-        $('.icon-row1').children().show(); // icon-row1 içindeki öğeleri geri getir
-    }
-}
-
 // ComboBox değiştirildiğinde yıldız sıfırla
 $('#sourceLanguage, #targetLanguage').change(function () {
     resetStarIcon();
@@ -317,6 +301,21 @@ function openPopup(id) {
     }
 }
 
+function closePopup(id) {
+    document.getElementById(id).style.display = 'none';
+}
+/* Kullanıcı hesaptan çıkışı */
+document.getElementById('exitProfil').addEventListener('click', (event) => {
+    event.preventDefault(); // Link varsayılan davranışını engelle
+    closePopup('profilPopup'); // Popup'ı kapat
+    setVisibility(false); // Kullanıcı çıkış yaptı, görünürlük ayarla
+    islogin=""; //Kullanıcı çıkış yaptı
+});
+
+document.getElementById("savedIcon").addEventListener("click", () => {
+    window.location.href = "saved.html";
+});
+
 /* Giriş yapılınca butonları ayarlama */
 function setVisibility(isLoggedIn) {
     const profilButton = document.getElementById('profilbutton');
@@ -336,22 +335,6 @@ function setVisibility(isLoggedIn) {
         registerButton.style.display = 'inline-block'; // Kayıt ol butonu görünür
     }
 }
-
-function closePopup(id) {
-    document.getElementById(id).style.display = 'none';
-}
-/* Kullanıcı hesaptan çıkışı */
-document.getElementById('exitProfil').addEventListener('click', (event) => {
-    event.preventDefault(); // Link varsayılan davranışını engelle
-    closePopup('profilPopup'); // Popup'ı kapat
-    setVisibility(false); // Kullanıcı çıkış yaptı, görünürlük ayarla
-    islogin=""; //Kullanıcı çıkış yaptı
-});
-
-document.getElementById("savedIcon").addEventListener("click", () => {
-    window.location.href = "saved.html";
-});
-
 
 
 
