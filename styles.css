@@ -475,3 +475,129 @@ header button:hover {
 img:hover {
     transform: scale(1.1);
 }
+
+.additional-settings .inner,.additional-settings a {
+    align-items: center;
+    color: #ffffff;
+    border-radius: 4px;
+    display: flex;
+    text-decoration: none;
+    justify-content: center;
+    transition: .2s ease-in-out
+}
+
+.additional-settings .button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0;
+    min-height: 40px;
+    min-width: 40px;
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: auto;
+    z-index: 990
+}
+
+
+.additional-settings .button .matches {
+    font-size: 14px;
+    line-height: 1.4em;
+    right: 6px;
+    text-align: left;
+    width: 300px
+}
+
+.additional-settings .matches h2 {
+    background: none;
+    color: #231f20;
+    font-size: 14pt;
+    font-weight: 700;
+    margin-left: 1%;
+    margin-right: 1%;
+    padding: .4em 0
+}
+
+.additional-settings .matches ul.matches-group {
+    display: block
+}
+
+.additional-settings .matches ul.matches-group li {
+    display: inline-block
+}
+
+.additional-settings .matches ul.matches-group.wide {
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+    padding: 0; 
+    margin: 0; 
+    list-style: none; 
+}
+
+.additional-settings .matches ul.matches-group.wide li {
+    width: 48%; 
+    margin-bottom: 1em; 
+    text-align: left; 
+    display: block; 
+}
+
+
+.additional-settings .matches {
+    display: none;
+    background: #f8f8f8;
+    border-radius: 0;
+    border-radius: 10px;
+    box-shadow: .05em .05em .2em rgba(0,0,0,.3);
+    box-sizing: border-box;
+    color: #231f20;
+    line-height: 1em;
+    padding: 1em 1.5em;
+    position: absolute;
+    top: 67px;
+    margin-right: 20px;
+    transition: z-index 0ms;
+    z-index: 996
+}
+
+.additional-settings .matches ul {
+    list-style-type: none;
+    max-height: 35em
+}
+
+.additional-settings .matches li {
+    background: 0 25% no-repeat;
+    line-height: 1.4em;
+    overflow: hidden;
+    padding: .2em 0;
+    position: relative;
+    white-space: nowrap
+}
+
+.additional-settings .matches li.selected {
+    font-weight: 700
+}
+
+.additional-settings .matches li a {
+    box-sizing: border-box;
+    color: #124673;
+    float: left;
+    margin: 0;
+    padding: 0 4px;
+    text-decoration: none;
+    width: 100%
+}
+
+@media only screen and (max-width: 840px) {
+    .additional-settings .matches li a {
+        padding-bottom:2px;
+        padding-top: 2px
+    }
+}
+
+.additional-settings .matches li a:hover {
+    text-decoration: underline
+}
