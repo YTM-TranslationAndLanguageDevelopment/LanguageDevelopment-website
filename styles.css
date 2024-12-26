@@ -552,7 +552,7 @@ header button:hover {
     padding: 1em 1.5em;
     position: absolute;
     top: 67px;
-    margin-right: 20px;
+    margin-right: 40px;
     transition: z-index 0ms;
     z-index: 996
 }

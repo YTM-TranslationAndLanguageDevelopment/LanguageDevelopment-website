@@ -55,7 +55,7 @@ function translateText(sourceText, sourceLang, targetLang, callback) { //Çeviri
     });
 }
 
-// Dillerin ve metinlerin yer değiştirilmesi
+// Dil değiştirme ikonuna tıklanıp dillerin ve metinlerin yer değiştirilmesi
 $('#swapLanguages').click(function () {
     // sourceLanguage değeri "auto" değilse işlemleri gerçekleştir
     const sourceLang = $('#sourceLanguage').val();
@@ -89,21 +89,16 @@ $('#copy').click(function () {
     }
 });
 
-// ComboBox'tan dil değişikliği işlevi
-function handleLanguageChange() {
+
+// ComboBox tıklanıp değeri değiştirildiğinde
+$('#sourceLanguage, #targetLanguage').change(function () {
+    resetStarIcon();
+    closeRecognizing(); 
     translate();
-    closeRecognizing();
 
     const selectedLanguage = document.getElementById("sourceLanguage").value;
     recognition.lang = selectedLanguage; // Yeni dili ayarla
     console.log('dil değişti: '+selectedLanguage);
-}
-
-// ComboBox değiştirildiğinde yıldız sıfırla
-$('#sourceLanguage, #targetLanguage').change(function () {
-    resetStarIcon();
-    closeRecognizing(); // Ses tanımayı durdur
-    toggleMicrophoneState(false);
 });
 
 
@@ -113,7 +108,6 @@ $('.delete-icon').click(function () {
     $('#resultText').val(''); // Çeviri metnini temizle
     adjustHeight();
     toggleElementsVisibility();
-    closeRecognizing();
     resetStarIcon();
 });
 
@@ -134,14 +128,11 @@ if ('webkitSpeechRecognition' in window) {
     };
 
     recognition.onerror = (event) => {
-        toggleMicrophoneState(false);
         console.error('Hata oluştu:', event.error);
     };
 
     recognition.onend = () => {
         console.log('Ses tanıma durduruldu.');
-        recognizing = false;
-        toggleMicrophoneState(false);
     };
 
     recognition.onresult = (event) => {
@@ -168,6 +159,7 @@ if ('webkitSpeechRecognition' in window) {
         translate();
     };
 } else {
+    recognizing = false;
     toggleMicrophoneState(false);
     alert('Tarayıcınız ses tanımayı desteklemiyor.');
 }
@@ -175,13 +167,12 @@ if ('webkitSpeechRecognition' in window) {
 // Mikrofon simgesine tıklandığında başlat/durdur
 $('#microfon').on('click', () => {
     if (recognizing) {
-        recognition.stop(); // Ses tanımayı durdur
-        recognizing = false;
-        toggleMicrophoneState(false); // Mikrofonu kapalı duruma geç
+        closeRecognizing();
     } else {
         recognition.lang = document.getElementById("sourceLanguage").value; // Dil ayarını yap
         recognition.start(); // Ses tanımayı başlat
         recognizing = true;
+        $('#sourceText').val("");
         toggleMicrophoneState(true); // Mikrofonu açık duruma geç
     }
 });
@@ -197,27 +188,15 @@ function closeRecognizing() {
 
 function toggleMicrophoneState(isListening) {
     const microphoneIcon = $('#microfon'); // Mikrofon simgesini doğrudan id ile seç
-    const random = $('#random');
-    const sourceText = $('#sourceText').val().trim();
+    const random = document.getElementById("random");
+
+    toggleElementsVisibility();
 
     if (isListening) {
         microphoneIcon.attr('src', 'images/stopmicrofon.png'); // Mikrofon simgesini "dinleme" durumuna değiştir
-        $('.star-icon, .icon-row2, #delete-icon').hide(); // Yıldız, icon-row2 ve deleteIcon'u gizle
-        $('.icon-row1').children().not(microphoneIcon).hide(); // icon-row1 içindeki mikrofon dışında kalanları gizle
+        random.style.display = "none";
     } else {
         microphoneIcon.attr('src', 'images/microfon.png'); // Mikrofon simgesini eski haline döndür
-        
-        if (sourceText) {
-            // Eğer sourceText içinde metin varsa
-            $('.star-icon, .icon-row2, #delete-icon').show(); // Yıldız, icon-row2 ve deleteIcon'u göster
-            $('.icon-row1').children().not(random).show(); // random hariç diğer ögeleri göster
-            random.hide(); // Random ögesini gizle
-        } else {
-            // Eğer sourceText içinde metin yoksa
-            $('.star-icon, .icon-row2, #delete-icon').hide(); // Yıldız, icon-row2 ve deleteIcon'u gizle
-            $('.icon-row1').children().not(microphoneIcon).hide(); // Tüm icon-row1 ögelerini gizle
-            random.show(); // Random ögesini göster
-        }
     }
 }
 
