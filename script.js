@@ -129,6 +129,7 @@ if ('webkitSpeechRecognition' in window) {
 
     recognition.onerror = (event) => {
         console.error('Hata oluştu:', event.error);
+        closeRecognizing();
     };
 
     recognition.onend = () => {
@@ -159,8 +160,7 @@ if ('webkitSpeechRecognition' in window) {
         translate();
     };
 } else {
-    recognizing = false;
-    toggleMicrophoneState(false);
+    closeRecognizing();
     alert('Tarayıcınız ses tanımayı desteklemiyor.');
 }
 
