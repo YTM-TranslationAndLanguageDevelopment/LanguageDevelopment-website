@@ -91,41 +91,39 @@ document.addEventListener("DOMContentLoaded", () => {
                         console.error(`"${text}" metni çevrilemedi:`, error);
                     });
             });
-    
-
-            // Sayfadaki tüm placeholder'ları çevir
-            const placeholderElements = document.querySelectorAll('[placeholder]');
-            placeholderElements.forEach(element => {
-                translateElementText(element, sourceLang, targetLang);
+        
+            // Sayfadaki tüm placeholder, title ve alt değerlerini çevir
+            const attributeElements = document.querySelectorAll('[placeholder], [title], [alt]');
+            attributeElements.forEach(element => {
+                translateAttributes(element, sourceLang, targetLang);
             });
         }
-    
-        function translateElementText(element, sourceLang, targetLang) {
-            const originalText = element.placeholder || element.innerHTML;
-            if (originalText) {
-                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(originalText)}`;
-    
-                fetch(url)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        const translatedText = data[0][0][0];
-                        if (element.placeholder !== undefined) {
-                            element.placeholder = translatedText;
-                        } else {
-                            element.innerHTML = translatedText;
-                        }
-                    })
-                    .catch(error => {
-                        console.error(`"${originalText}" metni çevrilemedi:`, error);
-                    });
-            }
-
-        }
+        
+        function translateAttributes(element, sourceLang, targetLang) {
+            const attributesToTranslate = ['placeholder', 'title', 'alt'];
+        
+            attributesToTranslate.forEach(attribute => {
+                const originalText = element.getAttribute(attribute);
+                if (originalText) {
+                    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(originalText)}`;
+        
+                    fetch(url)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            const translatedText = data[0][0][0];
+                            element.setAttribute(attribute, translatedText);
+                        })
+                        .catch(error => {
+                            console.error(`"${originalText}" ${attribute} çevrilemedi:`, error);
+                        });
+                }
+            });
+        }        
 
     
         const browserLang = navigator.language.split('-')[0]; // Tarayıcı dili (ör. "en-US" → "en")

@@ -55,6 +55,17 @@ body {
     cursor: pointer;
 }
 
+/* profil butonu*/
+#profilbutton{
+    display: none;
+    padding: 10px 20px;
+}
+
+/* ayarlar butonu*/
+#settingsbutton{
+    display: none;
+}
+
 .popup-content button:hover {
     background-color: #5c59b2;
     color: #f1eaea;
@@ -72,16 +83,6 @@ body {
     text-decoration: underline;
 }
 
-/* profil butonu*/
-#profilbutton{
-    display: none;
-    padding: 10px 20px;
-}
-
-/* ayarlar butonu*/
-#settingsbutton{
-    display: none;
-}
 
 .input-group {
 display: flex;
@@ -161,11 +162,6 @@ select {
 }
 
 
-textarea:focus {
-    border-color: #4CAF50;
-    outline: none;
-}
-
 .icons-container {
     display: flex;
     justify-content: center;
@@ -207,6 +203,7 @@ img:hover {
 header {
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
     background-color: #36acdb;
     color: white;
@@ -381,6 +378,7 @@ header button:hover {
     border-radius: 8px;
     resize: none;
     border: none;
+    outline: none;
     box-shadow: none;
     font-size: 24px;
     height: 200px; /* Başlangıç yüksekliği */
@@ -471,10 +469,6 @@ header button:hover {
     display: none;
 }
 
-/* Global img hover efektleri */
-img:hover {
-    transform: scale(1.1);
-}
 
 .additional-settings .inner,.additional-settings a {
     align-items: center;

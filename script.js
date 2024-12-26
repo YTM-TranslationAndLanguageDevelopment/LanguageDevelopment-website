@@ -25,27 +25,6 @@ function adjustHeight() {
 document.getElementById('sourceText').addEventListener('input', adjustHeight);
 document.getElementById('resultText').addEventListener('input', adjustHeight);
 
-//yan menüyü açma 
-function openMenu() {
-    document.getElementById("sideMenu").style.width = "250px";
-    document.getElementById("sideMenu").style.display="block";
-    document.querySelector(".menu-toggle").style.display = "none"; // Açma butonunu gizle
-    const menuToggle = document.querySelector(".menu-toggle");
-    menuToggle.classList.add("hidden"); // Açma butonunu gizle
-    document.querySelector(".politikalar").style.display = "grid"; 
-    document.querySelector(".social-icons").style.display = "grid";
-}
-//yan menüyü kapatma
-function closeMenu() {
-    document.getElementById("sideMenu").style.width = "0";
-    document.querySelector(".menu-toggle").style.display = "block"; // Açma butonunu göster
-    document.querySelector(".politikalar").style.display = "none"; //fecade tasarım
-    document.querySelector(".social-icons").style.display = "none"; //ekran kapanırken bloklaşma gösterilmiyor
-    setTimeout(() => {
-        const menuToggle = document.querySelector(".menu-toggle");
-        menuToggle.classList.remove("hidden"); // Açma butonunu yavaşça göster
-    }, 300);
-}
 function translate() {
     const sourceText = $('#sourceText').val();
     const sourceLang = $('#sourceLanguage').val();
@@ -97,6 +76,35 @@ $('#swapLanguages').click(function () {
     }
 });
 
+// Çeviri sonucunu panoya kopyala
+$('#copy').click(function () {
+    const resultText = $('#resultText').val();
+    if (resultText.trim()) {
+        navigator.clipboard.writeText(resultText).then(() => {
+        }).catch(() => {
+            alert('Panoya kopyalama başarısız oldu.');
+        });
+    } else {
+        alert('Kopyalanacak metin bulunamadı.');
+    }
+});
+
+// ComboBox'tan dil değişikliği işlevi
+function handleLanguageChange() {
+    translate();
+    closeRecognizing();
+
+    const selectedLanguage = document.getElementById("sourceLanguage").value;
+    recognition.lang = selectedLanguage; // Yeni dili ayarla
+    console.log('dil değişti: '+selectedLanguage);
+}
+
+// ComboBox değiştirildiğinde yıldız sıfırla
+$('#sourceLanguage, #targetLanguage').change(function () {
+    resetStarIcon();
+    closeRecognizing(); // Ses tanımayı durdur
+    toggleMicrophoneState(false);
+});
 
 
 // Silme butonuna tıklama işlevi
@@ -178,15 +186,6 @@ $('#microfon').on('click', () => {
     }
 });
 
-// Dil değişikliği işlevi
-function handleLanguageChange() {
-    translate();
-    closeRecognizing();
-
-    const selectedLanguage = document.getElementById("sourceLanguage").value;
-    recognition.lang = selectedLanguage; // Yeni dili ayarla
-    console.log('dil değişti: ${selectedLanguage}');
-}
 
 function closeRecognizing() {
     if (recognizing) {
@@ -222,18 +221,7 @@ function toggleMicrophoneState(isListening) {
     }
 }
 
-// Çeviri sonucunu panoya kopyala
-$('#copy').click(function () {
-    const resultText = $('#resultText').val();
-    if (resultText.trim()) {
-        navigator.clipboard.writeText(resultText).then(() => {
-        }).catch(() => {
-            alert('Panoya kopyalama başarısız oldu.');
-        });
-    } else {
-        alert('Kopyalanacak metin bulunamadı.');
-    }
-});
+
 
 // sourceText'i seslendir (Google Translate TTS)
 $('#volume1').click(function () {
@@ -387,14 +375,6 @@ function hideDictionaryText() {
 });
 
 
-// Yıldız simgesini değiştirme fonksiyonu
-function resetStarIcon() {
-    const starIcon = $('.star-icon');
-    if (starIcon.attr('src') === 'images/doluyıldız.png') {
-        starIcon.attr('src', 'images/bosyıldız.png'); // Bosyıldız.png'ye döndür
-    }
-}
-
 // Yıldız simgesi tıklama olayları
 $('.star-icon').click(function () {
     const starIcon = $(this);
@@ -405,14 +385,15 @@ $('.star-icon').click(function () {
     }
 });
 
+// Yıldız simgesini değiştirme fonksiyonu
+function resetStarIcon() {
+    const starIcon = $('.star-icon');
+    if (starIcon.attr('src') === 'images/doluyıldız.png') {
+        starIcon.attr('src', 'images/bosyıldız.png'); // Bosyıldız.png'ye döndür
+    }
+}
 
 
-// ComboBox değiştirildiğinde yıldız sıfırla
-$('#sourceLanguage, #targetLanguage').change(function () {
-    resetStarIcon();
-    closeRecognizing(); // Ses tanımayı durdur
-    toggleMicrophoneState(false);
-});
 function toggleElementsVisibility() {
     const sourceText = document.getElementById("sourceText").value.trim(); // sourceText içindeki metni al
     const elementsToShow = document.querySelectorAll(".volume, .star-icon, #dictionary, #copy, #derecele, #share, #delete-icon");
@@ -450,6 +431,29 @@ document.getElementById("sourceText").addEventListener("input", () => {
     }, 150); // 150ms sonra işlemi yap
     resetStarIcon();
 });
+
+
+//yan menüyü açma 
+function openMenu() {
+    document.getElementById("sideMenu").style.width = "250px";
+    document.getElementById("sideMenu").style.display="block";
+    document.querySelector(".menu-toggle").style.display = "none"; // Açma butonunu gizle
+    const menuToggle = document.querySelector(".menu-toggle");
+    menuToggle.classList.add("hidden"); // Açma butonunu gizle
+    document.querySelector(".politikalar").style.display = "grid"; 
+    document.querySelector(".social-icons").style.display = "grid";
+}
+//yan menüyü kapatma
+function closeMenu() {
+    document.getElementById("sideMenu").style.width = "0";
+    document.querySelector(".menu-toggle").style.display = "block"; // Açma butonunu göster
+    document.querySelector(".politikalar").style.display = "none"; //fecade tasarım
+    document.querySelector(".social-icons").style.display = "none"; //ekran kapanırken bloklaşma gösterilmiyor
+    setTimeout(() => {
+        const menuToggle = document.querySelector(".menu-toggle");
+        menuToggle.classList.remove("hidden"); // Açma butonunu yavaşça göster
+    }, 300);
+}
 
 function openPopup(id) {
     document.getElementById(id).style.display = 'flex';
