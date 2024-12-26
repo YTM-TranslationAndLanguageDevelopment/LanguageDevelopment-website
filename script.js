@@ -101,7 +101,6 @@ $('#sourceLanguage, #targetLanguage').change(function () {
     console.log('dil değişti: '+selectedLanguage);
 });
 
-
 // Silme butonuna tıklama işlevi
 $('.delete-icon').click(function () {
     $('#sourceText').val(''); // Kaynak metni temizle
@@ -110,6 +109,101 @@ $('.delete-icon').click(function () {
     toggleElementsVisibility();
     resetStarIcon();
 });
+
+
+
+const copyIcon = document.getElementById("copy");
+    const copyPanel = document.getElementById("copy-panel");
+
+    let hideTimeout;
+
+    function showPanel() {
+        const rect = copyIcon.getBoundingClientRect();
+        copyPanel.style.top = `${rect.bottom + window.scrollY + 4}px`;
+        copyPanel.style.left = `${rect.left + window.scrollX - 22}px`;
+
+        copyPanel.classList.add("visible");
+        copyPanel.classList.remove("hidden");
+
+        clearTimeout(hideTimeout);
+        hideTimeout = setTimeout(hidePanel, 10000);
+    }
+
+    function hidePanel() {
+        copyPanel.classList.remove("visible");
+        copyPanel.classList.add("hidden");
+    }
+
+    copyIcon.addEventListener("click", (event) => {
+        event.stopPropagation();
+        showPanel();
+    });
+
+    document.addEventListener("click", (event) => {
+        if (!copyPanel.contains(event.target)) {
+            hidePanel();
+        }
+    });
+
+// Yıldız simgesi tıklama olayları
+$('.star-icon').click(function () {
+    const starIcon = $(this);
+    if (starIcon.attr('src') === 'images/bosyıldız.png') {
+        starIcon.attr('src', 'images/doluyıldız.png'); // Doluyıldız.png yap
+    } else {
+        starIcon.attr('src', 'images/bosyıldız.png'); // Bosyıldız.png yap
+    }
+});
+
+
+// Yıldız simgesini değiştirme fonksiyonu
+function resetStarIcon() {
+    const starIcon = $('.star-icon');
+    if (starIcon.attr('src') === 'images/doluyıldız.png') {
+        starIcon.attr('src', 'images/bosyıldız.png'); // Bosyıldız.png'ye döndür
+    }
+}
+
+
+
+function toggleElementsVisibility() {
+    const sourceText = document.getElementById("sourceText").value.trim(); // sourceText içindeki metni al
+    const elementsToShow = document.querySelectorAll(".volume, .star-icon, #dictionary, #copy, #derecele, #share, #delete-icon");
+    const randomElement = document.getElementById("random");
+
+    if (sourceText) {
+        // Metin varsa belirli ögeleri göster
+        elementsToShow.forEach((element) => {
+            element.style.display = "block"; // Görünür yap
+        });
+        randomElement.style.display = "none"; // Rastgele kelime ögesini gizle
+    } else {
+        // Metin yoksa tam tersi
+        elementsToShow.forEach((element) => {
+            element.style.display = "none"; // Gizle
+        });
+        randomElement.style.display = "block"; // Rastgele kelime ögesini göster
+    }
+}
+
+let debounceTimeout;  //  Kaynak metin değiştiğinde
+document.getElementById("sourceText").addEventListener("input", () => {
+    hideDictionaryText();
+    toggleElementsVisibility();
+    closeRecognizing();
+
+    clearTimeout(debounceTimeout); // Önceki timeout'u temizle
+    debounceTimeout = setTimeout(() => {
+        const sourceTextValue = document.getElementById("sourceText").value;
+        if (sourceTextValue === "") {console.log('aa');
+            document.getElementById("resultText").value = ""; // value ile içeriği temizle
+        } else {
+            translate(); // Çeviri işlemini sadece bir süre sonra yap
+        }
+    }, 150); // 150ms sonra işlemi yap
+    resetStarIcon();
+});
+
 
 // Ses tanıma API'sini başlat
 let recognition;
@@ -199,7 +293,6 @@ function toggleMicrophoneState(isListening) {
         microphoneIcon.attr('src', 'images/microfon.png'); // Mikrofon simgesini eski haline döndür
     }
 }
-
 
 
 // sourceText'i seslendir (Google Translate TTS)
@@ -354,62 +447,6 @@ function hideDictionaryText() {
 });
 
 
-// Yıldız simgesi tıklama olayları
-$('.star-icon').click(function () {
-    const starIcon = $(this);
-    if (starIcon.attr('src') === 'images/bosyıldız.png') {
-        starIcon.attr('src', 'images/doluyıldız.png'); // Doluyıldız.png yap
-    } else {
-        starIcon.attr('src', 'images/bosyıldız.png'); // Bosyıldız.png yap
-    }
-});
-
-// Yıldız simgesini değiştirme fonksiyonu
-function resetStarIcon() {
-    const starIcon = $('.star-icon');
-    if (starIcon.attr('src') === 'images/doluyıldız.png') {
-        starIcon.attr('src', 'images/bosyıldız.png'); // Bosyıldız.png'ye döndür
-    }
-}
-
-
-function toggleElementsVisibility() {
-    const sourceText = document.getElementById("sourceText").value.trim(); // sourceText içindeki metni al
-    const elementsToShow = document.querySelectorAll(".volume, .star-icon, #dictionary, #copy, #derecele, #share, #delete-icon");
-    const randomElement = document.getElementById("random");
-
-    if (sourceText) {
-        // Metin varsa belirli ögeleri göster
-        elementsToShow.forEach((element) => {
-            element.style.display = "block"; // Görünür yap
-        });
-        randomElement.style.display = "none"; // Rastgele kelime ögesini gizle
-    } else {
-        // Metin yoksa tam tersi
-        elementsToShow.forEach((element) => {
-            element.style.display = "none"; // Gizle
-        });
-        randomElement.style.display = "block"; // Rastgele kelime ögesini göster
-    }
-}
-
-let debounceTimeout;  //  Kaynak metin değiştiğinde
-document.getElementById("sourceText").addEventListener("input", () => {
-    hideDictionaryText();
-    toggleElementsVisibility();
-    closeRecognizing();
-
-    clearTimeout(debounceTimeout); // Önceki timeout'u temizle
-    debounceTimeout = setTimeout(() => {
-        const sourceTextValue = document.getElementById("sourceText").value;
-        if (sourceTextValue === "") {console.log('aa');
-            document.getElementById("resultText").value = ""; // value ile içeriği temizle
-        } else {
-            translate(); // Çeviri işlemini sadece bir süre sonra yap
-        }
-    }, 150); // 150ms sonra işlemi yap
-    resetStarIcon();
-});
 
 
 //yan menüyü açma 
