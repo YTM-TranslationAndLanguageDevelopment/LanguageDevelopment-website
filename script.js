@@ -95,7 +95,7 @@ $('#copy').click(function () {
         copyPanel.classList.remove("hidden");
 
         clearTimeout(hideTimeout);
-        hideTimeout = setTimeout(hidePanel, 3000);
+        hideTimeout = setTimeout(hidePanel, 2000);
     }
 
     function hidePanel() {
@@ -516,6 +516,7 @@ document.getElementById('exitProfil').addEventListener('click', (event) => {
     event.preventDefault(); // Link varsayılan davranışını engelle
     closePopup('profilPopup'); // Popup'ı kapat
     setVisibility(false); // Kullanıcı çıkış yaptı, görünürlük ayarla
+    localStorage.clear();
 });
 
 document.getElementById("savedIcon").addEventListener("click", () => {
