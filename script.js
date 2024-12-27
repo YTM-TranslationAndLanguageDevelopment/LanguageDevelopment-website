@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => { //DOMContentLoaded
-    // localStorage'daki tüm bilgileri belli bir zamandan sonra temizle diye değiştirilecek
+    // localStorage'daki tüm bilgileri temizleme
     localStorage.clear();
 });
 
@@ -24,6 +24,7 @@ function adjustHeight() {
 // metin girişi olduğunda yüksekliği ayarla
 document.getElementById('sourceText').addEventListener('input', adjustHeight);
 document.getElementById('resultText').addEventListener('input', adjustHeight);
+
 
 function translate() {
     const sourceText = $('#sourceText').val();
@@ -55,26 +56,6 @@ function translateText(sourceText, sourceLang, targetLang, callback) { //Çeviri
     });
 }
 
-// Dil değiştirme ikonuna tıklanıp dillerin ve metinlerin yer değiştirilmesi
-$('#swapLanguages').click(function () {
-    // sourceLanguage değeri "auto" değilse işlemleri gerçekleştir
-    const sourceLang = $('#sourceLanguage').val();
-    const targetLang = $('#targetLanguage').val();
-
-    if (sourceLang !== 'auto') {
-        closeRecognizing();  // (Varsayılan olarak tanımlı bir fonksiyon olmalı)
-        resetStarIcon();     // (Varsayılan olarak tanımlı bir fonksiyon olmalı)
-
-        // Dilleri değiştir
-        $('#sourceLanguage').val(targetLang);
-        $('#targetLanguage').val(sourceLang);
-
-        // Çeviriyi yeniden başlat
-        $('#sourceText').val($('#resultText').val());
-
-        translate(); // Çeviriyi yeniden başlat
-    }
-});
 
 // Çeviri sonucunu panoya kopyala
 $('#copy').click(function () {
@@ -89,6 +70,60 @@ $('#copy').click(function () {
     }
 });
 
+    const copyIcon = document.getElementById("copy");
+    const copyPanel = document.getElementById("copy-panel");
+
+    copyIcon.addEventListener("click", (event) => {
+        event.stopPropagation();
+        showPanel();
+    });
+
+    document.addEventListener("click", (event) => {
+        if (!copyPanel.contains(event.target)) {
+            hidePanel();
+        }
+    });
+
+    let hideTimeout;
+
+    function showPanel() {
+        const rect = copyIcon.getBoundingClientRect();
+        copyPanel.style.top = `${rect.bottom + window.scrollY + 4}px`;
+        copyPanel.style.left = `${rect.left + window.scrollX - 22}px`;
+
+        copyPanel.classList.add("visible");
+        copyPanel.classList.remove("hidden");
+
+        clearTimeout(hideTimeout);
+        hideTimeout = setTimeout(hidePanel, 3000);
+    }
+
+    function hidePanel() {
+        copyPanel.classList.remove("visible");
+        copyPanel.classList.add("hidden");
+    }
+
+    
+// Dil değiştirme ikonuna tıklanıp dillerin ve metinlerin yer değiştirilmesi
+$('#swapLanguages').click(function () {
+    // sourceLanguage değeri "auto" değilse işlemleri gerçekleştir
+    const sourceLang = $('#sourceLanguage').val();
+    const targetLang = $('#targetLanguage').val();
+
+    if (sourceLang !== 'auto') {
+        closeRecognizing();  
+        resetStarIcon();     
+
+        // Dilleri değiştir
+        $('#sourceLanguage').val(targetLang);
+        $('#targetLanguage').val(sourceLang);
+
+        // Çeviriyi yeniden başlat
+        $('#sourceText').val($('#resultText').val());
+
+        translate(); // Çeviriyi yeniden başlat
+    }
+});
 
 // ComboBox tıklanıp değeri değiştirildiğinde
 $('#sourceLanguage, #targetLanguage').change(function () {
@@ -111,41 +146,7 @@ $('.delete-icon').click(function () {
 });
 
 
-
-const copyIcon = document.getElementById("copy");
-    const copyPanel = document.getElementById("copy-panel");
-
-    let hideTimeout;
-
-    function showPanel() {
-        const rect = copyIcon.getBoundingClientRect();
-        copyPanel.style.top = `${rect.bottom + window.scrollY + 4}px`;
-        copyPanel.style.left = `${rect.left + window.scrollX - 22}px`;
-
-        copyPanel.classList.add("visible");
-        copyPanel.classList.remove("hidden");
-
-        clearTimeout(hideTimeout);
-        hideTimeout = setTimeout(hidePanel, 10000);
-    }
-
-    function hidePanel() {
-        copyPanel.classList.remove("visible");
-        copyPanel.classList.add("hidden");
-    }
-
-    copyIcon.addEventListener("click", (event) => {
-        event.stopPropagation();
-        showPanel();
-    });
-
-    document.addEventListener("click", (event) => {
-        if (!copyPanel.contains(event.target)) {
-            hidePanel();
-        }
-    });
-
-// Yıldız simgesi tıklama olayları
+// Yıldız simgesi tıklanınca resmini değiştirme
 $('.star-icon').click(function () {
     const starIcon = $(this);
     if (starIcon.attr('src') === 'images/bosyıldız.png') {
@@ -155,8 +156,7 @@ $('.star-icon').click(function () {
     }
 });
 
-
-// Yıldız simgesini değiştirme fonksiyonu
+// Yıldız simgesini sıfırlama fonksiyonu
 function resetStarIcon() {
     const starIcon = $('.star-icon');
     if (starIcon.attr('src') === 'images/doluyıldız.png') {
@@ -165,28 +165,8 @@ function resetStarIcon() {
 }
 
 
-
-function toggleElementsVisibility() {
-    const sourceText = document.getElementById("sourceText").value.trim(); // sourceText içindeki metni al
-    const elementsToShow = document.querySelectorAll(".volume, .star-icon, #dictionary, #copy, #derecele, #share, #delete-icon");
-    const randomElement = document.getElementById("random");
-
-    if (sourceText) {
-        // Metin varsa belirli ögeleri göster
-        elementsToShow.forEach((element) => {
-            element.style.display = "block"; // Görünür yap
-        });
-        randomElement.style.display = "none"; // Rastgele kelime ögesini gizle
-    } else {
-        // Metin yoksa tam tersi
-        elementsToShow.forEach((element) => {
-            element.style.display = "none"; // Gizle
-        });
-        randomElement.style.display = "block"; // Rastgele kelime ögesini göster
-    }
-}
-
-let debounceTimeout;  //  Kaynak metin değiştiğinde
+//  Kaynak metin - source text değiştiğinde
+let debounceTimeout;  
 document.getElementById("sourceText").addEventListener("input", () => {
     hideDictionaryText();
     toggleElementsVisibility();
@@ -204,6 +184,52 @@ document.getElementById("sourceText").addEventListener("input", () => {
     resetStarIcon();
 });
 
+
+// sourceText'i seslendir (Google Translate TTS)
+$('#volume1').click(function () {
+    const text = $('#sourceText').val();
+    if (text.trim()) {
+        playTTS(text, $('#sourceLanguage').val());
+    } else {
+        alert('Seslendirilecek bir metin bulunamadı.');
+    }
+});
+
+// resultText'i seslendir (Google Translate TTS)
+$('#volume2').click(function () {
+    const text = $('#resultText').val();
+    if (text.trim()) {
+        playTTS(text, $('#targetLanguage').val());
+    } else {
+        alert('Seslendirilecek bir metin bulunamadı.');
+    }
+});
+
+function playTTS(text, lang) {
+    // Backend üzerindeki /tts endpointine istek göndermek için URL oluştur
+    const ttsUrl = `http://localhost:3000/tts?text=${encodeURIComponent(text)}&lang=${lang}`;
+    
+    // Audio nesnesi oluştur ve sesi çal
+    const audio = new Audio(ttsUrl);
+    audio.play().catch((error) => {
+        console.error("Ses oynatırken hata oluştu:", error);
+        alert("Seslendirme başlatılamadı.");
+    });
+}
+
+
+// Mikrofon simgesine tıklandığında başlat/durdur
+$('#microfon').on('click', () => {
+    if (recognizing) {
+        closeRecognizing();
+    } else {
+        recognition.lang = document.getElementById("sourceLanguage").value; // Dil ayarını yap
+        recognition.start(); // Ses tanımayı başlat
+        recognizing = true;
+        $('#sourceText').val("");
+        toggleMicrophoneState(true); // Mikrofonu açık duruma geç
+    }
+});
 
 // Ses tanıma API'sini başlat
 let recognition;
@@ -258,28 +284,16 @@ if ('webkitSpeechRecognition' in window) {
     alert('Tarayıcınız ses tanımayı desteklemiyor.');
 }
 
-// Mikrofon simgesine tıklandığında başlat/durdur
-$('#microfon').on('click', () => {
+function closeRecognizing() { // Ses tanımayı durdur
     if (recognizing) {
-        closeRecognizing();
-    } else {
-        recognition.lang = document.getElementById("sourceLanguage").value; // Dil ayarını yap
-        recognition.start(); // Ses tanımayı başlat
-        recognizing = true;
-        $('#sourceText').val("");
-        toggleMicrophoneState(true); // Mikrofonu açık duruma geç
-    }
-});
-
-
-function closeRecognizing() {
-    if (recognizing) {
-        recognition.stop(); // Ses tanımayı durdur
+        recognition.stop(); 
         recognizing = false;
-        toggleMicrophoneState(false); // Mikrofonu sıfırla
+        toggleMicrophoneState(false); 
     }
 }
 
+
+//Ses tanıma başladığında ve durduğunda ikonların görünürlükleri
 function toggleMicrophoneState(isListening) {
     const microphoneIcon = $('#microfon'); // Mikrofon simgesini doğrudan id ile seç
     const random = document.getElementById("random");
@@ -295,37 +309,27 @@ function toggleMicrophoneState(isListening) {
 }
 
 
-// sourceText'i seslendir (Google Translate TTS)
-$('#volume1').click(function () {
-    const text = $('#sourceText').val();
-    if (text.trim()) {
-        playTTS(text, $('#sourceLanguage').val());
-    } else {
-        alert('Seslendirilecek bir metin bulunamadı.');
-    }
-});
+//İkon görünürlük ayarları
+function toggleElementsVisibility() {
+    const sourceText = document.getElementById("sourceText").value.trim(); // sourceText içindeki metni al
+    const elementsToShow = document.querySelectorAll(".volume, .star-icon, #dictionary, #copy, #derecele, #share, #delete-icon");
+    const randomElement = document.getElementById("random");
 
-// resultText'i seslendir (Google Translate TTS)
-$('#volume2').click(function () {
-    const text = $('#resultText').val();
-    if (text.trim()) {
-        playTTS(text, $('#targetLanguage').val());
+    if (sourceText) {
+        // Metin varsa belirli ögeleri göster
+        elementsToShow.forEach((element) => {
+            element.style.display = "block"; // Görünür yap
+        });
+        randomElement.style.display = "none"; // Rastgele kelime ögesini gizle
     } else {
-        alert('Seslendirilecek bir metin bulunamadı.');
+        // Metin yoksa tam tersi
+        elementsToShow.forEach((element) => {
+            element.style.display = "none"; // Gizle
+        });
+        randomElement.style.display = "block"; // Rastgele kelime ögesini göster
     }
-});
-
-function playTTS(text, lang) {
-    // Backend üzerindeki /tts endpointine istek göndermek için URL oluştur
-    const ttsUrl = `http://localhost:3000/tts?text=${encodeURIComponent(text)}&lang=${lang}`;
-    
-    // Audio nesnesi oluştur ve sesi çal
-    const audio = new Audio(ttsUrl);
-    audio.play().catch((error) => {
-        console.error("Ses oynatırken hata oluştu:", error);
-        alert("Seslendirme başlatılamadı.");
-    });
 }
+
 
 //Random kelime getirme
 document.getElementById("random").addEventListener("click", () => {
@@ -360,47 +364,61 @@ document.getElementById("random").addEventListener("click", () => {
 });
 
 document.getElementById("dictionary").addEventListener("click", () => {
-    if(toggleDictionaryTextVisibility()){ //dictionaryText görünür, kelime türü belli ise
-        return;
+    if (toggleDictionaryTextVisibility()) {
+        return; // dictionaryText görünür, kelime türü belli ise
     }
+
     const sourceTextarea = document.getElementById("sourceText");
     const dictionaryText = document.getElementById("dictionaryText"); // Sonuçları yazdıracağımız <p> elemanı
     const sourceLang = document.getElementById("sourceLanguage").value; // Girilen metnin dili
+    const selectedLanguageElement = document.querySelector(".matches-group .selected a"); // Seçili dilin `hreflang` değerini al
+    const selectedLanguage = selectedLanguageElement ? selectedLanguageElement.getAttribute("hreflang") : "en";
 
-    let word = sourceTextarea.value.trim().toLowerCase(); // Metni trimle ve küçük harfe dönüştür
+    let word = sourceTextarea.value.trim().toLowerCase(); // Metni temizle ve küçük harfe dönüştür
     dictionaryText.textContent = ""; // Önceki sonuçları temizle
 
-    // Kelime geçerli mi kontrol et (boşluk, enter, noktalama işaretleri ve sayılar olmamalı)
+    // Kelime geçerli mi kontrol et (boşluk, noktalama işaretleri ve sayılar olmamalı)
     if (/[\s\d.,;:'"!?(){}[\]-]/.test(word)) {
         alert("Lütfen geçerli bir kelime girin.");
         return;
     }
 
-    // İngilizce değilse önce İngilizceye çevir
+    // Kelimenin türünü bulup yazdırma
     const processWord = (translatedWord) => {
         fetch(`/wordnik-dictionary?word=${encodeURIComponent(translatedWord)}`)
             .then((response) => response.json())
             .then((data) => {
                 if (data && data.type) {
-                    console.log(data.type);
-                    // Kelime türünü İngilizce'den Türkçe'ye çevir
-                    translateText(data.type, "en", "tr", (translatedType) => {
-                        if (translatedType) {
-                            dictionaryText.textContent = `Kelimenin türü: ${translatedType}`;
-                        } else {
-                            dictionaryText.textContent = "Kelimenin türü alınamadı.";
-                        }
+                    // Seçili dile "Kelimenin türü: " kısmını çevir ve tür bilgisini yazdır
+                    translateText("Kelimenin türü:", "tr", selectedLanguage, (translatedLabel) => {
+                        translateText(data.type, "en", selectedLanguage, (translatedType) => {
+                            if (translatedLabel && translatedType) {
+                                dictionaryText.textContent = `${translatedLabel} ${translatedType}`;
+                            } else {
+                                // Hata durumunda varsayılan bir mesaj göster
+                                translateText("Kelimenin türü alınamadı.", "tr", selectedLanguage, (translatedMessage) => {
+                                    dictionaryText.textContent = translatedMessage || "Error retrieving word type.";
+                                });
+                            }
+                        });
                     });
                 } else {
-                    dictionaryText.textContent = "Kelimenin türü alınamadı.";
+                    // Tür bilgisi alınamazsa hata mesajını çevir
+                    translateText("Kelimenin türü alınamadı.", "tr", selectedLanguage, (translatedMessage) => {
+                        dictionaryText.textContent = translatedMessage || "Error retrieving word type.";
+                    });
                 }
             })
             .catch((error) => {
                 console.error("Wordnik API hatası:", error);
-                dictionaryText.textContent = "Kelimenin türü alınamadı.";
+                // Hata durumunda mesajı çevir
+                translateText("Kelimenin türü alınamadı.", "tr", selectedLanguage, (translatedMessage) => {
+                    dictionaryText.textContent = translatedMessage || "Error retrieving word type.";
+                });
             });
     };
 
+    // Türü sorgulanacak metin İngilizce değilse önce İngilizceye çevir
     if (sourceLang !== "en") {
         translateText(word, sourceLang, "en", (translatedText) => {
             if (translatedText) {
@@ -413,6 +431,7 @@ document.getElementById("dictionary").addEventListener("click", () => {
         processWord(word); // İngilizce ise direkt türünü sorgula
     }
 });
+
 
 
 // DictionaryText görünürlüğünü kontrol eden yardımcı fonksiyon
