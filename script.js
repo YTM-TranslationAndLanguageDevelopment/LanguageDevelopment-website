@@ -1,8 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => { //DOMContentLoaded
-    // localStorage'daki tüm bilgileri temizleme
-    localStorage.clear();
-});
-
 function adjustHeight() {
     const sourceTextarea = document.getElementById('sourceText');
     const resultTextarea = document.getElementById('resultText');
