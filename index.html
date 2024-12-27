@@ -201,12 +201,6 @@
                 </div>
             </div>
 
-            <!-- Copy Panel -->
-            <div id="copy-panel" class="hidden">
-                <div class="panel-arrow"></div>
-                <div class="panel-content">Çeviri Kopyalandı</div>
-            </div>
-
             <!-- Alt İkonlar -->
             <div class="icons-container">
             <div class="icons-container-area">
@@ -219,7 +213,60 @@
             </div>
             </div>
         </div>
-    </main>
+    </main>               
+
+    
+     <!-- Copy Panel -->
+    <div id="copy-panel" class="hidden">
+        <div class="panel-arrow"></div>
+        <div class="panel-content">Çeviri Kopyalandı</div>
+    </div>
+
+<div id="derecele-panel" class="hidden">
+    <div class="panel-arrow"></div>
+    <div class="panel-content">
+        <div class="panelMain">
+            <p  class="panelCenteredtext">Bu çeviriyi değerlendirin</p>
+            <div class="panelIcons">
+                <div class="icon" id="like-icon">
+                    👍
+                    <div class="tooltip">İyi çeviri</div>
+                </div>
+                <div class="icon" id="dislike-icon">
+                    👎
+                    <div class="tooltip">Kötü çeviri</div>
+                </div>
+            </div>
+        <p >Geri bildiriminiz, ürünü iyileştirmek<br> için kullanılacaktır</p>
+        <div class="divider"></div>
+        <a href="#" class="edit-suggestion">
+            <img src="images/pen_icon.png" alt="Kalem İkonu">
+            <p>Düzenleme öner</p>
+        </a>
+    </div>
+    </div>
+</div>
+    
+        <!-- Share Panel -->
+    <div id="share-panel" class="hidden">
+        <div class="panel-arrow"></div>
+        <div class="panel-content">
+            <div class="panelMain">
+            <p class="panelCenteredtext">Bu çeviriyi paylaşın</p>
+            <div class="panelIcons">
+                <a href="mailto:?" class="icon">
+                    <img src="images/envelope.png" alt="E-posta" class="icon-img">
+                    <p class="icon-text">E-posta</p>
+                </a>
+                <a target="_blank" href="https://twitter.com/intent/tweet?" class="icon">
+                    <img src="images/twitter.png" alt="X" class="icon-img">
+                    <p class="icon-text">X</p>
+                </a>
+            </div>
+            </div>
+        </div>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>

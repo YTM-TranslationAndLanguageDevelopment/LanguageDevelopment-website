@@ -65,38 +65,99 @@ $('#copy').click(function () {
     }
 });
 
-    const copyIcon = document.getElementById("copy");
-    const copyPanel = document.getElementById("copy-panel");
+const copyIcon = document.getElementById("copy");
+const copyPanel = document.getElementById("copy-panel");
 
-    copyIcon.addEventListener("click", (event) => {
-        event.stopPropagation();
-        showPanel();
-    });
+copyIcon.addEventListener("click", (event) => {
+    event.stopPropagation();
+    showCopyPanel();
+});
 
-    document.addEventListener("click", (event) => {
-        if (!copyPanel.contains(event.target)) {
-            hidePanel();
-        }
-    });
+function showCopyPanel() {
+    const rect = copyIcon.getBoundingClientRect();
+    copyPanel.style.top = `${rect.bottom + window.scrollY + 4}px`;
+    copyPanel.style.left = `${rect.left + window.scrollX - 22}px`;
 
-    let hideTimeout;
+    copyPanel.classList.add("visible");
+    copyPanel.classList.remove("hidden");
 
-    function showPanel() {
-        const rect = copyIcon.getBoundingClientRect();
-        copyPanel.style.top = `${rect.bottom + window.scrollY + 4}px`;
-        copyPanel.style.left = `${rect.left + window.scrollX - 22}px`;
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(hidePanel, 2000);
+}
 
-        copyPanel.classList.add("visible");
-        copyPanel.classList.remove("hidden");
+const derecele = document.getElementById("derecele");
+const derecelePanel = document.getElementById("derecele-panel");
 
-        clearTimeout(hideTimeout);
-        hideTimeout = setTimeout(hidePanel, 2000);
+let hideTimeout;
+
+derecele.addEventListener("click", (event) => {
+    event.stopPropagation();
+    showDerecelePanel();
+});
+
+function showDerecelePanel() {
+    const rect = derecele.getBoundingClientRect();
+    derecelePanel.style.top = `${rect.bottom + window.scrollY + 4}px`;
+    derecelePanel.style.left = `${rect.left + window.scrollX - 22}px`;
+
+    derecelePanel.classList.add("visible");
+    derecelePanel.classList.remove("hidden");
+
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(hidePanel, 10000);
+}
+
+
+const shareIcon = document.getElementById("share");
+const sharePanel = document.getElementById("share-panel");
+
+shareIcon.addEventListener("click", (event) => {
+    event.stopPropagation();
+    showSharePanel();
+});
+
+function showSharePanel() {
+    const rect = shareIcon.getBoundingClientRect();
+    sharePanel.style.top = `${rect.bottom + window.scrollY + 5}px`;
+    sharePanel.style.left = `${rect.left + window.scrollX - 25}px`;
+
+    sharePanel.classList.add("visible");
+    sharePanel.classList.remove("hidden");
+
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(hidePanel, 100000);
+}
+
+
+function hidePanel() {
+    derecelePanel.classList.remove("visible");
+    derecelePanel.classList.add("hidden");
+    copyPanel.classList.remove("visible");
+    copyPanel.classList.add("hidden");
+    sharePanel.classList.remove("visible");
+    sharePanel.classList.add("hidden");
+}
+
+document.addEventListener("click", (event) => {
+    const derecelePanelVisible = derecelePanel.classList.contains("visible");
+    const copyPanelVisible = copyPanel.classList.contains("visible");
+    const sharePanelVisible = sharePanel.classList.contains("visible");
+
+    if (derecelePanelVisible && !derecelePanel.contains(event.target) && event.target !== derecele) {
+        derecelePanel.classList.remove("visible");
+        derecelePanel.classList.add("hidden");
     }
 
-    function hidePanel() {
+    if (copyPanelVisible && !copyPanel.contains(event.target) && event.target !== copyIcon) {
         copyPanel.classList.remove("visible");
         copyPanel.classList.add("hidden");
     }
+
+    if (sharePanelVisible && !sharePanel.contains(event.target) && event.target !== shareIcon) {
+        sharePanel.classList.remove("visible");
+        sharePanel.classList.add("hidden");
+    }
+});
 
     
 // Dil değiştirme ikonuna tıklanıp dillerin ve metinlerin yer değiştirilmesi
