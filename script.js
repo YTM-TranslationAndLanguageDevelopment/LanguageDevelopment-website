@@ -75,7 +75,7 @@ copyIcon.addEventListener("click", (event) => {
 
 function showCopyPanel() {
     const rect = copyIcon.getBoundingClientRect();
-    copyPanel.style.top = `${rect.bottom + window.scrollY + 4}px`;
+    copyPanel.style.top = `${rect.bottom + window.scrollY + 5}px`;
     copyPanel.style.left = `${rect.left + window.scrollX - 22}px`;
 
     copyPanel.classList.add("visible");
@@ -83,6 +83,26 @@ function showCopyPanel() {
 
     clearTimeout(hideTimeout);
     hideTimeout = setTimeout(hidePanel, 2000);
+}
+
+const shareIcon = document.getElementById("share");
+const sharePanel = document.getElementById("share-panel");
+
+shareIcon.addEventListener("click", (event) => {
+    event.stopPropagation();
+    showSharePanel();
+});
+
+function showSharePanel() {
+    const rect = shareIcon.getBoundingClientRect();
+    sharePanel.style.top = `${rect.bottom + window.scrollY + 4}px`;
+    sharePanel.style.left = `${rect.left + window.scrollX - 66}px`;
+
+    sharePanel.classList.add("visible");
+    sharePanel.classList.remove("hidden");
+
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(hidePanel, 8000);
 }
 
 const derecele = document.getElementById("derecele");
@@ -97,37 +117,15 @@ derecele.addEventListener("click", (event) => {
 
 function showDerecelePanel() {
     const rect = derecele.getBoundingClientRect();
-    derecelePanel.style.top = `${rect.bottom + window.scrollY + 4}px`;
-    derecelePanel.style.left = `${rect.left + window.scrollX - 22}px`;
+    derecelePanel.style.top = `${rect.bottom + window.scrollY -250}px`;
+    derecelePanel.style.left = `${rect.left + window.scrollX - 440}px`;
 
     derecelePanel.classList.add("visible");
     derecelePanel.classList.remove("hidden");
 
     clearTimeout(hideTimeout);
-    hideTimeout = setTimeout(hidePanel, 10000);
+    hideTimeout = setTimeout(hidePanel, 8000);
 }
-
-
-const shareIcon = document.getElementById("share");
-const sharePanel = document.getElementById("share-panel");
-
-shareIcon.addEventListener("click", (event) => {
-    event.stopPropagation();
-    showSharePanel();
-});
-
-function showSharePanel() {
-    const rect = shareIcon.getBoundingClientRect();
-    sharePanel.style.top = `${rect.bottom + window.scrollY + 5}px`;
-    sharePanel.style.left = `${rect.left + window.scrollX - 25}px`;
-
-    sharePanel.classList.add("visible");
-    sharePanel.classList.remove("hidden");
-
-    clearTimeout(hideTimeout);
-    hideTimeout = setTimeout(hidePanel, 100000);
-}
-
 
 function hidePanel() {
     derecelePanel.classList.remove("visible");
@@ -160,6 +158,40 @@ document.addEventListener("click", (event) => {
 });
 
     
+//Share-panel ikonlar tıklanınca ilgili bağlantıyı açma
+const resultTextElement = document.querySelector("#resultText"); // #resultText textarea öğesini seç
+    const mailtoLink = document.querySelector("#mailto"); // Mailto bağlantısını seç
+    const tweettoLink = document.querySelector("#tweetto"); // Tweetto bağlantısını seç
+
+    if (resultTextElement) {
+        const getText = () => resultTextElement.value.trim(); // #resultText'teki metni al ve boşlukları temizle
+
+        // Mailto linkini güncelle
+        mailtoLink.addEventListener("click", function (event) {
+            const text = getText();
+            if (text) {
+                this.href = `mailto:?body=${encodeURIComponent(text)}`;
+            } else {
+                alert("Gönderilecek bir metin bulunamadı.");
+                event.preventDefault(); // Varsayılan davranışı engelle
+            }
+        });
+
+        // Tweetto linkini güncelle
+        tweettoLink.addEventListener("click", function (event) {
+            const text = getText();
+            if (text) {
+                this.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            } else {
+                alert("Gönderilecek bir metin bulunamadı.");
+                event.preventDefault(); // Varsayılan davranışı engelle
+            }
+        });
+    } else {
+        console.error("#resultText öğesi bulunamadı.");
+    }
+
+
 // Dil değiştirme ikonuna tıklanıp dillerin ve metinlerin yer değiştirilmesi
 $('#swapLanguages').click(function () {
     // sourceLanguage değeri "auto" değilse işlemleri gerçekleştir

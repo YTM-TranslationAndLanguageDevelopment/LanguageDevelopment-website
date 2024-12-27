@@ -596,6 +596,7 @@ header button:hover {
     text-decoration: underline
 }
 
+/*   Panel Tasarımları  */
 
 /* Copy Panel Tasarımı */
 #copy-panel {
@@ -618,11 +619,11 @@ header button:hover {
     margin-right: 70px;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-bottom: 10px solid #fbf8f8;
+    border-bottom: 10px solid #ffeeff;
 }
 
 #copy-panel .panel-content {
-    background-color: #fbf8f8;
+    background-color: #ffeeff;
     color: #1c1a1a;
     padding: 10px 15px;
     border-radius: 5px;
@@ -635,159 +636,6 @@ header button:hover {
     opacity: 1;
     transform: translateY(0);
 }
-
-        /* Derecele Panel Tasarımı */
-        #derecele-panel {
-            font-size: 13px;
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            z-index: 10;
-            transform: translateY(15px);
-            width: 220px; /* Panel genişliği sınırlandırıldı */
-            margin: 0 auto; /* Panel öğeleri ortalandı */
-        }
-
-        #derecele-panel .panel-arrow {
-            width: 0;
-            height: 0;
-            margin-right: 70px;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-bottom: 15px solid #fffafa;
-        }
-
-        #derecele-panel .panelMain{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #derecele-panel .panel-content {
-            background-color: #fffafa;
-            color: #3C4043;
-            width: 95%;
-            padding: 10px 15px;
-            border-radius: 5px;
-            box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.36);
-        }
-
-        /* Görünürlük */
-        #derecele-panel.visible {
-            visibility: visible;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Gizli */
-        .hidden {
-            visibility: hidden;
-            opacity: 0;
-            transform: translateY(15px);
-        }
-
-        /* İkonlar ve Tooltip */
-        #derecele-panel .icon {
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-            border: 1.1px solid rgb(225, 208, 208); /* Siyah renk ince daire kenarı */
-            border-radius: 50%;
-            line-height: 50px;
-            text-align: center;
-            cursor: pointer;
-            position: relative;
-        }
-
-        #derecele-panel .icon:hover {
-            background-color: #ddd;
-        }
-
-        #derecele-panel .tooltip {
-            display: none; /* Başlangıçta gizli */
-            position: absolute;
-            width: max-content;
-            text-align: center;
-            align-items: center;
-            justify-content: center;
-            bottom: -24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: black;
-            color: white;
-            padding: 4px 8px; /* Daha düşük padding */
-            border-radius: 5px;
-            font-size: 11px;
-            line-height: 1.2; /* Satır yüksekliğiyle düzenleme */
-            z-index: 11;
-            opacity: 0; /* Görünmez */
-            transition: opacity 0.3s ease;
-        }
-        
-        #derecele-panel .icon:hover .tooltip {
-            display: flex;
-            opacity: 1; /* Hover ile görünür */
-        }
-        
-
-        /* Divider */
-        .divider {
-            width: 95%;
-            height: 0.5px;
-            background-color: #DADCE0;
-            margin: 5px 0;
-        }
-
-        /* Düzenleme öner */
-        #derecele-panel .edit-suggestion {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: bolder;
-            color:#174EA6;
-            padding: 0 12px;
-            border-radius: 7px;
-            gap: 10px;
-        }
-
-        #derecele-panel .panelCenteredtext{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            font-weight: bolder;
-        }
-
-
-    
-        #derecele-panel .panelIcons{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: large;
-            margin-bottom: 9px;
-            gap: 30px;
-        }
-
-
-        #derecele-panel .edit-suggestion:hover {
-            color:#092d67;
-            background-color: #f7f6f6; /* Hafif koyulaşma efekti */
-        }
-
-        #derecele-panel .edit-suggestion img {
-            width: 19px;
-            height: 19px;
-            margin-right: 5px;
-        }
 
 
 /* Share Panel Tasarımı */ 
@@ -810,12 +658,12 @@ header button:hover {
     height: 0;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-bottom: 10px solid #fffafa;
-    margin-right: 70px;
+    border-bottom: 10px solid #ffeeff;
+    margin-right: 10px;
 }
 
 #share-panel .panel-content {
-    background-color: #fffafa;
+    background-color: #ffeeff;
     color: #3C4043;
     width: 95%;
     padding: 10px 15px;
@@ -885,4 +733,159 @@ header button:hover {
     visibility: visible;
     opacity: 1;
     transform: translateY(0);
+}
+
+
+/* Derecele Panel Tasarımı */
+#derecele-panel {
+    font-size: 13px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    z-index: 10;
+    transform: translateY(15px);
+    width: 220px; /* Panel genişliği sınırlandırıldı */
+    margin: 0 auto; /* Panel öğeleri ortalandı */
+}
+
+#derecele-panel .panel-arrow {
+    width: 0;
+    height: 0;
+    margin-right: 70px;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid #fff4ff;
+}
+
+#derecele-panel .panelMain{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#derecele-panel .panel-content {
+    background-color: #fff4ff;
+    color: #3C4043;
+    width: 95%;
+    padding: 10px 15px;
+    border-radius: 5px;
+    box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.36);
+}
+
+/* Görünürlük */
+#derecele-panel.visible {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* İkonlar ve Tooltip */
+#derecele-panel .icon {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 1.1px solid rgb(225, 208, 208); /* Siyah renk ince daire kenarı */
+    border-radius: 50%;
+    line-height: 50px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+}
+
+#derecele-panel .icon:hover {
+    background-color: rgb(241, 234, 234);
+}
+
+#derecele-panel .tooltip {
+    display: none; /* Başlangıçta gizli */
+    position: absolute;
+    width: max-content;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: black;
+    color: white;
+    padding: 4px 8px; /* Daha düşük padding */
+    border-radius: 5px;
+    font-size: 11px;
+    line-height: 1.2; /* Satır yüksekliğiyle düzenleme */
+    z-index: 11;
+    opacity: 0; /* Görünmez */
+    transition: opacity 0.3s ease;
+}
+
+#derecele-panel .icon:hover .tooltip {
+    display: flex;
+    opacity: 1; /* Hover ile görünür */
+}
+
+
+/* Divider */
+.divider {
+    width: 95%;
+    height: 0.5px;
+    background-color: #DADCE0;
+    margin: 5px 0;
+}
+
+/* Düzenleme öner */
+#derecele-panel .edit-suggestion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bolder;
+    color:#174EA6;
+    padding: 0 12px;
+    border-radius: 7px;
+    gap: 10px;
+}
+
+#derecele-panel .panelCenteredtext{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: bolder;
+}
+
+
+
+#derecele-panel .panelIcons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: large;
+    margin-bottom: 9px;
+    gap: 30px;
+}
+
+
+#derecele-panel .edit-suggestion:hover {
+    color:#092d67;
+    background-color: #ecf3fd; /* Hafif koyulaşma efekti */
+}
+
+#derecele-panel .edit-suggestion img {
+    width: 19px;
+    height: 19px;
+    margin-right: 5px;
+}
+
+/* Gizli */
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(15px);
 }
