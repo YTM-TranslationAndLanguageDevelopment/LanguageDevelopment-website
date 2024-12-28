@@ -40,20 +40,20 @@ function submitLogin() {
         .then((data) => {
             if (data.success) {
                 
-                // Kullanıcı e-postasını localStorage'a kaydet
-                localStorage.setItem("userEmail", email);
+                // Kullanıcı e-postasını sessionStorage'a kaydet
+                sessionStorage.setItem("userEmail", email);
                 
                 if (data.redirect === 'admin.html') {
-                    localStorage.setItem('authority', 'admin');
+                    sessionStorage.setItem('authority', 'admin');
                     window.open(data.redirect, '_blank'); // Admin sayfasına yönlendir
                     closePopup("girisPopup"); // Giriş popup'ını kapat
                     setVisibility(true);
                 } else {
-                    localStorage.setItem('authority', 'user');
+                    sessionStorage.setItem('authority', 'user');
                     closePopup("girisPopup"); // Giriş popup'ını kapat
                     setVisibility(true);
                 }
-                localStorage.setItem('userEmail', email);
+                sessionStorage.setItem('userEmail', email);
             } else {
                 alert(data.message); // Kullanıcı bulunamadı veya şifre yanlış
             }

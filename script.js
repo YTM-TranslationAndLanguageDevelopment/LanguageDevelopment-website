@@ -604,7 +604,7 @@ document.getElementById('exitProfil').addEventListener('click', (event) => {
     event.preventDefault(); // Link varsayılan davranışını engelle
     closePopup('profilPopup'); // Popup'ı kapat
     setVisibility(false); // Kullanıcı çıkış yaptı, görünürlük ayarla
-    localStorage.clear();
+    sessionStorage.clear();
 });
 
 document.getElementById("savedIcon").addEventListener("click", () => {

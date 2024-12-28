@@ -334,12 +334,14 @@ header button:hover {
 
 /* Sosyal Medya Alanı */
 .social-icons {
-    margin-top: 325px;
-    margin-right: 20px;
+    position: absolute; /* Yan menüye göre konumlandır */
+    bottom: 72px; /* En altın 100px yukarısında */
+    left: 0;
+    width: 100%; /* Genişliği menüye göre ayarla */
     display: grid;
     grid-template-columns: repeat(3, auto); /* 3 sütun */
-    flex-wrap:wrap-reverse;     
-    justify-content: center;
+    justify-content: center; /* Ortala */
+    gap: 3px;
 }
 
 .social-icons img {

@@ -1,6 +1,6 @@
 function profilbilgileriayarla() {
-    // localStorage'dan e-posta bilgisi al
-    const userEmail = localStorage.getItem("userEmail");
+    // sessionStorage'dan e-posta bilgisi al
+    const userEmail = sessionStorage.getItem("userEmail");
     if (userEmail) {
         fetch(`/get-user-info?email=${encodeURIComponent(userEmail)}`)
             .then(response => response.json())
