@@ -477,6 +477,7 @@ header button:hover {
     color: #ffffff;
     border-radius: 4px;
     display: flex;
+    cursor: pointer;
     text-decoration: none;
     justify-content: center;
     transition: .2s ease-in-out

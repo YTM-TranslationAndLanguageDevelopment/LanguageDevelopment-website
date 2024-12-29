@@ -1,3 +1,12 @@
+document.addEventListener("DOMContentLoaded", function () {
+    // sessionStorage'da 'userEmail' var mı kontrol et
+    const userEmail = sessionStorage.getItem('userEmail');
+
+    if (userEmail) {
+        setVisibility(true);
+    }
+});
+
 function adjustHeight() {
     const sourceTextarea = document.getElementById('sourceText');
     const resultTextarea = document.getElementById('resultText');
