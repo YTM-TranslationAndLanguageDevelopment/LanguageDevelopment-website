@@ -67,6 +67,7 @@ function submitRegistration() {
 
                 closePopup("kayitPopup");
                 setVisibility(true);
+                startTimer();
             } else {
                 alert(data.message);
             }

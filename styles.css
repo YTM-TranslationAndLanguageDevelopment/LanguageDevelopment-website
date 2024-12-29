@@ -116,6 +116,71 @@ border-radius: 5px;
 }
 
 
+/* Profil Sayfası */
+.profile-settings p{
+    font-size: 19px;
+    font-weight: bolder;
+}
+
+.profile-section {
+    display: flex;
+    align-items: center;
+}
+
+.profile-section .icon {
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+}
+
+.profile-settings span{
+    font-size: 17px;
+    padding: 4px;
+}
+
+.days-section {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.days-section .day {
+    text-align: center;
+    font-size: 12px;
+}
+
+.days-section .circle {
+    width: 25px;
+    height: 25px;
+    display: block;
+    margin: 0 auto 5px;
+}
+
+.streak-section {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.streak-section img{
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+}
+
+#exitProfil {
+    width: 100%;
+    margin: auto;
+    font-size: 18px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+/* Ana Sayfa */
 main {
     width: 100%;
     max-width: 800px;

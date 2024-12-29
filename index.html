@@ -11,26 +11,78 @@
     <script src="register.js"></script>
     <script src="profile.js"></script>
     <script src="pagetranslate.js"></script>
+    <script src="timecalculator.js"></script>
 </head>
 <body>
     
     <!-- Üst Kısım (Header) -->
     <header>
 
-    <!-- Profil Popup -->
-    <div id="profilPopup" class="popup">  <!-- Geliştirilecek -->
-        <div class="popup-content">
-            <span class="close" onclick="closePopup('profilPopup')">&times;</span>
-            <h2>Profil Ekranı</h2>
-            <div class="input-group">
-                <p id="profilUserName">Kullanıcı adı:</p>
-            </div>
-            <div class="input-group">
-                <p id="profilEmail">Kullanıcı email:</p>
-            </div>
-                <p><a href="" id="exitProfil" class="exit-link">⮪ Çıkış Yap</a></p>
+
+<!-- Profil Popup -->
+<div id="profilPopup" class="popup">
+    <div class="popup-content">
+        <span class="close" onclick="closePopup('profilPopup')">&times;</span>
+        <div class="profile-settings">
+        <div class="profile-section">
+            <img src="images/user.png" alt="User Icon" class="icon">
+            <p>Kullanıcı adı:</p>
+            <span id="profilUserName"></span>
         </div>
+        <div class="profile-section">
+            <img src="images/profilEnvelope.png" alt="Envelope Icon" class="icon">
+            <p>E-mail:</p>
+            <span id="profilEmail"></span>
+        </div>
+        <div class="profile-section">
+            <img src="images/target.png" alt="Target Icon" class="icon">
+            <p>Toplam score:</p>
+            <span id="totalScore"></span>
+        </div>
+        <div class="profile-section">
+            <img src="images/study-time.png" alt="Study Time Icon" class="icon">
+            <p>Çalışılan zaman:</p>
+            <span id="studiedTime"></span>
+        </div>
+        <div class="days-section">
+            <div class="day">
+                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <span>Mon</span>
+            </div>
+            <div class="day">
+                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <span>Tue</span>
+            </div>
+            <div class="day">
+                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <span>Wed</span>
+            </div>
+            <div class="day">
+                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <span>Thu</span>
+            </div>
+            <div class="day">
+                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <span>Fri</span>
+            </div>
+            <div class="day">
+                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <span>Sat</span>
+            </div>
+            <div class="day">
+                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <span>Sun</span>
+            </div>
+        </div>
+        <div class="streak-section">
+            <img src="images/burn.png" alt="Burn Icon" class="icon">
+            <p id="streak">0</p>
+            <span>day</span>
+        </div>
+        <button id="exitProfil" class="exitProfil" onclick="logout()">Oturumu kapat</button>
     </div>
+ </div>
+</div>
 
         <!-- Giriş Yap Popup -->
     <div id="girisPopup" class="popup">

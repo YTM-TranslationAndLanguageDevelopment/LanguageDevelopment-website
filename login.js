@@ -42,6 +42,7 @@ function submitLogin() {
                 
                 // Kullanıcı e-postasını sessionStorage'a kaydet
                 sessionStorage.setItem("userEmail", email);
+                startTimer();
                 
                 if (data.redirect === 'admin.html') {
                     sessionStorage.setItem('authority', 'admin');
