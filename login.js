@@ -1,33 +1,95 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const inputs = [
-        document.getElementById('email'),
-        document.getElementById('password')
-    ];
+    // Input alanlarına event listener'ları ekle
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
 
-    // Enter tuşu ile alanlar arasında geçiş ve giriş
-    inputs.forEach((input, index) => {
-        input.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                if (index < inputs.length - 1) {
-                    inputs[index + 1].focus();
-                } else {
-                    submitLogin(); // Son alanda Enter ile giriş yap
-                }
-            }
-        });
+    emailInput.addEventListener('input', () => {
+        const email = emailInput.value;
+        const emailError = document.getElementById("emailError");
+        
+        if (!email) {
+            emailError.textContent = "E-posta alanı boş bırakılamaz.";
+        } else if (!email.endsWith('@gmail.com') && !email.endsWith('@hotmail.com')) {
+            emailError.textContent = "Geçerli bir e-posta adresi giriniz (@gmail.com veya @hotmail.com)";
+        } else {
+            emailError.textContent = "";
+        }
+    });
+
+    passwordInput.addEventListener('input', () => {
+        const password = passwordInput.value;
+        const passwordError = document.getElementById("passwordError");
+        
+        if (!password) {
+            passwordError.textContent = "Şifre alanı boş bırakılamaz.";
+        } else if (password.length < 5) {
+            passwordError.textContent = "Şifre en az 5 karakter olmalıdır.";
+        } else {
+            passwordError.textContent = "";
+        }
     });
 });
 
+function validateEmail(email) {
+    return email.endsWith('@gmail.com') || email.endsWith('@hotmail.com');
+}
+
+function validatePassword(password) {
+    return password.length >= 5;
+}
+
+// Anlık doğrulama fonksiyonları
+function validateLoginEmail() {
+    const email = document.getElementById("email").value;
+    const emailError = document.getElementById("emailError");
+    
+    if (!email) {
+        emailError.textContent = "E-posta alanı boş bırakılamaz.";
+        return false;
+    } else if (!validateEmail(email)) {
+        emailError.textContent = "Geçerli bir e-posta adresi giriniz (@gmail.com veya @hotmail.com)";
+        return false;
+    } else {
+        emailError.textContent = "";
+        return true;
+    }
+}
+
+function validateLoginPassword() {
+    const password = document.getElementById("password").value;
+    const passwordError = document.getElementById("passwordError");
+    
+    if (!password) {
+        passwordError.textContent = "Şifre alanı boş bırakılamaz.";
+        return false;
+    } else if (!validatePassword(password)) {
+        passwordError.textContent = "Şifre en az 5 karakter olmalıdır.";
+        return false;
+    } else {
+        passwordError.textContent = "";
+        return true;
+    }
+}
+
 function submitLogin() {
+    const loginButton = document.querySelector('#girisPopup button[onclick="submitLogin()"]');
+    
+    if (loginButton.disabled) {
+        return;
+    }
+
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
-    // Eposta ve şifre alanlarının boş bırakılmaması için doğrulama
-    if (!email || !password) {
-        alert("E-posta ve şifre boş bırakılamaz!");
+    // Son bir kontrol daha yap
+    const isEmailValid = validateLoginEmail();
+    const isPasswordValid = validateLoginPassword();
+
+    if (!isEmailValid || !isPasswordValid) {
         return;
     }
+
+    loginButton.disabled = true;
 
     fetch("http://localhost:3000/login", {
         method: "POST",
@@ -39,26 +101,32 @@ function submitLogin() {
         .then((response) => response.json())
         .then((data) => {
             if (data.success) {
-                
-                // Kullanıcı e-postasını sessionStorage'a kaydet
                 sessionStorage.setItem("userEmail", email);
                 
                 if (data.redirect === 'admin.html') {
                     sessionStorage.setItem('authority', 'admin');
-                    window.open(data.redirect, '_blank'); // Admin sayfasına yönlendir
-                    closePopup("girisPopup"); // Giriş popup'ını kapat
+                    window.open(data.redirect, '_blank');
+                    closePopup("girisPopup");
                     setVisibility(true);
                 } else {
                     sessionStorage.setItem('authority', 'user');
-                    closePopup("girisPopup"); // Giriş popup'ını kapat
+                    closePopup("girisPopup");
                     setVisibility(true);
                 }
                 sessionStorage.setItem('userEmail', email);
             } else {
-                alert(data.message); // Kullanıcı bulunamadı veya şifre yanlış
+                alert(data.message);
             }
         })
         .catch((error) => {
             console.error("Giriş sırasında bir hata oluştu:", error);
+            alert("Giriş yapılırken bir hata oluştu. Lütfen tekrar deneyin.");
+        })
+        .finally(() => {
+            loginButton.disabled = false;
         });
 }
+
+// Input alanlarındaki değişiklikleri dinle ve anında doğrula
+document.getElementById('email').addEventListener('input', validateLoginEmail);
+document.getElementById('password').addEventListener('input', validateLoginPassword);

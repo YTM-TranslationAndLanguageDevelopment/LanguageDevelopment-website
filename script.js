@@ -243,13 +243,79 @@ $('.delete-icon').click(function () {
 });
 
 
-// Yıldız simgesi tıklanınca resmini değiştirme
-$('.star-icon').click(function () {
+// Yıldız simgesi tıklanınca işlem yapma
+$('.star-icon').click(async function () {
     const starIcon = $(this);
-    if (starIcon.attr('src') === 'images/bosyıldız.png') {
-        starIcon.attr('src', 'images/doluyıldız.png'); // Doluyıldız.png yap
-    } else {
-        starIcon.attr('src', 'images/bosyıldız.png'); // Bosyıldız.png yap
+    const sourceText = $('#sourceText').val();
+    const resultText = $('#resultText').val();
+    const sourceLang = $('#sourceLanguage').val();
+    const targetLang = $('#targetLanguage').val();
+    const userEmail = sessionStorage.getItem('userEmail');
+
+    // Kullanıcı girişi kontrolü
+    if (!userEmail) {
+        alert('Bu özelliği kullanmak için giriş yapmalısınız.');
+        starIcon.attr('src', 'images/bosyıldız.png');
+        return;
+    }
+
+    // Çeviri verilerinin kontrolü
+    if (!sourceText || !resultText) {
+        alert('Kaydetmek için çeviri yapmalısınız.');
+        starIcon.attr('src', 'images/bosyıldız.png');
+        return;
+    }
+
+    try {
+        if (starIcon.attr('src') === 'images/bosyıldız.png') {
+            // Çeviriyi kaydet
+            const response = await fetch('http://localhost:3000/save-translation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail,
+                    sourceText,
+                    resultText,
+                    sourceLang,
+                    targetLang,
+                    savedDate: new Date().toISOString()
+                }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                starIcon.attr('src', 'images/doluyıldız.png');
+            } else {
+                alert('Çeviri kaydedilemedi: ' + data.message);
+                starIcon.attr('src', 'images/bosyıldız.png');
+            }
+        } else {
+            // Çeviriyi sil
+            const response = await fetch('http://localhost:3000/delete-translation', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail,
+                    sourceText,
+                    resultText
+                }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                starIcon.attr('src', 'images/bosyıldız.png');
+            } else {
+                alert('Çeviri silinemedi: ' + data.message);
+                starIcon.attr('src', 'images/doluyıldız.png');
+            }
+        }
+    } catch (error) {
+        console.error('İşlem sırasında hata:', error);
+        alert('Bir hata oluştu. Lütfen tekrar deneyin.');
     }
 });
 
