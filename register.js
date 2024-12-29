@@ -61,9 +61,9 @@ function submitRegistration() {
         .then((response) => response.json())
         .then((data) => {
             if (data.message === "Kayıt başarılı!") {
-                // Kullanıcı e-postasını localStorage'a kaydet
-                localStorage.setItem("userEmail", email);
-                localStorage.setItem('authority', 'user');
+                // Kullanıcı e-postasını sessionStorage'a kaydet
+                sessionStorage.setItem("userEmail", email);
+                sessionStorage.setItem('authority', 'user');
 
                 closePopup("kayitPopup");
                 setVisibility(true);

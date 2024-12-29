@@ -11,8 +11,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("userNameLabel").style.display="block";
     }
 
-    // localStorage'dan e-posta bilgisi al
-    const userEmail = localStorage.getItem("userEmail");
+    // sessionStorage'dan e-posta bilgisi al
+    const userEmail = sessionStorage.getItem("userEmail");
 
     if (userEmail) {
         userEmailLabel.textContent = `Eposta: ${userEmail}`;

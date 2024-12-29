@@ -1,3 +1,12 @@
+document.addEventListener("DOMContentLoaded", function () {
+    // sessionStorage'da 'userEmail' var mı kontrol et
+    const userEmail = sessionStorage.getItem('userEmail');
+
+    if (userEmail) {
+        setVisibility(true);
+    }
+});
+
 function adjustHeight() {
     const sourceTextarea = document.getElementById('sourceText');
     const resultTextarea = document.getElementById('resultText');
@@ -604,7 +613,7 @@ document.getElementById('exitProfil').addEventListener('click', (event) => {
     event.preventDefault(); // Link varsayılan davranışını engelle
     closePopup('profilPopup'); // Popup'ı kapat
     setVisibility(false); // Kullanıcı çıkış yaptı, görünürlük ayarla
-    localStorage.clear();
+    sessionStorage.clear();
 });
 
 document.getElementById("savedIcon").addEventListener("click", () => {
