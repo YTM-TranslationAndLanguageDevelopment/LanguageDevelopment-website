@@ -289,6 +289,76 @@ app.get('/wordnik-dictionary', async (req, res) => {
     }
 });
 
+// Çeviri kaydetme endpoint'i
+app.post('/save-translation', async (req, res) => {
+    const { userEmail, sourceText, resultText, sourceLang, targetLang, savedDate } = req.body;
+
+    try {
+        const collection = await getCollection('translations');
+        
+        // Aynı çevirinin daha önce kaydedilip kaydedilmediğini kontrol et
+        const existingTranslation = await collection.findOne({
+            userEmail,
+            sourceText,
+            resultText
+        });
+
+        if (existingTranslation) {
+            return res.status(400).json({
+                success: false,
+                message: 'Bu çeviri zaten kaydedilmiş.'
+            });
+        }
+
+        // Yeni çeviriyi kaydet
+        await collection.insertOne({
+            userEmail,
+            sourceText,
+            resultText,
+            sourceLang,
+            targetLang,
+            savedDate
+        });
+
+        res.json({ success: true, message: 'Çeviri başarıyla kaydedildi.' });
+    } catch (error) {
+        console.error('Çeviri kaydetme hatası:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Sunucu hatası oluştu.'
+        });
+    }
+});
+
+// Çeviri silme endpoint'i
+app.delete('/delete-translation', async (req, res) => {
+    const { userEmail, sourceText, resultText } = req.body;
+
+    try {
+        const collection = await getCollection('translations');
+        
+        const result = await collection.deleteOne({
+            userEmail,
+            sourceText,
+            resultText
+        });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Silinecek çeviri bulunamadı.'
+            });
+        }
+
+        res.json({ success: true, message: 'Çeviri başarıyla silindi.' });
+    } catch (error) {
+        console.error('Çeviri silme hatası:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Sunucu hatası oluştu.'
+        });
+    }
+});
 
 //Çalışılan zamanı güncelleme
 app.post("/update-studied-time", async (req, res) => {
