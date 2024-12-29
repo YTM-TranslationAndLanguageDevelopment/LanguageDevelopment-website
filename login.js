@@ -102,6 +102,7 @@ function submitLogin() {
         .then((data) => {
             if (data.success) {
                 sessionStorage.setItem("userEmail", email);
+                startTimer();
                 
                 if (data.redirect === 'admin.html') {
                     sessionStorage.setItem('authority', 'admin');

@@ -173,6 +173,7 @@ function submitRegistration() {
                 sessionStorage.setItem('authority', 'user');
                 closePopup("kayitPopup");
                 setVisibility(true);
+                startTimer();
             } else {
                 alert(data.message);
             }

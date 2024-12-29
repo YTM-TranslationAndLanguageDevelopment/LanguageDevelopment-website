@@ -57,7 +57,6 @@ app.get("/user", async (req, res) => {
     }
 });
 
-// Kullanıcı ismini ve epostasını getirme - profil sayfası için ekstra veriler isteyip geliştirilecek
 app.get('/get-user-info', async (req, res) => {
     const { email } = req.query;
 
@@ -73,7 +72,14 @@ app.get('/get-user-info', async (req, res) => {
 
         if (user) {
             // Kullanıcı bilgilerini döndür
-            res.status(200).json({ username: user.username, email: user.email });
+            res.status(200).json({
+                username: user.username,
+                email: user.email,
+                totalScore: user.totalScore,
+                streak: user.streak,
+                studiedTime: user.studiedTime,
+                studiedDays: user.studiedDays
+            });
         } else {
             res.status(404).json({ error: "Kullanıcı bulunamadı." });
         }
@@ -82,6 +88,7 @@ app.get('/get-user-info', async (req, res) => {
         res.status(500).json({ error: "Sunucu hatası." });
     }
 });
+
 
 
 
@@ -101,6 +108,40 @@ app.post('/login', async (req, res) => {
         if (!isPasswordValid) {
             return res.json({ success: false, message: 'Şifre yanlış.' });
         }
+
+        // Kullanıcının bugünkü gün bilgisini al ve veritabanını güncelle
+        const today = new Date().toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+
+        if (!user.studiedDays[today]) {
+            // Güncelleme işlemi
+            await usersCollection.updateOne(
+                { email }, // Koşul
+                { $set: { [`studiedDays.${today}`]: true } } // Güncelleme
+            );
+        }
+
+
+        // Streak hesaplama
+        const daysOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        const todayIndex = daysOrder.indexOf(today); // Bugünkü günün sırası
+        let streak = 0;
+
+        // Geriye doğru günleri kontrol et
+        for (let i = todayIndex - 1; i >= 0; i--) {
+            const day = daysOrder[i];
+            if (user.studiedDays[day]) {
+                streak++; // Eğer true ise streak'i artır
+            } else {
+                break; // False bulunduğunda döngüyü bitir
+            }
+        }
+
+        // Streak değerini güncelle
+        await usersCollection.updateOne(
+            { email },
+            { $set: { streak } }
+        );
+
 
         // Kullanıcının yetkisini kontrol et
         const authority = user.authority;
@@ -142,16 +183,18 @@ app.post("/register", async (req, res) => {
         // Tarih bilgileri
         const currentDate = new Date().toISOString();
 
+        // Kullanıcının bugünkü gününü işaretle
+        const today = new Date().toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+
         // Yeni kullanıcıyı oluştur
         const newUser = {
             email,
             username,
-            password: hashedPassword, // Şifre yerine hashlenmiş şifre
+            password: hashedPassword,
             totalScore: 0,
-            fireDay: 0,
+            streak: 0,
             studiedTime: 0,
             createDate: { $date: currentDate },
-            lastLoginDay: { $date: currentDate },
             studiedDays: {
                 monday: false,
                 tuesday: false,
@@ -163,6 +206,9 @@ app.post("/register", async (req, res) => {
             },
             authority: "user",
         };
+
+        // Bugünkü günü true olarak işaretle
+        newUser.studiedDays[today] = true;
 
         // Kullanıcıyı koleksiyona ekle
         await collection.insertOne(newUser);
@@ -313,6 +359,35 @@ app.delete('/delete-translation', async (req, res) => {
         });
     }
 });
+
+//Çalışılan zamanı güncelleme
+app.post("/update-studied-time", async (req, res) => {
+    const { email, minutes } = req.body;
+
+    if (!email || !minutes) {
+        return res.status(400).json({ success: false, message: "Geçersiz veri!" });
+    }
+
+    try {
+        const usersCollection = await getCollection("user");
+
+        // Kullanıcıyı bul ve studiedTime'ı güncelle
+        const result = await usersCollection.updateOne(
+            { email },
+            { $inc: { studiedTime: minutes } } // Dakikayı ekle
+        );
+
+        if (result.modifiedCount === 0) {
+            return res.status(404).json({ success: false, message: "Kullanıcı bulunamadı." });
+        }
+
+        res.json({ success: true, message: "StudiedTime başarıyla güncellendi." });
+    } catch (error) {
+        console.error("StudiedTime güncelleme hatası:", error);
+        res.status(500).json({ success: false, message: "Sunucu hatası." });
+    }
+});
+
 
 // Sunucuyu başlat
 app.listen(port, () => {

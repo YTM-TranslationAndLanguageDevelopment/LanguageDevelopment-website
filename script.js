@@ -667,6 +667,9 @@ function openPopup(id) {
     }else if (id === 'profilPopup') {
         document.getElementById("profilUserName").value = ""; // Profil için kullanıcı adı
         document.getElementById("profilEmail").value = ""; // Profil için eposta
+        document.getElementById("totalScore").value = ""; // Profil için totalScore
+        document.getElementById("studiedTime").value = ""; // Profil studiedTime
+        document.getElementById("streak").value = ""; // Profil için streak
         profilbilgileriayarla();
     }
 }
@@ -680,6 +683,7 @@ document.getElementById('exitProfil').addEventListener('click', (event) => {
     closePopup('profilPopup'); // Popup'ı kapat
     setVisibility(false); // Kullanıcı çıkış yaptı, görünürlük ayarla
     sessionStorage.clear();
+    stopTimer();
 });
 
 document.getElementById("savedIcon").addEventListener("click", () => {
