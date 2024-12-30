@@ -35,6 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
     inputsConfig.forEach((inputConfig, index) => {
         const inputElement = document.getElementById(inputConfig.id);
 
+        inputElement.addEventListener('input', () => {
+            validateAndTranslateError(inputConfig);
+        });
+
         inputElement.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 event.preventDefault();
@@ -45,6 +49,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+    });
+
+    // Enter tuşu için genel event listener
+    const registerButton = document.querySelector('#kayitPopup button[onclick="submitRegistration()"]');
+    document.querySelector('#kayitPopup').addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            registerButton.click();
+        }
     });
 });
 
@@ -93,6 +106,8 @@ function validateEmail(email) {
 
 // Kayıt gönderme
 function submitRegistration() {
+    const isValid = inputsConfig.every(config => validateAndTranslateError(config));
+    if (!isValid) return;
 
     const username = document.getElementById('newUsername').value.trim();
     const email = document.getElementById('newEmail').value.trim();

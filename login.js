@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inputsConfig.forEach((inputConfig, index) => {
         const inputElement = document.getElementById(inputConfig.id);
 
+        // Input alanlarına event listener'ları ekle
         inputElement.addEventListener('input', () => validateAndTranslateError(inputConfig));
 
         inputElement.addEventListener('keydown', (event) => {
@@ -37,6 +38,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+    });
+
+    // Enter tuşu için event listener
+    const loginButton = document.querySelector('#girisPopup button[onclick="submitLogin()"]');
+    document.querySelector('#girisPopup').addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            loginButton.click();
+        }
     });
 });
 
