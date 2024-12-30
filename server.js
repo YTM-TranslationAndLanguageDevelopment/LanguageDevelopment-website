@@ -298,6 +298,35 @@ app.get('/wordnik-dictionary', async (req, res) => {
     }
 });
 
+//Çalışılan zamanı güncelleme
+app.post("/update-studied-time", async (req, res) => {
+    const { email, minutes } = req.body;
+
+    if (!email || !minutes) {
+        return res.status(400).json({ success: false, message: "Geçersiz veri!" });
+    }
+
+    try {
+        const usersCollection = await getCollection("user");
+
+        // Kullanıcıyı bul ve studiedTime'ı güncelle
+        const result = await usersCollection.updateOne(
+            { email },
+            { $inc: { studiedTime: minutes } } // Dakikayı ekle
+        );
+
+        if (result.modifiedCount === 0) {
+            return res.status(404).json({ success: false, message: "Kullanıcı bulunamadı." });
+        }
+
+        res.json({ success: true, message: "StudiedTime başarıyla güncellendi." });
+    } catch (error) {
+        console.error("StudiedTime güncelleme hatası:", error);
+        res.status(500).json({ success: false, message: "Sunucu hatası." });
+    }
+});
+
+
 // Çeviri kaydetme endpoint'i
 app.post('/save-translation', async (req, res) => {
     const { userEmail, sourceText, resultText, sourceLang, targetLang } = req.body;
@@ -367,7 +396,6 @@ app.post('/save-translation', async (req, res) => {
 // Çeviri silme endpoint'i
 app.delete('/delete-translation', async (req, res) => {
     const { userEmail, sourceText, resultText, sourceLang, targetLang } = req.body;
-    console.log("DELETE isteği alındı:", { userEmail, sourceText, resultText, sourceLang, targetLang });
     try {
         const collection = await getCollection('wordsTable');
         const langGroup = `${sourceLang}-${targetLang}`; // Belirtilen dil grubunu al
@@ -423,33 +451,45 @@ app.delete('/delete-translation', async (req, res) => {
     }
 });
 
-
-
-//Çalışılan zamanı güncelleme
-app.post("/update-studied-time", async (req, res) => {
-    const { email, minutes } = req.body;
-
-    if (!email || !minutes) {
-        return res.status(400).json({ success: false, message: "Geçersiz veri!" });
-    }
+// Çeviri kontrolü endpoint'i
+app.post('/check-translation', async (req, res) => {
+    const { userEmail, sourceText, resultText, sourceLang, targetLang } = req.body;
 
     try {
-        const usersCollection = await getCollection("user");
+        const collection = await getCollection('wordsTable');
+        const langGroup = `${sourceLang}-${targetLang}`;
 
-        // Kullanıcıyı bul ve studiedTime'ı güncelle
-        const result = await usersCollection.updateOne(
-            { email },
-            { $inc: { studiedTime: minutes } } // Dakikayı ekle
-        );
-
-        if (result.modifiedCount === 0) {
-            return res.status(404).json({ success: false, message: "Kullanıcı bulunamadı." });
+        // Kullanıcının dokümanını bul
+        const userDoc = await collection.findOne({ email: userEmail });
+        if (!userDoc || !userDoc.translations) {
+            return res.status(404).json({
+                success: false,
+                message: 'Dil grubu bulunamadı.',
+            });
         }
 
-        res.json({ success: true, message: "StudiedTime başarıyla güncellendi." });
+        const translations = userDoc.translations;
+
+        // Dil grubunda çeviri var mı kontrol et
+        if (translations[langGroup]) {
+            const exists = translations[langGroup].some(
+                (item) => item.source_text === sourceText.toLowerCase() &&
+                        item.target_text === resultText.toLowerCase()
+            );
+
+            if (exists) {
+                return res.json({ success: true });
+            }
+        }
+
+        // Eğer çeviri yoksa
+        return res.json({ success: false });
     } catch (error) {
-        console.error("StudiedTime güncelleme hatası:", error);
-        res.status(500).json({ success: false, message: "Sunucu hatası." });
+        console.error('Çeviri kontrol hatası:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Sunucu hatası oluştu.',
+        });
     }
 });
 

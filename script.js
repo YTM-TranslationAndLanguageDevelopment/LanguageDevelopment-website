@@ -223,7 +223,7 @@ $('.star-icon').click(async function () {
 
     // Kullanıcı girişi kontrolü
     if (!userEmail) {
-        alert('Bu özelliği kullanmak için giriş yapmalısınız.');
+        alert('Çeviriyi kaydetmek için giriş yapmalısınız.');
         starIcon.attr('src', 'images/bosyıldız.png');
         return;
     }
@@ -300,23 +300,71 @@ function resetStarIcon() {
 
 
 //  Kaynak metin - source text değiştiğinde
-let debounceTimeout;  
-document.getElementById("sourceText").addEventListener("input", () => {
+let debounceTimeout;
+
+document.getElementById("sourceText").addEventListener("input", async () => {
     hideDictionaryText();
     toggleElementsVisibility();
     closeRecognizing();
 
     clearTimeout(debounceTimeout); // Önceki timeout'u temizle
-    debounceTimeout = setTimeout(() => {
-        const sourceTextValue = document.getElementById("sourceText").value;
-        if (sourceTextValue === "") {console.log('aa');
+    debounceTimeout = setTimeout(async () => {
+        const sourceTextValue = document.getElementById("sourceText").value.trim();
+        const sourceLang = document.getElementById("sourceLanguage").value;
+        const targetLang = document.getElementById("targetLanguage").value;
+        const userEmail = sessionStorage.getItem('userEmail');
+
+        // Eğer kaynak metin boşsa yıldız simgesini sıfırlayalım
+        if (sourceTextValue === "") {
             document.getElementById("resultText").value = ""; // value ile içeriği temizle
+            resetStarIcon();
         } else {
-            translate(); // Çeviri işlemini sadece bir süre sonra yap
+            try {
+                // Çeviri işlemi yapmadan önce, metni çevirip bekle
+                await translateTextAreas(); // Burada çeviri işlemi yapılacak
+
+                // Çeviri tamamlandıktan sonra resultText'i al
+                const resultTextValue = document.getElementById("resultText").value.trim();
+
+                // Çeviri işlemi tamamlandığında, veri tabanında mevcut olup olmadığını kontrol et
+                const response = await fetch('http://localhost:3000/check-translation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userEmail,
+                        sourceText: sourceTextValue,
+                        resultText: resultTextValue,
+                        sourceLang,
+                        targetLang
+                    }),
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    // Eğer çeviri zaten mevcutsa yıldız simgesini dolu yap
+                    const starIcon = $('.star-icon');
+                    starIcon.attr('src', 'images/doluyıldız.png');
+                } else {
+                    // Eğer çeviri mevcut değilse yıldız simgesini boş yap
+                    resetStarIcon();
+                }
+            } catch (error) {
+                console.error("Çeviri hatası: ", error);
+            }
         }
-    }, 150); // 150ms sonra işlemi yap
-    resetStarIcon();
+    }, 100); // 100ms sonra işlemi yap
 });
+
+// Yıldız simgesini sıfırlama fonksiyonu
+function resetStarIcon() {
+    const starIcon = $('.star-icon');
+    if (starIcon.attr('src') === 'images/doluyıldız.png') {
+        starIcon.attr('src', 'images/bosyıldız.png'); // Bosyıldız.png'ye döndür
+    }
+}
+
 
 
 // sourceText'i seslendir (Google Translate TTS)
