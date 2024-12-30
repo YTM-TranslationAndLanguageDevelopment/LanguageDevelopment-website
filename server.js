@@ -66,28 +66,27 @@ app.get('/get-user-info', async (req, res) => {
 
     try {
         const usersCollection = await getCollection("user");
-
-        // E-posta ile kullanıcıyı bulun
         const user = await usersCollection.findOne({ email });
 
-        if (user) {
-            // Kullanıcı bilgilerini döndür
-            res.status(200).json({
-                username: user.username,
-                email: user.email,
-                totalScore: user.totalScore,
-                streak: user.streak,
-                studiedTime: user.studiedTime,
-                studiedDays: user.studiedDays
-            });
-        } else {
-            res.status(404).json({ error: "Kullanıcı bulunamadı." });
-        }
+        if (!user) {
+            return res.status(404).json({ error: "Kullanıcı bulunamadı." });
+        }        
+
+        // Kullanıcı bilgilerini döndür
+        res.status(200).json({
+            username: user.username,
+            email: user.email,
+            totalScore: user.totalScore,
+            streak: user.streak,
+            studiedTime: user.studiedTime,
+            studiedDays: user.studiedDays,
+        });
     } catch (error) {
         console.error("Kullanıcı bilgisi alınırken hata oluştu:", error);
         res.status(500).json({ error: "Sunucu hatası." });
     }
 });
+
 
 
 
@@ -110,38 +109,45 @@ app.post('/login', async (req, res) => {
         }
 
         // Kullanıcının bugünkü gün bilgisini al ve veritabanını güncelle
-        const today = new Date().toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+        const bugün = new Date().toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
 
-        if (!user.studiedDays[today]) {
+
+        if (!user.studiedDays[bugün]) {
             // Güncelleme işlemi
             await usersCollection.updateOne(
                 { email }, // Koşul
-                { $set: { [`studiedDays.${today}`]: true } } // Güncelleme
+                { $set: { [`studiedDays.${bugün}`]: true } } // Güncelleme
             );
         }
 
 
-        // Streak hesaplama
-        const daysOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-        const todayIndex = daysOrder.indexOf(today); // Bugünkü günün sırası
-        let streak = 0;
+        // Tarih kontrolleri
+        const today = new Date();
+        const lastLoginDay = new Date(user.lastLoginDay?.$date || user.lastLoginDay || 0);
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
 
-        // Geriye doğru günleri kontrol et
-        for (let i = todayIndex - 1; i >= 0; i--) {
-            const day = daysOrder[i];
-            if (user.studiedDays[day]) {
-                streak++; // Eğer true ise streak'i artır
-            } else {
-                break; // False bulunduğunda döngüyü bitir
-            }
+        let updatedStreak = user.streak;
+        if (lastLoginDay.toDateString() === today.toDateString()) {
+            // Bugün giriş yapılmış, bir şey yapma
+        } else if (lastLoginDay.toDateString() === yesterday.toDateString()) {
+            // Dün giriş yapılmış, streak artır
+            updatedStreak++;
+        } else {
+            // Daha önceki günler, streak sıfırla
+            updatedStreak = 0;
         }
 
-        // Streak değerini güncelle
+        // Güncellemeleri yap
         await usersCollection.updateOne(
             { email },
-            { $set: { streak } }
+            {
+                $set: {
+                    lastLoginDay: { $date: today.toISOString() },
+                    streak: updatedStreak,
+                },
+            }
         );
-
 
         // Kullanıcının yetkisini kontrol et
         const authority = user.authority;
@@ -163,9 +169,13 @@ app.post('/login', async (req, res) => {
 });
 
 
-// Kayıt İşlemi
 app.post("/register", async (req, res) => {
     const { username, email, password } = req.body;
+
+    // Girdi kontrolü
+    if (!username || !email || !password) {
+        return res.status(400).send({ message: "Kullanıcı adı, e-posta ve şifre alanları doldurulmalıdır." });
+    }
 
     try {
         const collection = await getCollection("user");
@@ -180,11 +190,9 @@ app.post("/register", async (req, res) => {
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        // Tarih bilgileri
-        const currentDate = new Date().toISOString();
-
-        // Kullanıcının bugünkü gününü işaretle
-        const today = new Date().toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+        const today = new Date();
+        const todayString = today.toISOString();
+        const dayName = today.toLocaleString("en-US", { weekday: "long" }).toLowerCase();
 
         // Yeni kullanıcıyı oluştur
         const newUser = {
@@ -194,7 +202,8 @@ app.post("/register", async (req, res) => {
             totalScore: 0,
             streak: 0,
             studiedTime: 0,
-            createDate: { $date: currentDate },
+            createDate: { $date: todayString },
+            lastLoginDay: { $date: todayString },
             studiedDays: {
                 monday: false,
                 tuesday: false,
@@ -208,11 +217,10 @@ app.post("/register", async (req, res) => {
         };
 
         // Bugünkü günü true olarak işaretle
-        newUser.studiedDays[today] = true;
+        newUser.studiedDays[dayName] = true;
 
         // Kullanıcıyı koleksiyona ekle
         await collection.insertOne(newUser);
-
 
         res.status(201).send({ message: "Kayıt başarılı!" });
     } catch (err) {
@@ -220,6 +228,7 @@ app.post("/register", async (req, res) => {
         res.status(500).send({ message: "Bir hata oluştu.", error: err.message });
     }
 });
+
 
 
 //sesle çeviri
@@ -289,77 +298,6 @@ app.get('/wordnik-dictionary', async (req, res) => {
     }
 });
 
-// Çeviri kaydetme endpoint'i
-app.post('/save-translation', async (req, res) => {
-    const { userEmail, sourceText, resultText, sourceLang, targetLang, savedDate } = req.body;
-
-    try {
-        const collection = await getCollection('translations');
-        
-        // Aynı çevirinin daha önce kaydedilip kaydedilmediğini kontrol et
-        const existingTranslation = await collection.findOne({
-            userEmail,
-            sourceText,
-            resultText
-        });
-
-        if (existingTranslation) {
-            return res.status(400).json({
-                success: false,
-                message: 'Bu çeviri zaten kaydedilmiş.'
-            });
-        }
-
-        // Yeni çeviriyi kaydet
-        await collection.insertOne({
-            userEmail,
-            sourceText,
-            resultText,
-            sourceLang,
-            targetLang,
-            savedDate
-        });
-
-        res.json({ success: true, message: 'Çeviri başarıyla kaydedildi.' });
-    } catch (error) {
-        console.error('Çeviri kaydetme hatası:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Sunucu hatası oluştu.'
-        });
-    }
-});
-
-// Çeviri silme endpoint'i
-app.delete('/delete-translation', async (req, res) => {
-    const { userEmail, sourceText, resultText } = req.body;
-
-    try {
-        const collection = await getCollection('translations');
-        
-        const result = await collection.deleteOne({
-            userEmail,
-            sourceText,
-            resultText
-        });
-
-        if (result.deletedCount === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'Silinecek çeviri bulunamadı.'
-            });
-        }
-
-        res.json({ success: true, message: 'Çeviri başarıyla silindi.' });
-    } catch (error) {
-        console.error('Çeviri silme hatası:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Sunucu hatası oluştu.'
-        });
-    }
-});
-
 //Çalışılan zamanı güncelleme
 app.post("/update-studied-time", async (req, res) => {
     const { email, minutes } = req.body;
@@ -385,6 +323,173 @@ app.post("/update-studied-time", async (req, res) => {
     } catch (error) {
         console.error("StudiedTime güncelleme hatası:", error);
         res.status(500).json({ success: false, message: "Sunucu hatası." });
+    }
+});
+
+
+// Çeviri kaydetme endpoint'i
+app.post('/save-translation', async (req, res) => {
+    const { userEmail, sourceText, resultText, sourceLang, targetLang } = req.body;
+
+    try {
+        const collection = await getCollection('wordsTable');
+        const languageKey = `${sourceLang}-${targetLang}`;
+
+        // Kullanıcının mevcut dokümanını bul
+        const userDocument = await collection.findOne({ email: userEmail });
+
+        // Yeni kelime grubu
+        const newTranslation = {
+            source_text: sourceText,
+            target_text: resultText,
+            score: 0,
+            nextScore: 5,
+            isFavorite: false,
+            difficulty: 'difficult',
+            added_time: new Date(),
+        };
+
+        if (userDocument) {
+            // Mevcut bir dil grubu kontrolü
+            const translations = userDocument.translations || {};
+            if (!translations[languageKey]) {
+                translations[languageKey] = [];
+            }
+
+            // Aynı kelime grubunun eklenip eklenmediğini kontrol et
+            const exists = translations[languageKey].some(
+                (item) => item.source_text === sourceText && item.target_text === resultText
+            );
+
+            if (exists) {
+                return res.status(400).json({ success: false, message: 'Bu çeviri zaten mevcut.' });
+            }
+
+            // Dil grubuna yeni çeviri ekle
+            translations[languageKey].push(newTranslation);
+
+            // Kullanıcı dokümanını güncelle
+            await collection.updateOne(
+                { email: userEmail },
+                { $set: { translations } }
+            );
+        } else {
+            // Yeni bir kullanıcı dokümanı oluştur
+            const newUserDocument = {
+                email: userEmail,
+                translations: {
+                    [languageKey]: [newTranslation],
+                },
+            };
+
+            await collection.insertOne(newUserDocument);
+        }
+
+        res.json({ success: true, message: 'Çeviri başarıyla kaydedildi.' });
+    } catch (error) {
+        console.error('Çeviri kaydetme hatası:', error);
+        res.status(500).json({ success: false, message: 'Sunucu hatası oluştu.' });
+    }
+});
+
+
+// Çeviri silme endpoint'i
+app.delete('/delete-translation', async (req, res) => {
+    const { userEmail, sourceText, resultText, sourceLang, targetLang } = req.body;
+    try {
+        const collection = await getCollection('wordsTable');
+        const langGroup = `${sourceLang}-${targetLang}`; // Belirtilen dil grubunu al
+
+        // Kullanıcının dokümanını bul
+        const userDoc = await collection.findOne({ email: userEmail });
+        if (!userDoc || !userDoc.translations) {
+            return res.status(404).json({
+                success: false,
+                message: 'Dil grubu bulunamadı.',
+            });
+        }
+
+        const translations = userDoc.translations;
+
+        // Yalnızca belirtilen dil grubunda çeviriyi sil
+        let isDeleted = false;
+
+        if (translations[langGroup]) {
+            const updatedGroup = translations[langGroup].filter(
+                (item) =>
+                    item.source_text.toLowerCase() !== sourceText.toLowerCase() ||
+                    item.target_text.toLowerCase() !== resultText.toLowerCase()
+            );
+
+            if (updatedGroup.length !== translations[langGroup].length) {
+                translations[langGroup] = updatedGroup;
+                if (translations[langGroup].length === 0) delete translations[langGroup];
+                isDeleted = true;
+            }
+        }
+
+        if (!isDeleted) {
+            return res.status(404).json({
+                success: false,
+                message: 'Silinecek çeviri bulunamadı.',
+            });
+        }
+
+        // Güncellemeyi kaydet
+        await collection.updateOne(
+            { email: userEmail },
+            { $set: { translations } }
+        );
+
+        res.json({ success: true, message: 'Çeviri başarıyla silindi.' });
+    } catch (error) {
+        console.error('Çeviri silme hatası:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Sunucu hatası oluştu.',
+        });
+    }
+});
+
+// Çeviri kontrolü endpoint'i
+app.post('/check-translation', async (req, res) => {
+    const { userEmail, sourceText, resultText, sourceLang, targetLang } = req.body;
+
+    try {
+        const collection = await getCollection('wordsTable');
+        const langGroup = `${sourceLang}-${targetLang}`;
+
+        // Kullanıcının dokümanını bul
+        const userDoc = await collection.findOne({ email: userEmail });
+        if (!userDoc || !userDoc.translations) {
+            return res.status(404).json({
+                success: false,
+                message: 'Dil grubu bulunamadı.',
+            });
+        }
+
+        const translations = userDoc.translations;
+
+        // Dil grubunda çeviri var mı kontrol et
+        if (translations[langGroup]) {
+            const exists = translations[langGroup].some(
+                (item) => item.source_text === sourceText.toLowerCase() &&
+                        item.target_text === resultText.toLowerCase()
+            );
+
+            if (exists) {
+                return res.json({ success: true });
+            }
+        }
+
+        // Eğer çeviri yoksa
+        return res.json({ success: false });
+    } catch (error) {
+        console.error('Çeviri kontrol hatası:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Sunucu hatası oluştu.',
+        });
     }
 });
 
