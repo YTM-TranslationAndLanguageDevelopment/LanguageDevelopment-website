@@ -30,37 +30,6 @@ document.getElementById('sourceText').addEventListener('input', adjustHeight);
 document.getElementById('resultText').addEventListener('input', adjustHeight);
 
 
-function translate() {
-    const sourceText = $('#sourceText').val();
-    const sourceLang = $('#sourceLanguage').val();
-    const targetLang = $('#targetLanguage').val();
-
-    if (!sourceText.trim()) {
-        $('#resultText').val('');
-        return;
-    }
-
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(sourceText)}`;
-    
-    $.getJSON(url, function (data) {
-        $('#resultText').val(data[0][0][0]);
-    }).fail(function () {
-        $('#resultText').val('Çeviri yapılamadı.');
-    });
-}
-
-function translateText(sourceText, sourceLang, targetLang, callback) { //Çeviri sonucunu döndürür
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(sourceText)}`;
-
-    $.getJSON(url, function (data) {
-        const translatedText = data[0][0][0];
-        callback(translatedText); // Çevrilen metni geri döndür
-    }).fail(function () {
-        callback(null); // Çeviri başarısız olursa null döndür
-    });
-}
-
-
 // Çeviri sonucunu panoya kopyala
 $('#copy').click(function () {
     const resultText = $('#resultText').val();
@@ -246,8 +215,8 @@ $('.delete-icon').click(function () {
 // Yıldız simgesi tıklanınca işlem yapma
 $('.star-icon').click(async function () {
     const starIcon = $(this);
-    const sourceText = $('#sourceText').val();
-    const resultText = $('#resultText').val();
+    const sourceText = $('#sourceText').val().trim().toLowerCase();
+    const resultText = $('#resultText').val().trim().toLowerCase();
     const sourceLang = $('#sourceLanguage').val();
     const targetLang = $('#targetLanguage').val();
     const userEmail = sessionStorage.getItem('userEmail');
@@ -627,90 +596,4 @@ function hideDictionaryText() {
         });
     }
 });
-
-
-
-
-//yan menüyü açma 
-function openMenu() {
-    document.getElementById("sideMenu").style.width = "250px";
-    document.getElementById("sideMenu").style.display="block";
-    document.querySelector(".menu-toggle").style.display = "none"; // Açma butonunu gizle
-    const menuToggle = document.querySelector(".menu-toggle");
-    menuToggle.classList.add("hidden"); // Açma butonunu gizle
-    document.querySelector(".politikalar").style.display = "grid"; 
-    document.querySelector(".social-icons").style.display = "grid";
-}
-//yan menüyü kapatma
-function closeMenu() {
-    document.getElementById("sideMenu").style.width = "0";
-    document.querySelector(".menu-toggle").style.display = "block"; // Açma butonunu göster
-    document.querySelector(".politikalar").style.display = "none"; //fecade tasarım
-    document.querySelector(".social-icons").style.display = "none"; //ekran kapanırken bloklaşma gösterilmiyor
-    setTimeout(() => {
-        const menuToggle = document.querySelector(".menu-toggle");
-        menuToggle.classList.remove("hidden"); // Açma butonunu yavaşça göster
-    }, 300);
-}
-
-function openPopup(id) {
-    document.getElementById(id).style.display = 'flex';
-
-    // Metin kutularını temizle
-    if (id === 'girisPopup') {
-        document.getElementById("email").value = ""; // Giriş için eposta
-        document.getElementById("password").value = ""; // Giriş için şifre
-    } else if (id === 'kayitPopup') {
-        document.getElementById("newUsername").value = ""; // Kayıt için kullanıcı adı
-        document.getElementById("newEmail").value = ""; // Kayıt için eposta
-        document.getElementById("newPassword").value = ""; // Kayıt için şifre
-    }else if (id === 'profilPopup') {
-        document.getElementById("profilUserName").value = ""; // Profil için kullanıcı adı
-        document.getElementById("profilEmail").value = ""; // Profil için eposta
-        document.getElementById("totalScore").value = ""; // Profil için totalScore
-        document.getElementById("studiedTime").value = ""; // Profil studiedTime
-        document.getElementById("streak").value = ""; // Profil için streak
-        profilbilgileriayarla();
-    }
-}
-
-function closePopup(id) {
-    document.getElementById(id).style.display = 'none';
-}
-/* Kullanıcı hesaptan çıkışı */
-document.getElementById('exitProfil').addEventListener('click', (event) => {
-    event.preventDefault(); // Link varsayılan davranışını engelle
-    closePopup('profilPopup'); // Popup'ı kapat
-    setVisibility(false); // Kullanıcı çıkış yaptı, görünürlük ayarla
-    sessionStorage.clear();
-    stopTimer();
-});
-
-document.getElementById("savedIcon").addEventListener("click", () => {
-    window.location.href = "saved.html";
-});
-
-/* Giriş yapılınca butonları ayarlama */
-function setVisibility(isLoggedIn) {
-    const profilButton = document.getElementById('profilbutton');
-    const settingsButton = document.getElementById('settingsbutton');
-    const loginButton = document.getElementById('loginbutton');
-    const registerButton = document.getElementById('registerbutton');
-
-    if (isLoggedIn) {
-        profilButton.style.display = 'inline-block'; // Profil butonu görünür
-        settingsButton.style.display = 'inline-block'; // Ayarlar butonu görünür
-        loginButton.style.display = 'none'; // Giriş butonu gizli
-        registerButton.style.display = 'none'; // Kayıt ol butonu gizli
-    } else {
-        profilButton.style.display = 'none'; // Profil butonu gizli
-        settingsButton.style.display = 'none'; // Ayarlar butonu görünür
-        loginButton.style.display = 'inline-block'; // Giriş butonu görünür
-        registerButton.style.display = 'inline-block'; // Kayıt ol butonu görünür
-    }
-}
-
-
-
-
 

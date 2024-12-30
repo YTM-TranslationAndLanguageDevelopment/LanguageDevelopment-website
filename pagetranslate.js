@@ -2,6 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const inner = document.querySelector('.inner');
     const matches = document.querySelector('.additional-settings .matches');
 
+     // Kullanıcının seçtiği dili kaydetmek ve almak için yardımcı fonksiyonlar
+    const getStoredLanguage = () => sessionStorage.getItem("selectedLanguage");
+    const storeLanguage = (lang) => sessionStorage.setItem("selectedLanguage", lang);
+
     // Dil kutusuna tıklanınca matches görünürlüğünü aç/kapat
     inner.addEventListener('click', function (event) {
         const clickedElement = event.target; // Tıklanan ögeyi al
@@ -35,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
         link.addEventListener('click', event => {
             event.preventDefault();
             const targetLang = link.getAttribute('hreflang'); // Seçilen dil
+            storeLanguage(targetLang);
             const selectedElement = document.querySelector('.matches-group .selected a');
             const sourceLang = selectedElement ? selectedElement.getAttribute('hreflang') : 'auto';
             
@@ -126,9 +131,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }        
 
     
-        const browserLang = navigator.language.split('-')[0]; // Tarayıcı dili (ör. "en-US" → "en")
-        const selectedElement = document.querySelector('.matches-group .selected a');
-        const sourceLang = selectedElement ? selectedElement.getAttribute('hreflang') : 'auto';
-        translatePage(sourceLang, browserLang);
-        updateSelectedClass(browserLang);
+       // Sayfa yüklendiğinde dil kontrolü
+    const browserLang = navigator.language.split('-')[0]; // Tarayıcı dili
+    const storedLang = getStoredLanguage(); // Kaydedilen dil
+    const initialLang = storedLang || browserLang; // Tercih edilen veya tarayıcı dili
+    const selectedElement = document.querySelector('.matches-group .selected a');
+    const sourceLang = selectedElement ? selectedElement.getAttribute('hreflang') : 'auto';
+
+    updateSelectedClass(initialLang); // Seçili dili güncelle
+    translatePage(sourceLang, initialLang); // Sayfayı çevir
 });
