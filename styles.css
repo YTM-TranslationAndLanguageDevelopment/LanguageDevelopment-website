@@ -25,7 +25,7 @@ body {
     border-radius: 10px;
     padding: 21px;
     padding-right: 30px;
-    min-width: 300px;
+    width: 300px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: relative;
     text-align: center;
@@ -34,10 +34,10 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 .popup-content h2 {
-    color: #323131;
     padding-top: 5px;
     margin-bottom: 30px;
     margin-top: -5px;
@@ -96,7 +96,7 @@ width: 80%;
 .input-group label {
 align-self: flex-start;
 margin-bottom: 5px;
-color: #313131;
+color: #555;
 }
 
 .input-group input {
@@ -117,13 +117,8 @@ border-radius: 5px;
 
 /* Profil Sayfası */
 .profile-settings p{
-    font-size: 18px;
-    color: #2575cb;
+    font-size: 19px;
     font-weight: bolder;
-}
-
-.profile-settings{
-    padding: 10px;
 }
 
 .profile-section {
@@ -142,42 +137,15 @@ border-radius: 5px;
     padding: 4px;
 }
 
-#totalScore{
-    font-size: 19px;
-}
-
 .days-section {
     display: flex;
     justify-content: space-between;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    background-color: #7cb1fc;
+    margin: 10px 0;
 }
 
 .days-section .day {
     text-align: center;
-    width: 30px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 5px;
-    margin: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    background-color: #e6f5ff;
-    cursor: pointer;    
-}
-.days-section .day:hover{
-    background-color: #cae4fd;
-}
-
-.days-section span{
-    font-size: 15px;
+    font-size: 12px;
 }
 
 .days-section .circle {
@@ -190,17 +158,13 @@ border-radius: 5px;
 .streak-section {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
-}
-
-.streak-section p{
-    font-size: 22px;
-    color: rgb(255, 0, 34);
+    font-size: 14px;
+    margin-bottom: 15px;
 }
 
 .streak-section img{
     width: 25px;
-    height: 28px;
+    height: 25px;
     margin-right: 10px;
 }
 
@@ -995,13 +959,8 @@ header button:hover {
 }
 
 .error-message {
-    display: none; /* Varsayılan olarak gizli */
-    align-items: center;
     color: #ff0000;
     font-size: 12px;
     margin-top: 4px;
-    margin-bottom: 5px;
-}
-.error-message.active {
-    display: flex; /* Hata olduğunda görünür */
+    display: block;
 }

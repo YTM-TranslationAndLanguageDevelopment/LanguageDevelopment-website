@@ -12,12 +12,194 @@
     <script src="profile.js"></script>
     <script src="pagetranslate.js"></script>
     <script src="timecalculator.js"></script>
-    <script src="header.js"></script>
-    <script src="translate.js"></script>
 </head>
 <body>
     
-    <my-header></my-header>
+    <!-- Üst Kısım (Header) -->
+    <header>
+
+
+<!-- Profil Popup -->
+<div id="profilPopup" class="popup">
+    <div class="popup-content">
+        <span class="close" onclick="closePopup('profilPopup')">&times;</span>
+        <div class="profile-settings">
+        <div class="profile-section">
+            <img src="images/user.png" alt="User Icon" class="icon">
+            <p>Kullanıcı adı:</p>
+            <span id="profilUserName"></span>
+        </div>
+        <div class="profile-section">
+            <img src="images/profilEnvelope.png" alt="Envelope Icon" class="icon">
+            <p>E-mail:</p>
+            <span id="profilEmail"></span>
+        </div>
+        <div class="profile-section">
+            <img src="images/target.png" alt="Target Icon" class="icon">
+            <p>Toplam score:</p>
+            <span id="totalScore"></span>
+        </div>
+        <div class="profile-section">
+            <img src="images/study-time.png" alt="Study Time Icon" class="icon">
+            <p>Çalışılan zaman:</p>
+            <span id="studiedTime"></span>
+        </div>
+        <div class="days-section">
+            <div class="day">
+                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <span>Mon</span>
+            </div>
+            <div class="day">
+                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <span>Tue</span>
+            </div>
+            <div class="day">
+                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <span>Wed</span>
+            </div>
+            <div class="day">
+                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <span>Thu</span>
+            </div>
+            <div class="day">
+                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <span>Fri</span>
+            </div>
+            <div class="day">
+                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <span>Sat</span>
+            </div>
+            <div class="day">
+                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <span>Sun</span>
+            </div>
+        </div>
+        <div class="streak-section">
+            <img src="images/burn.png" alt="Burn Icon" class="icon">
+            <p id="streak">0</p>
+            <span>day</span>
+        </div>
+        <button id="exitProfil" class="exitProfil" onclick="logout()">Oturumu kapat</button>
+    </div>
+ </div>
+</div>
+
+        <!-- Giriş Yap Popup -->
+    <div id="girisPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup('girisPopup')">&times;</span>
+            <h2>Giriş Yap</h2>
+            <div class="input-group">
+                <label for="email">E-posta:</label>
+                <input type="email" id="email" name="email" placeholder="E-posta adresinizi girin">
+                <span id="emailError" class="error-message"></span>
+            </div>
+            <div class="input-group">
+                <label for="password">Şifre:</label>
+                <input type="password" id="password" name="password" placeholder="Şifrenizi girin">
+                <span id="passwordError" class="error-message"></span>
+            </div>
+                <button type="button" onclick="submitLogin()">Giriş Yap</button>
+            <p>Hesabınız yok mu? <a href="" id="signupFromLogin" onclick="closePopup('girisPopup'); openPopup('kayitPopup');">Kayıt Ol</a></p>
+        </div>
+    </div>
+
+    <!-- Kayıt Ol Popup -->
+    <div id="kayitPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup('kayitPopup')">&times;</span>
+            <h2>Kayıt Ol</h2>
+            <div class="input-group">
+                <label for="newUsername">Kullanıcı Adı:</label>
+                <input type="text" id="newUsername" name="newUsername" placeholder="Kullanıcı adınızı girin">
+                <span id="newUsernameError" class="error-message"></span>
+            </div>
+            <div class="input-group">
+                <label for="newEmail">E-posta:</label>
+                <input type="email" id="newEmail" name="newEmail" placeholder="E-posta adresinizi girin">
+                <span id="newEmailError" class="error-message"></span>
+            </div>
+            <div class="input-group">
+                <label for="newPassword">Şifre:</label>
+                <input type="password" id="newPassword" name="newPassword" placeholder="Şifrenizi girin">
+                <span id="newPasswordError" class="error-message"></span>
+            </div>
+                <button class="submit-button" onclick="submitRegistration()">Kayıt Ol</button>
+        </div>
+    </div>
+        <div class="header-container">
+        <button type="button" id="profilbutton" onclick="openPopup('profilPopup')">Profil</button>
+        <button type="button" id="settingsbutton"  onclick="openPopup('settingsPopup')" >Ayarlar</button>
+        <button type="button" id="loginbutton" onclick="openPopup('girisPopup')">Giriş Yap</button>
+        <button type="button" id="registerbutton" onclick="openPopup('kayitPopup')">Kayıt Ol</button>
+        </div>
+
+         <!-- Yan Menü -->
+    <aside id="sideMenu" class="side-menu">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
+        <div class="politikalar">
+        <div class="politikadiv"  onclick="window.location.href='GizlilikPolitikası.html';">
+            <img src="images/verified.png" title="verified" class="verified" alt="verified">
+            <a>Gizlilik Politikası</a>
+        </div>
+        <div class="politikadiv" onclick="window.location.href='ÇerezPolitikası.html';">
+            <img src="images/cookie.png" title="cookie" class="cookie" alt="cookie">
+            <a>Çerez Politikası</a>
+        </div>
+        <div class="politikadiv" onclick="window.location.href='Hakkımızda.html';">
+            <img src="images/group.png" title="group" class="group" alt="group">
+            <a>Hakkımızda</a>
+        </div>
+        </div>
+        <div class="social-icons">
+            <a href="https://github.com/AliKacarr" target="_blank"><img src="images/github.png" alt="GitHub"></a>
+            <a href="https://www.linkedin.com/in/ali-ka%C3%A7ar-6878ab251/" target="_blank"><img src="images/linkedin.png" alt="LinkedIn"></a>
+            <a href="https://www.youtube.com/@alikacar4645/videos" target="_blank"><img src="images/youtube.png" alt="YouTube"></a>
+            <a href="https://m.facebook.com/profile.php/?id=100027508234162" target="_blank"><img src="images/facebook.png" alt="Facebook"></a>
+            <a href="https://twitter.com/alikacar23" target="_blank"><img src="images/x.png" alt="X"></a>
+            <a href="https://www.instagram.com/alikacar23/" target="_blank"><img src="images/instagram.png" alt="X"></a>
+        </div>
+    </aside>
+    <div class="additional-settings ">
+        <div id="settings" class="button settings">
+            <div class="inner">
+                <a id="setting" aria-label="Settings">
+                    <img src="images/logo.png" title="" class="logo" alt="Dil">
+                </a>
+        </div>
+
+        <div class="matches">
+                <h2>Language</h2>
+                <ul class="matches-group wide">
+                    <li style="direction: rtl;"><a hreflang="ar" >عربي</a></li>
+                    <li> <a hreflang="bg" >Български</a> </li>
+                    <li><a hreflang="cs" >Čeština</a></li>
+                    <li> <a hreflang="de" >Deutsch</a></li>
+                    <li> <a hreflang="en" >English</a></li>
+                    <li class="selected"> <a hreflang="tr" >Türkçe</a></li>
+                    <li> <a hreflang="es" >Español</a></li>
+                    <li> <a hreflang="fr" >Français</a></li>
+                    <li>  <a hreflang="hr" >Hrvatski</a></li>
+                    <li>  <a hreflang="hu" >Magyar</a></li>
+                    <li><a hreflang="it"  >Italiano</a></li>
+                    <li><a hreflang="ka"  >ქართული ენა</a> </li>
+                    <li> <a hreflang="nl" >Nederlands</a> </li>
+                    <li> <a hreflang="pl" >Polski</a>  </li>
+                    <li> <a hreflang="pt" >Português</a> </li>
+                    <li> <a hreflang="ro" >Română</a></li>
+                    <li> <a hreflang="ru" >Pусский</a></li>
+                    <li> <a hreflang="sk" >Slovenský</a></li>
+                    <li> <a hreflang="el" >Ελληνικά</a></li>
+                    <li> <a hreflang="sr" >Srpski</a></li>
+                    <li>  <a hreflang="uk" >Українська</a> </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    </header>
+    <div class="menu-toggle" onclick="openMenu()">☰</div>
    
 
     <!-- Ana İçerik -->
