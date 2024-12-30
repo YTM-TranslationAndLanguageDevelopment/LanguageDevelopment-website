@@ -1,188 +1,120 @@
-// Enter tuşu ile alanlar arasında geçiş ve kayıt işlemi
 document.addEventListener('DOMContentLoaded', () => {
-    const inputs = [
-        document.getElementById('newUsername'),
-        document.getElementById('newEmail'),
-        document.getElementById('newPassword'),
+    const inputsConfig = [
+        {
+            id: 'newUsername',
+            type: 'username',
+            minLength: 5,
+            errorId: 'newUsernameError',
+            errorMessages: {
+                empty: "Kullanıcı adı boş bırakılamaz.",
+                short: "Kullanıcı adı en az 5 karakter olmalıdır.",
+            }
+        },
+        {
+            id: 'newEmail',
+            type: 'email',
+            errorId: 'newEmailError',
+            errorMessages: {
+                empty: "E-posta alanı boş bırakılamaz.",
+                invalid: "Geçerli bir e-posta adresi giriniz.",
+            }
+        },
+        {
+            id: 'newPassword',
+            type: 'password',
+            minLength: 5,
+            errorId: 'newPasswordError',
+            errorMessages: {
+                empty: "Şifre alanı boş bırakılamaz.",
+                short: "Şifre en az 5 karakter olmalıdır.",
+                matchUsername: "Kullanıcı adı ve şifre aynı olamaz.",
+            }
+        }
     ];
 
-    inputs.forEach((input, index) => {
-        input.addEventListener('keydown', (event) => {
+    inputsConfig.forEach((inputConfig, index) => {
+        const inputElement = document.getElementById(inputConfig.id);
+
+        inputElement.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
-                event.preventDefault(); // Varsayılan davranışı engelle
-                if (index < inputs.length - 1) {
-                    inputs[index + 1].focus(); // Bir sonraki alana odaklan
+                event.preventDefault();
+                if (index < inputsConfig.length - 1) {
+                    document.getElementById(inputsConfig[index + 1].id).focus();
                 } else {
-                    submitRegistration(); // Son alanda Enter ile kayıt işlemini başlat
+                    submitRegistration(); // Son inputta Enter ile kayıt
                 }
             }
         });
     });
-
-    // Input alanlarına event listener'ları ekle
-    const usernameInput = document.getElementById('newUsername');
-    const emailInput = document.getElementById('newEmail');
-    const passwordInput = document.getElementById('newPassword');
-
-    usernameInput.addEventListener('input', () => {
-        const username = usernameInput.value;
-        const usernameError = document.getElementById("newUsernameError");
-        
-        if (!username) {
-            usernameError.textContent = "Kullanıcı adı boş bırakılamaz.";
-        } else if (username.length < 5) {
-            usernameError.textContent = "Kullanıcı adı en az 5 karakter olmalıdır.";
-        } else {
-            usernameError.textContent = "";
-        }
-
-        // Kullanıcı adı değiştiğinde şifre kontrolünü de yap
-        validatePassword();
-    });
-
-    emailInput.addEventListener('input', () => {
-        const email = emailInput.value;
-        const emailError = document.getElementById("newEmailError");
-        
-        if (!email) {
-            emailError.textContent = "E-posta alanı boş bırakılamaz.";
-        } else if (!email.endsWith('@gmail.com') && !email.endsWith('@hotmail.com')) {
-            emailError.textContent = "Geçerli bir e-posta adresi giriniz (@gmail.com veya @hotmail.com)";
-        } else {
-            emailError.textContent = "";
-        }
-    });
-
-    const validatePassword = () => {
-        const username = usernameInput.value;
-        const password = passwordInput.value;
-        const passwordError = document.getElementById("newPasswordError");
-        
-        if (!password) {
-            passwordError.textContent = "Şifre alanı boş bırakılamaz.";
-        } else if (password.length < 5) {
-            passwordError.textContent = "Şifre en az 5 karakter olmalıdır.";
-        } else if (username === password) {
-            passwordError.textContent = "Kullanıcı adı ve şifre aynı olamaz.";
-        } else {
-            passwordError.textContent = "";
-        }
-    };
-
-    passwordInput.addEventListener('input', validatePassword);
 });
 
-function validateUsername(username) {
-    return username.length >= 5;
+// Genel doğrulama ve hata çevirisi
+function validateAndTranslateError({ id, type, minLength, errorId, errorMessages }) {
+    const inputElement = document.getElementById(id);
+    const errorElement = document.getElementById(errorId);
+    const value = inputElement.value.trim();
+    const username = document.getElementById('newUsername').value.trim();
+    const sourceLang = 'auto'; // Varsayılan hata mesajlarının dili
+
+    const browserLang = navigator.language.split('-')[0];
+    const storedLang = sessionStorage.getItem('selectedLanguage');
+    const targetLang = storedLang || browserLang;
+
+    let errorMessage = "";
+
+    if (!value) {
+        errorMessage = errorMessages.empty;
+    } else if (minLength && value.length < minLength) {
+        errorMessage = errorMessages.short;
+    } else if (type === 'email' && !validateEmail(value)) {
+        errorMessage = errorMessages.invalid;
+    } else if (type === 'password' && username === value) {
+        errorMessage = errorMessages.matchUsername;
+    }
+
+    if (errorMessage) {
+        // Hata mesajını çevir ve göster
+        translateText(errorMessage, sourceLang, targetLang, (translatedError) => {
+            errorElement.textContent = translatedError || errorMessage; // Çeviri başarısızsa varsayılan hata
+            errorElement.classList.add('active');
+        });
+        return false;
+    } else {
+        errorElement.textContent = "";
+        errorElement.classList.remove('active');
+        return true;
+    }
 }
 
+// E-posta doğrulama fonksiyonu
 function validateEmail(email) {
     return email.endsWith('@gmail.com') || email.endsWith('@hotmail.com');
 }
 
-function validatePassword(password) {
-    return password.length >= 5;
-}
-
-// Anlık doğrulama fonksiyonları
-function validateRegisterUsername() {
-    const username = document.getElementById("newUsername").value;
-    const usernameError = document.getElementById("newUsernameError");
-    
-    if (!username) {
-        usernameError.textContent = "Kullanıcı adı boş bırakılamaz.";
-        return false;
-    } else if (!validateUsername(username)) {
-        usernameError.textContent = "Kullanıcı adı en az 5 karakter olmalıdır.";
-        return false;
-    } else {
-        usernameError.textContent = "";
-        return true;
-    }
-}
-
-function validateRegisterEmail() {
-    const email = document.getElementById("newEmail").value;
-    const emailError = document.getElementById("newEmailError");
-    
-    if (!email) {
-        emailError.textContent = "E-posta alanı boş bırakılamaz.";
-        return false;
-    } else if (!validateEmail(email)) {
-        emailError.textContent = "Geçerli bir e-posta adresi giriniz (@gmail.com veya @hotmail.com)";
-        return false;
-    } else {
-        emailError.textContent = "";
-        return true;
-    }
-}
-
-function validateRegisterPassword() {
-    const username = document.getElementById("newUsername").value;
-    const password = document.getElementById("newPassword").value;
-    const passwordError = document.getElementById("newPasswordError");
-    
-    if (!password) {
-        passwordError.textContent = "Şifre alanı boş bırakılamaz.";
-        return false;
-    } else if (!validatePassword(password)) {
-        passwordError.textContent = "Şifre en az 5 karakter olmalıdır.";
-        return false;
-    } else if (username === password) {
-        passwordError.textContent = "Kullanıcı adı ve şifre aynı olamaz.";
-        return false;
-    } else {
-        passwordError.textContent = "";
-        return true;
-    }
-}
-
+// Kayıt gönderme
 function submitRegistration() {
-    const registerButton = document.querySelector('#kayitPopup button[onclick="submitRegistration()"]');
-    
-    if (registerButton.disabled) {
-        return;
-    }
 
-    // Son bir kontrol daha yap
-    const isUsernameValid = validateRegisterUsername();
-    const isEmailValid = validateRegisterEmail();
-    const isPasswordValid = validateRegisterPassword();
-
-    if (!isUsernameValid || !isEmailValid || !isPasswordValid) {
-        return;
-    }
-
-    const username = document.getElementById("newUsername").value;
-    const email = document.getElementById("newEmail").value;
-    const password = document.getElementById("newPassword").value;
-
-    registerButton.disabled = true;
+    const username = document.getElementById('newUsername').value.trim();
+    const email = document.getElementById('newEmail').value.trim();
+    const password = document.getElementById('newPassword').value.trim();
 
     fetch("http://localhost:3000/register", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),
     })
         .then((response) => response.json())
         .then((data) => {
             if (data.message === "Kayıt başarılı!") {
                 sessionStorage.setItem("userEmail", email);
-                sessionStorage.setItem('authority', 'user');
                 closePopup("kayitPopup");
                 setVisibility(true);
-                startTimer();
             } else {
                 alert(data.message);
             }
         })
         .catch((error) => {
-            console.error("Hata:", error);
-            alert("Kayıt yapılırken bir hata oluştu. Lütfen tekrar deneyin.");
-        })
-        .finally(() => {
-            registerButton.disabled = false;
+            console.error("Kayıt hatası:", error);
+            alert("Bir hata oluştu. Lütfen tekrar deneyin.");
         });
 }
