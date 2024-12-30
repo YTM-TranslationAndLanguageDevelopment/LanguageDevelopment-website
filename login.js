@@ -22,26 +22,38 @@ const inputsConfig = [
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
-    inputsConfig.forEach((inputConfig, index) => {
-        const inputElement = document.getElementById(inputConfig.id);
+    // Input alanlarına event listener'ları ekle
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const loginButton = document.querySelector('#girisPopup button[onclick="submitLogin()"]');
 
-        // Input alanlarına event listener'ları ekle
-        inputElement.addEventListener('input', () => validateAndTranslateError(inputConfig));
+    emailInput.addEventListener('input', () => {
+        const email = emailInput.value;
+        const emailError = document.getElementById("emailError");
+        
+        if (!email) {
+            emailError.textContent = "E-posta alanı boş bırakılamaz.";
+        } else if (!email.endsWith('@gmail.com') && !email.endsWith('@hotmail.com')) {
+            emailError.textContent = "Geçerli bir e-posta adresi giriniz (@gmail.com veya @hotmail.com)";
+        } else {
+            emailError.textContent = "";
+        }
+    });
 
-        inputElement.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                if (index < inputsConfig.length - 1) {
-                    document.getElementById(inputsConfig[index + 1].id).focus();
-                } else {
-                    submitLogin(); // Son inputta Enter ile giriş
-                }
-            }
-        });
+    passwordInput.addEventListener('input', () => {
+        const password = passwordInput.value;
+        const passwordError = document.getElementById("passwordError");
+        
+        if (!password) {
+            passwordError.textContent = "Şifre alanı boş bırakılamaz.";
+        } else if (password.length < 5) {
+            passwordError.textContent = "Şifre en az 5 karakter olmalıdır.";
+        } else {
+            passwordError.textContent = "";
+        }
     });
 
     // Enter tuşu için event listener
-    const loginButton = document.querySelector('#girisPopup button[onclick="submitLogin()"]');
     document.querySelector('#girisPopup').addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
