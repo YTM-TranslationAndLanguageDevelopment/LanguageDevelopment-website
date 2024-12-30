@@ -66,28 +66,27 @@ app.get('/get-user-info', async (req, res) => {
 
     try {
         const usersCollection = await getCollection("user");
-
-        // E-posta ile kullanıcıyı bulun
         const user = await usersCollection.findOne({ email });
 
-        if (user) {
-            // Kullanıcı bilgilerini döndür
-            res.status(200).json({
-                username: user.username,
-                email: user.email,
-                totalScore: user.totalScore,
-                streak: user.streak,
-                studiedTime: user.studiedTime,
-                studiedDays: user.studiedDays
-            });
-        } else {
-            res.status(404).json({ error: "Kullanıcı bulunamadı." });
-        }
+        if (!user) {
+            return res.status(404).json({ error: "Kullanıcı bulunamadı." });
+        }        
+
+        // Kullanıcı bilgilerini döndür
+        res.status(200).json({
+            username: user.username,
+            email: user.email,
+            totalScore: user.totalScore,
+            streak: user.streak,
+            studiedTime: user.studiedTime,
+            studiedDays: user.studiedDays,
+        });
     } catch (error) {
         console.error("Kullanıcı bilgisi alınırken hata oluştu:", error);
         res.status(500).json({ error: "Sunucu hatası." });
     }
 });
+
 
 
 
@@ -110,9 +109,10 @@ app.post('/login', async (req, res) => {
         }
 
         // Kullanıcının bugünkü gün bilgisini al ve veritabanını güncelle
-        const today = new Date().toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+        const bugün = new Date().toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
 
-        if (!user.studiedDays[today]) {
+
+        if (!user.studiedDays[bugün]) {
             // Güncelleme işlemi
             await usersCollection.updateOne(
                 { email }, // Koşul
@@ -121,27 +121,36 @@ app.post('/login', async (req, res) => {
         }
 
 
-        // Streak hesaplama
-        const daysOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-        const todayIndex = daysOrder.indexOf(today); // Bugünkü günün sırası
-        let streak = 0;
+        // Tarih kontrolleri
+        const today = new Date();
+        const lastLoginDay = new Date(user.lastLoginDay?.$date || user.lastLoginDay || 0);
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
 
-        // Geriye doğru günleri kontrol et
-        for (let i = todayIndex - 1; i >= 0; i--) {
-            const day = daysOrder[i];
-            if (user.studiedDays[day]) {
-                streak++; // Eğer true ise streak'i artır
-            } else {
-                break; // False bulunduğunda döngüyü bitir
-            }
+        let updatedStreak = user.streak;
+        console.log(lastLoginDay.toDateString());
+        console.log(today.toDateString());
+        if (lastLoginDay.toDateString() === today.toDateString()) {
+            // Bugün giriş yapılmış, bir şey yapma
+        } else if (lastLoginDay.toDateString() === yesterday.toDateString()) {
+            // Dün giriş yapılmış, streak artır
+            updatedStreak++;
+        } else {
+            // Daha önceki günler, streak sıfırla
+            updatedStreak = 0;
+            console.log(updatedStreak+'a');
         }
 
-        // Streak değerini güncelle
+        // Güncellemeleri yap
         await usersCollection.updateOne(
             { email },
-            { $set: { streak } }
+            {
+                $set: {
+                    lastLoginDay: { $date: today.toISOString() },
+                    streak: updatedStreak,
+                },
+            }
         );
-
 
         // Kullanıcının yetkisini kontrol et
         const authority = user.authority;
@@ -163,9 +172,13 @@ app.post('/login', async (req, res) => {
 });
 
 
-// Kayıt İşlemi
 app.post("/register", async (req, res) => {
     const { username, email, password } = req.body;
+
+    // Girdi kontrolü
+    if (!username || !email || !password) {
+        return res.status(400).send({ message: "Kullanıcı adı, e-posta ve şifre alanları doldurulmalıdır." });
+    }
 
     try {
         const collection = await getCollection("user");
@@ -180,11 +193,9 @@ app.post("/register", async (req, res) => {
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        // Tarih bilgileri
-        const currentDate = new Date().toISOString();
-
-        // Kullanıcının bugünkü gününü işaretle
-        const today = new Date().toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+        const today = new Date();
+        const todayString = today.toISOString();
+        const dayName = today.toLocaleString("en-US", { weekday: "long" }).toLowerCase();
 
         // Yeni kullanıcıyı oluştur
         const newUser = {
@@ -194,7 +205,8 @@ app.post("/register", async (req, res) => {
             totalScore: 0,
             streak: 0,
             studiedTime: 0,
-            createDate: { $date: currentDate },
+            createDate: { $date: todayString },
+            lastLoginDay: { $date: todayString },
             studiedDays: {
                 monday: false,
                 tuesday: false,
@@ -208,11 +220,10 @@ app.post("/register", async (req, res) => {
         };
 
         // Bugünkü günü true olarak işaretle
-        newUser.studiedDays[today] = true;
+        newUser.studiedDays[dayName] = true;
 
         // Kullanıcıyı koleksiyona ekle
         await collection.insertOne(newUser);
-
 
         res.status(201).send({ message: "Kayıt başarılı!" });
     } catch (err) {
@@ -220,6 +231,7 @@ app.post("/register", async (req, res) => {
         res.status(500).send({ message: "Bir hata oluştu.", error: err.message });
     }
 });
+
 
 
 //sesle çeviri

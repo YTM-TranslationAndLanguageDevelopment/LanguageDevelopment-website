@@ -35,8 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     inputsConfig.forEach((inputConfig, index) => {
         const inputElement = document.getElementById(inputConfig.id);
 
-        inputElement.addEventListener('input', () => validateAndTranslateError(inputConfig));
-
         inputElement.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 event.preventDefault();
@@ -95,9 +93,6 @@ function validateEmail(email) {
 
 // Kayıt gönderme
 function submitRegistration() {
-    const isValid = inputsConfig.every(inputConfig => validateAndTranslateError(inputConfig));
-
-    if (!isValid) return;
 
     const username = document.getElementById('newUsername').value.trim();
     const email = document.getElementById('newEmail').value.trim();

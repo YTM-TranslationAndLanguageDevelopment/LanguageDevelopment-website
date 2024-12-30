@@ -20,6 +20,8 @@ function profilbilgileriayarla() {
                     // Streak bilgisi
                     document.getElementById("streak").textContent = data.streak;
 
+                    const today = new Date().toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+
                     // Günler ve ikonları ayarla
                     const daysOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
                     const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -45,6 +47,12 @@ function profilbilgileriayarla() {
                         } else {
                             img.src = "images/x-mark.png"; // İlk true'dan sonraki false için "x-mark"
                         }
+
+                        // Bugün olan günün arka planını değiştir
+                        if (day === today) {
+                            dayElement.style.backgroundColor = "#f8ff91"; // Bugün olan gün için arka plan rengini değiştir
+                        }
+
                     });
                 } else {
                     alert("Kullanıcı bilgileri alınamadı.");
