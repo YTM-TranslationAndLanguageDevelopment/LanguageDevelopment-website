@@ -1,28 +1,10 @@
 // Enter tuşu ile alanlar arasında geçiş ve kayıt işlemi
 document.addEventListener('DOMContentLoaded', () => {
-    const inputs = [
-        document.getElementById('newUsername'),
-        document.getElementById('newEmail'),
-        document.getElementById('newPassword'),
-    ];
-
-    inputs.forEach((input, index) => {
-        input.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault(); // Varsayılan davranışı engelle
-                if (index < inputs.length - 1) {
-                    inputs[index + 1].focus(); // Bir sonraki alana odaklan
-                } else {
-                    submitRegistration(); // Son alanda Enter ile kayıt işlemini başlat
-                }
-            }
-        });
-    });
-
     // Input alanlarına event listener'ları ekle
     const usernameInput = document.getElementById('newUsername');
     const emailInput = document.getElementById('newEmail');
     const passwordInput = document.getElementById('newPassword');
+    const registerButton = document.querySelector('#kayitPopup button[onclick="submitRegistration()"]');
 
     usernameInput.addEventListener('input', () => {
         const username = usernameInput.value;
@@ -35,8 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             usernameError.textContent = "";
         }
-
-        // Kullanıcı adı değiştiğinde şifre kontrolünü de yap
         validatePassword();
     });
 
@@ -70,6 +50,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     passwordInput.addEventListener('input', validatePassword);
+
+    // Enter tuşu için event listener
+    document.querySelector('#kayitPopup').addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            registerButton.click();
+        }
+    });
 });
 
 function validateUsername(username) {

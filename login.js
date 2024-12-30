@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Input alanlarına event listener'ları ekle
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
+    const loginButton = document.querySelector('#girisPopup button[onclick="submitLogin()"]');
 
     emailInput.addEventListener('input', () => {
         const email = emailInput.value;
@@ -26,6 +27,14 @@ document.addEventListener('DOMContentLoaded', () => {
             passwordError.textContent = "Şifre en az 5 karakter olmalıdır.";
         } else {
             passwordError.textContent = "";
+        }
+    });
+
+    // Enter tuşu için event listener
+    document.querySelector('#girisPopup').addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            loginButton.click();
         }
     });
 });
