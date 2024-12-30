@@ -270,7 +270,9 @@ $('.star-icon').click(async function () {
                 body: JSON.stringify({
                     userEmail,
                     sourceText,
-                    resultText
+                    resultText,
+                    sourceLang,
+                    targetLang
                 }),
             });
 
