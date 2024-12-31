@@ -22,19 +22,17 @@ const inputsConfig = [
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
-    inputsConfig.forEach((inputConfig, index) => {
+    inputsConfig.forEach((inputConfig) => {
         const inputElement = document.getElementById(inputConfig.id);
+        if (!inputElement) return;
 
         inputElement.addEventListener('input', () => validateAndTranslateError(inputConfig));
 
+        // Enter tuşuna basıldığında sadece giriş işlemini başlat
         inputElement.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
-                event.preventDefault();
-                if (index < inputsConfig.length - 1) {
-                    document.getElementById(inputsConfig[index + 1].id).focus();
-                } else {
-                    submitLogin(); // Son inputta Enter ile giriş
-                }
+                event.preventDefault(); // Varsayılan Enter davranışını engelle
+                submitLogin(); // Giriş işlemini başlat
             }
         });
     });
@@ -82,15 +80,39 @@ function validateEmail(email) {
 
 // Giriş gönderme
 function submitLogin() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    
+    let hasError = false;
+
+    if (!email) {
+        emailError.textContent = "E-posta alanı boş bırakılamaz.";
+        emailError.classList.add('active');
+        hasError = true;
+    } else {
+        emailError.textContent = "";
+        emailError.classList.remove('active');
+    }
+
+    if (!password) {
+        passwordError.textContent = "Şifre alanı boş bırakılamaz.";
+        passwordError.classList.add('active');
+        hasError = true;
+    } else {
+        passwordError.textContent = "";
+        passwordError.classList.remove('active');
+    }
+
+    if (hasError) return;
+
     const isValid = ['email', 'password'].every(id => {
         const inputConfig = inputsConfig.find(config => config.id === id);
         return validateAndTranslateError(inputConfig);
     });
 
     if (!isValid) return;
-
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value.trim();
 
     fetch("http://localhost:3000/login", {
         method: "POST",

@@ -32,17 +32,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    inputsConfig.forEach((inputConfig, index) => {
+    inputsConfig.forEach((inputConfig) => {
         const inputElement = document.getElementById(inputConfig.id);
+        if (!inputElement) return;
+
+        inputElement.addEventListener('input', () => validateAndTranslateError(inputConfig));
 
         inputElement.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 event.preventDefault();
-                if (index < inputsConfig.length - 1) {
-                    document.getElementById(inputsConfig[index + 1].id).focus();
-                } else {
-                    submitRegistration(); // Son inputta Enter ile kayıt
-                }
+                submitRegistration();
             }
         });
     });
@@ -93,10 +92,51 @@ function validateEmail(email) {
 
 // Kayıt gönderme
 function submitRegistration() {
-
     const username = document.getElementById('newUsername').value.trim();
     const email = document.getElementById('newEmail').value.trim();
     const password = document.getElementById('newPassword').value.trim();
+    
+    const usernameError = document.getElementById('newUsernameError');
+    const emailError = document.getElementById('newEmailError');
+    const passwordError = document.getElementById('newPasswordError');
+    
+    let hasError = false;
+
+    if (!username) {
+        usernameError.textContent = "Kullanıcı adı boş bırakılamaz.";
+        usernameError.classList.add('active');
+        hasError = true;
+    } else {
+        usernameError.textContent = "";
+        usernameError.classList.remove('active');
+    }
+
+    if (!email) {
+        emailError.textContent = "E-posta alanı boş bırakılamaz.";
+        emailError.classList.add('active');
+        hasError = true;
+    } else {
+        emailError.textContent = "";
+        emailError.classList.remove('active');
+    }
+
+    if (!password) {
+        passwordError.textContent = "Şifre alanı boş bırakılamaz.";
+        passwordError.classList.add('active');
+        hasError = true;
+    } else {
+        passwordError.textContent = "";
+        passwordError.classList.remove('active');
+    }
+
+    if (hasError) return;
+
+    const isValid = ['newUsername', 'newEmail', 'newPassword'].every(id => {
+        const inputConfig = inputsConfig.find(config => config.id === id);
+        return validateAndTranslateError(inputConfig);
+    });
+
+    if (!isValid) return;
 
     fetch("http://localhost:3000/register", {
         method: "POST",
