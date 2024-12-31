@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Çeviri ve Dil Gelişimi</title>
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="login.js"></script>
+    <script src="register.js"></script>
+    <script src="profile.js"></script>
+    <script src="pagetranslate.js"></script>
+    <script src="timecalculator.js"></script>
+    <script src="header.js"></script>
+    <script src="translate.js"></script>
+</head>
+<body>
+    
+    <my-header></my-header>
+   
+
+    <!-- Ana İçerik -->
+    <main>
+        <div class="translation-container">
+            <!-- Dil Seçim Kutuları -->
+            <div class="language-selection">
+                <select id="sourceLanguage" >
+                    <option value="auto">Dili algıla</option>
+                    <option value="en" selected>İngilizce</option>
+                    <option value="tr">Türkçe</option>
+                    <option value="fr">Fransızca</option>
+                    <option value="de">Almanca</option>
+                    <option value="es">İspanyolca</option>
+                    <option value="it">İtalyanca</option>
+                    <option value="ru">Rusça</option>
+                    <option value="zh-CN">Çince</option>
+                    <option value="ja">Japonca</option>
+                </select>
+                <img id="swapLanguages" src="images/arrow.png" title="Dil Değiştir">
+                <select id="targetLanguage" >
+                    <option value="tr" selected>Türkçe</option>
+                    <option value="en">İngilizce</option>
+                    <option value="fr">Fransızca</option>
+                    <option value="de">Almanca</option>
+                    <option value="es">İspanyolca</option>
+                    <option value="it">İtalyanca</option>
+                    <option value="ru">Rusça</option>
+                    <option value="zh-CN">Çince</option>
+                    <option value="ja">Japonca</option>
+                </select>
+            </div>
+
+            <!-- Çeviri Alanları -->
+            <div class="translation-areas">
+                <div class="text-container" id="sourceContainer">
+                    <textarea id="sourceText" placeholder="Metin girin"></textarea>
+                    <img id="delete-icon" src="images/delete.png" title="Kaynak metni temizle" class="delete-icon" alt="delete">
+                    <div class="icon-row1">
+                        <img id="microfon" src="images/microfon.png" title="Sesle çeviri" class="microfon" alt="microphone">
+                        <img id="volume1" src="images/volume.png" title="Dinle" class="volume" alt="volume">
+                        <img id="random" src="images/random.png" title="Rastgele kelime getir" alt="random">
+                        <img id="dictionary" src="images/dictionary.png" title="Kelimenin türünü öğren" alt="dictionary">
+                        <p id="dictionaryText" ></p>
+                    </div>
+                </div>
+                <div class="text-container" id="resultContainer">
+                    <textarea id="resultText" placeholder="Çeviri" type=text readonly></textarea>
+                    <img id="yıldız" src="images/bosyıldız.png" title="Çeviriyi kaydet" class="star-icon" alt="star">
+                    <div class="icon-row2">
+                        <img id="volume2" src="images/volume.png" title="Dinle" class="volume" alt="volume">
+                        <img id="copy" src="images/copy.png" title="Kopyala" alt="paste">
+                        <img id="share" src="images/share.png" title="Çeviriyi paylaş" alt="share">
+                        <img id="derecele" src="images/derecele.png" title="Bu çeviriyi değerlendirin" alt="rate">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alt İkonlar -->
+            <div class="icons-container">
+            <div class="icons-container-area">
+                <img src="images/history.png" alt="Geçmiş" title="Geçmiş" id="historyIcon" class="icon-small">
+                <p>Geçmiş</p>
+            </div>
+            <div class="icons-container-area">
+                <img src="images/saved.png" alt="Kaydedilenler" title="Kaydedilenler" id="savedIcon" class="icon-small">
+                <p>Kaydedilenler</p>
+            </div>
+            </div>
+        </div>
+    </main>               
+
+
+     <!-- Copy Panel -->
+    <div id="copy-panel" class="hidden">
+        <div class="panel-arrow"></div>
+        <div class="panel-content">Çeviri Kopyalandı</div>
+    </div>
+
+        <!-- Share Panel -->
+    <div id="share-panel" class="hidden">
+        <div class="panel-arrow"></div>
+        <div class="panel-content">
+            <div class="panelMain">
+            <p class="panelCenteredtext">Bu çeviriyi paylaşın</p>
+            <div class="panelIcons">
+                <a id="mailto" href="mailto:?" class="icon">
+                    <img src="images/envelope.png" alt="E-posta" class="icon-img">
+                    <p class="icon-text">E-posta</p>
+                </a>
+                <a id="tweetto" target="_blank" href="https://twitter.com/intent/tweet?" class="icon">
+                    <img src="images/twitter.png" alt="X" class="icon-img">
+                    <p class="icon-text">X</p>
+                </a>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="derecele-panel" class="hidden">
+        <div class="panel-arrow"></div>
+        <div class="panel-content">
+            <div class="panelMain">
+                <p  class="panelCenteredtext">Bu çeviriyi değerlendirin</p>
+                <div class="panelIcons">
+                    <div class="icon" id="like-icon">
+                        👍
+                        <div class="tooltip">İyi çeviri</div>
+                    </div>
+                    <div class="icon" id="dislike-icon">
+                        👎
+                        <div class="tooltip">Kötü çeviri</div>
+                    </div>
+                </div>
+            <p >Geri bildiriminiz, ürünü iyileştirmek<br> için kullanılacaktır</p>
+            <div class="divider"></div>
+            <a  class="edit-suggestion">
+                <img src="images/pen_icon.png" alt="Kalem İkonu">
+                <p>Düzenleme öner</p>
+            </a>
+        </div>
+        </div>
+    </div>
+        
+    <script src="script.js"></script>
+</body>
+</html>
