@@ -116,7 +116,7 @@ app.post('/login', async (req, res) => {
             // Güncelleme işlemi
             await usersCollection.updateOne(
                 { email }, // Koşul
-                { $set: { [`studiedDays.${today}`]: true } } // Güncelleme
+                { $set: { [`studiedDays.${bugün}`]: true } } // Güncelleme
             );
         }
 
@@ -128,8 +128,6 @@ app.post('/login', async (req, res) => {
         yesterday.setDate(today.getDate() - 1);
 
         let updatedStreak = user.streak;
-        console.log(lastLoginDay.toDateString());
-        console.log(today.toDateString());
         if (lastLoginDay.toDateString() === today.toDateString()) {
             // Bugün giriş yapılmış, bir şey yapma
         } else if (lastLoginDay.toDateString() === yesterday.toDateString()) {
@@ -138,7 +136,6 @@ app.post('/login', async (req, res) => {
         } else {
             // Daha önceki günler, streak sıfırla
             updatedStreak = 0;
-            console.log(updatedStreak+'a');
         }
 
         // Güncellemeleri yap

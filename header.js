@@ -33,31 +33,31 @@ class Header extends HTMLElement { //HTMLElement sınıfından Header adında bi
         </div>
         <div class="days-section">
             <div class="day">
-                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <img src="images/circle.png" alt="ikon" class="circle">
                 <span>Mon</span>
             </div>
             <div class="day">
-                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <img src="images/circle.png" alt="ikon" class="circle">
                 <span>Tue</span>
             </div>
             <div class="day">
-                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <img src="images/circle.png" alt="ikon" class="circle">
                 <span>Wed</span>
             </div>
             <div class="day">
-                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <img src="images/circle.png" alt="ikon" class="circle">
                 <span>Thu</span>
             </div>
             <div class="day">
-                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <img src="images/circle.png" alt="ikon" class="circle">
                 <span>Fri</span>
             </div>
             <div class="day">
-                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <img src="images/circle.png" alt="ikon" class="circle">
                 <span>Sat</span>
             </div>
             <div class="day">
-                <img src="images/circle.png" alt="Circle Icon" class="circle">
+                <img src="images/circle.png" alt="ikon" class="circle">
                 <span>Sun</span>
             </div>
         </div>
