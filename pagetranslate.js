@@ -64,71 +64,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
         //----------------Sayfa Çevirisi----------------
-        function translatePage(sourceLang, targetLang) {
-            // Tüm metin düğümlerini bul
-            const textNodes = [];
-            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
-            let node;
-            while ((node = walker.nextNode())) {
-                if (node.nodeValue.trim()) {
-                    textNodes.push(node);
-                }
-            }
-        
-            // Çeviri için tüm metinleri topla
-            const texts = textNodes.map(node => node.nodeValue);
-        
-            // Her bir metni çevir ve DOM'u güncelle
-            texts.forEach((text, index) => {
-                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
-                
-                fetch(url)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        textNodes[index].nodeValue = data[0][0][0];
-                    })
-                    .catch(error => {
-                        console.error(`"${text}" metni çevrilemedi:`, error);
-                    });
-            });
-        
-            // Sayfadaki tüm placeholder, title ve alt değerlerini çevir
-            const attributeElements = document.querySelectorAll('[placeholder], [title], [alt]');
-            attributeElements.forEach(element => {
-                translateAttributes(element, sourceLang, targetLang);
-            });
+        // Sayfa çevirisi
+    function translatePage(sourceLang, targetLang) {
+        const textNodes = [];
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+        let node;
+
+        // Metin düğümlerini topla
+        while ((node = walker.nextNode())) {
+            if (node.nodeValue.trim()) textNodes.push(node);
         }
-        
-        function translateAttributes(element, sourceLang, targetLang) {
-            const attributesToTranslate = ['placeholder', 'title', 'alt'];
-        
-            attributesToTranslate.forEach(attribute => {
+
+        // Her bir metni çevir
+        textNodes.forEach(node => {
+            translateText(node.nodeValue, sourceLang, targetLang, (translatedText) => {
+                if (translatedText) node.nodeValue = translatedText;
+            });
+        });
+
+        // Öznitelikleri çevir
+        const attributeElements = document.querySelectorAll('[placeholder], [title], [alt]');
+        attributeElements.forEach(element => {
+            ['placeholder', 'title', 'alt'].forEach(attribute => {
                 const originalText = element.getAttribute(attribute);
                 if (originalText) {
-                    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(originalText)}`;
-        
-                    fetch(url)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            const translatedText = data[0][0][0];
-                            element.setAttribute(attribute, translatedText);
-                        })
-                        .catch(error => {
-                            console.error(`"${originalText}" ${attribute} çevrilemedi:`, error);
-                        });
+                    translateText(originalText, sourceLang, targetLang, (translatedText) => {
+                        if (translatedText) element.setAttribute(attribute, translatedText);
+                    });
                 }
             });
-        }        
+        });
+    }  
 
     
        // Sayfa yüklendiğinde dil kontrolü
