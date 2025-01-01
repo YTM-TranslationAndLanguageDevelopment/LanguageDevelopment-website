@@ -29,20 +29,46 @@ function adjustHeight() {
 document.getElementById('sourceText').addEventListener('input', adjustHeight);
 document.getElementById('resultText').addEventListener('input', adjustHeight);
 
+//Panaller
+function hidePanel() {
+    derecelePanel.classList.remove("visible");
+    derecelePanel.classList.add("hidden");
+    copyPanel.classList.remove("visible");
+    copyPanel.classList.add("hidden");
+    sharePanel.classList.remove("visible");
+    sharePanel.classList.add("hidden");
+    savedPanel.classList.remove("visible");
+    savedPanel.classList.add("hidden");
+}
 
-// Çeviri sonucunu panoya kopyala
-$('#copy').click(function () {
-    const resultText = $('#resultText').val();
-    if (resultText.trim()) {
-        navigator.clipboard.writeText(resultText).then(() => {
-        }).catch(() => {
-            alert('Panoya kopyalama başarısız oldu.');
-        });
-    } else {
-        alert('Kopyalanacak metin bulunamadı.');
+document.addEventListener("click", (event) => {
+    const derecelePanelVisible = derecelePanel.classList.contains("visible");
+    const copyPanelVisible = copyPanel.classList.contains("visible");
+    const sharePanelVisible = sharePanel.classList.contains("visible");
+    const savedPanelVisible = savedPanel.classList.contains("visible");
+
+    if (derecelePanelVisible && !derecelePanel.contains(event.target) && event.target !== dereceleIcon) {
+        derecelePanel.classList.remove("visible");
+        derecelePanel.classList.add("hidden");
+    }
+
+    if (copyPanelVisible && !copyPanel.contains(event.target) && event.target !== copyIcon) {
+        copyPanel.classList.remove("visible");
+        copyPanel.classList.add("hidden");
+    }
+
+    if (sharePanelVisible && !sharePanel.contains(event.target) && event.target !== shareIcon) {
+        sharePanel.classList.remove("visible");
+        sharePanel.classList.add("hidden");
+    }
+
+    if (savedPanelVisible && !savedPanel.contains(event.target) && event.target !== savedIcon) {
+        savedPanel.classList.remove("visible");
+        savedPanel.classList.add("hidden");
     }
 });
 
+//copy panel
 const copyIcon = document.getElementById("copy");
 const copyPanel = document.getElementById("copy-panel");
 
@@ -63,6 +89,7 @@ function showCopyPanel() {
     hideTimeout = setTimeout(hidePanel, 2000);
 }
 
+//share panel
 const shareIcon = document.getElementById("share");
 const sharePanel = document.getElementById("share-panel");
 
@@ -83,18 +110,19 @@ function showSharePanel() {
     hideTimeout = setTimeout(hidePanel, 8000);
 }
 
-const derecele = document.getElementById("derecele");
+//derecele panel
+const dereceleIcon = document.getElementById("derecele");
 const derecelePanel = document.getElementById("derecele-panel");
 
 let hideTimeout;
 
-derecele.addEventListener("click", (event) => {
+dereceleIcon.addEventListener("click", (event) => {
     event.stopPropagation();
     showDerecelePanel();
 });
 
 function showDerecelePanel() {
-    const rect = derecele.getBoundingClientRect();
+    const rect = dereceleIcon.getBoundingClientRect();
     derecelePanel.style.top = `${rect.bottom + window.scrollY -250}px`;
     derecelePanel.style.left = `${rect.left + window.scrollX - 440}px`;
 
@@ -105,34 +133,32 @@ function showDerecelePanel() {
     hideTimeout = setTimeout(hidePanel, 8000);
 }
 
-function hidePanel() {
-    derecelePanel.classList.remove("visible");
-    derecelePanel.classList.add("hidden");
-    copyPanel.classList.remove("visible");
-    copyPanel.classList.add("hidden");
-    sharePanel.classList.remove("visible");
-    sharePanel.classList.add("hidden");
+const savedIcon = document.getElementById("yıldız");
+const savedPanel = document.getElementById("saved-panel");
+const dismissButton = document.getElementById("dismiss-button");
+const savedloginButton = document.getElementById("saved-login-button");
+
+function showSavedPanel() {
+    const rect = savedIcon.getBoundingClientRect();
+    savedPanel.style.top = `${rect.bottom + window.scrollY +115}px`;
+    savedPanel.style.left = `${rect.left + window.scrollX - 335}px`;
+
+    savedPanel.classList.add("visible");
+    savedPanel.classList.remove("hidden");
+
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(hidePanel, 8000); 
 }
 
-document.addEventListener("click", (event) => {
-    const derecelePanelVisible = derecelePanel.classList.contains("visible");
-    const copyPanelVisible = copyPanel.classList.contains("visible");
-    const sharePanelVisible = sharePanel.classList.contains("visible");
+// Şimdi değil butonuna tıklanınca panel kapanır
+dismissButton.addEventListener("click", () => {
+savedPanel.classList.remove("visible");
+});
 
-    if (derecelePanelVisible && !derecelePanel.contains(event.target) && event.target !== derecele) {
-        derecelePanel.classList.remove("visible");
-        derecelePanel.classList.add("hidden");
-    }
-
-    if (copyPanelVisible && !copyPanel.contains(event.target) && event.target !== copyIcon) {
-        copyPanel.classList.remove("visible");
-        copyPanel.classList.add("hidden");
-    }
-
-    if (sharePanelVisible && !sharePanel.contains(event.target) && event.target !== shareIcon) {
-        sharePanel.classList.remove("visible");
-        sharePanel.classList.add("hidden");
-    }
+// Oturum aç butonuna tıklanınca giriş fonksiyonu çağrılır ve panel kapanır
+savedloginButton.addEventListener("click", () => {
+    savedPanel.classList.remove("visible");
+    openPopup("girisPopup");
 });
 
     
@@ -170,49 +196,8 @@ const resultTextElement = document.querySelector("#resultText"); // #resultText 
     }
 
 
-// Dil değiştirme ikonuna tıklanıp dillerin ve metinlerin yer değiştirilmesi
-$('#swapLanguages').click(function () {
-    // sourceLanguage değeri "auto" değilse işlemleri gerçekleştir
-    const sourceLang = $('#sourceLanguage').val();
-    const targetLang = $('#targetLanguage').val();
-
-    if (sourceLang !== 'auto') {
-        closeRecognizing();  
-        resetStarIcon();     
-
-        // Dilleri değiştir
-        $('#sourceLanguage').val(targetLang);
-        $('#targetLanguage').val(sourceLang);
-
-        // Çeviriyi yeniden başlat
-        $('#sourceText').val($('#resultText').val());
-
-        translate(); // Çeviriyi yeniden başlat
-    }
-});
-
-// ComboBox tıklanıp değeri değiştirildiğinde
-$('#sourceLanguage, #targetLanguage').change(function () {
-    resetStarIcon();
-    closeRecognizing(); 
-    translate();
-
-    const selectedLanguage = document.getElementById("sourceLanguage").value;
-    recognition.lang = selectedLanguage; // Yeni dili ayarla
-    console.log('dil değişti: '+selectedLanguage);
-});
-
-// Silme butonuna tıklama işlevi
-$('.delete-icon').click(function () {
-    $('#sourceText').val(''); // Kaynak metni temizle
-    $('#resultText').val(''); // Çeviri metnini temizle
-    adjustHeight();
-    toggleElementsVisibility();
-    resetStarIcon();
-});
-
-
-// Yıldız simgesi tıklanınca işlem yapma
+    //Ana menü ikonları işlevleri
+// Yıldız simgesi tıklanınca
 $('.star-icon').click(async function () {
     const starIcon = $(this);
     const sourceText = $('#sourceText').val().trim().toLowerCase();
@@ -222,15 +207,14 @@ $('.star-icon').click(async function () {
     const userEmail = sessionStorage.getItem('userEmail');
 
     // Kullanıcı girişi kontrolü
-    if (!userEmail) {
-        alert('Çeviriyi kaydetmek için giriş yapmalısınız.');
+    if (!userEmail) { 
+        showSavedPanel();
         starIcon.attr('src', 'images/bosyıldız.png');
         return;
     }
 
     // Çeviri verilerinin kontrolü
     if (!sourceText || !resultText) {
-        alert('Kaydetmek için çeviri yapmalısınız.');
         starIcon.attr('src', 'images/bosyıldız.png');
         return;
     }
@@ -298,7 +282,6 @@ function resetStarIcon() {
     }
 }
 
-
 //  Kaynak metin - source text değiştiğinde
 let debounceTimeout;
 
@@ -325,6 +308,11 @@ document.getElementById("sourceText").addEventListener("input", async () => {
 
                 // Çeviri tamamlandıktan sonra resultText'i al
                 const resultTextValue = document.getElementById("resultText").value.trim();
+
+                // Kullanıcı girişi kontrolü
+                if (!userEmail) { 
+                    return;
+                }
 
                 // Çeviri işlemi tamamlandığında, veri tabanında mevcut olup olmadığını kontrol et
                 const response = await fetch('http://localhost:3000/check-translation', {
@@ -357,14 +345,62 @@ document.getElementById("sourceText").addEventListener("input", async () => {
     }, 100); // 100ms sonra işlemi yap
 });
 
-// Yıldız simgesini sıfırlama fonksiyonu
-function resetStarIcon() {
-    const starIcon = $('.star-icon');
-    if (starIcon.attr('src') === 'images/doluyıldız.png') {
-        starIcon.attr('src', 'images/bosyıldız.png'); // Bosyıldız.png'ye döndür
-    }
-}
 
+// Çeviri sonucunu panoya kopyala
+$('#copy').click(function () {
+    const resultText = $('#resultText').val();
+    if (resultText.trim()) {
+        navigator.clipboard.writeText(resultText).then(() => {
+        }).catch(() => {
+            alert('Panoya kopyalama başarısız oldu.');
+        });
+    } else {
+        alert('Kopyalanacak metin bulunamadı.');
+    }
+});
+
+
+// Dil değiştirme ikonuna tıklanıp dillerin ve metinlerin yer değiştirilmesi
+$('#swapLanguages').click(function () {
+    // sourceLanguage değeri "auto" değilse işlemleri gerçekleştir
+    const sourceLang = $('#sourceLanguage').val();
+    const targetLang = $('#targetLanguage').val();
+
+    if (sourceLang !== 'auto') {
+        closeRecognizing();  
+        resetStarIcon();     
+
+        // Dilleri değiştir
+        $('#sourceLanguage').val(targetLang);
+        $('#targetLanguage').val(sourceLang);
+
+        // Çeviriyi yeniden başlat
+        $('#sourceText').val($('#resultText').val());
+
+        translate(); // Çeviriyi yeniden başlat
+    }
+});
+
+// ComboBox tıklanıp değeri değiştirildiğinde
+$('#sourceLanguage, #targetLanguage').change(function () {
+    resetStarIcon();
+    closeRecognizing(); 
+    translate();
+
+    const selectedLanguage = document.getElementById("sourceLanguage").value;
+    recognition.lang = selectedLanguage; // Yeni dili ayarla
+    console.log('dil değişti: '+selectedLanguage);
+});
+
+// Silme butonuna tıklama işlevi
+$('.delete-icon').click(function () {
+    $('#sourceText').val(''); // Kaynak metni temizle
+    $('#resultText').val(''); // Çeviri metnini temizle
+    adjustHeight();
+    toggleElementsVisibility();
+    hideDictionaryText();
+    resetStarIcon();
+});
 
 
 // sourceText'i seslendir (Google Translate TTS)
@@ -387,6 +423,7 @@ $('#volume2').click(function () {
     }
 });
 
+//Seslendirme isteği
 function playTTS(text, lang) {
     // Backend üzerindeki /tts endpointine istek göndermek için URL oluştur
     const ttsUrl = `http://localhost:3000/tts?text=${encodeURIComponent(text)}&lang=${lang}`;
@@ -398,7 +435,6 @@ function playTTS(text, lang) {
         alert("Seslendirme başlatılamadı.");
     });
 }
-
 
 // Mikrofon simgesine tıklandığında başlat/durdur
 $('#microfon').on('click', () => {
@@ -485,6 +521,7 @@ function toggleMicrophoneState(isListening) {
     if (isListening) {
         microphoneIcon.attr('src', 'images/stopmicrofon.png'); // Mikrofon simgesini "dinleme" durumuna değiştir
         random.style.display = "none";
+        hideDictionaryText();
     } else {
         microphoneIcon.attr('src', 'images/microfon.png'); // Mikrofon simgesini eski haline döndür
     }
@@ -634,16 +671,3 @@ function hideDictionaryText() {
     const dictionaryText = document.getElementById("dictionaryText");
     dictionaryText.style.display = "none"; // Görünürlüğü kapat
 }
-
-
-// Belirtilen ögelere tıklanınca dictionaryText görünürlüğünü kapat
-["microfon", "delete-icon"].forEach((id) => {
-    const element = document.getElementById(id);
-
-    if (element) {
-        element.addEventListener("click", () => {
-            hideDictionaryText();
-        });
-    }
-});
-
