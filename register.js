@@ -1,14 +1,14 @@
-document.addEventListener('DOMContentLoaded', () => {
+const RegisterService = (() => {
     const inputsConfig = [
         {
             id: 'newUsername',
-            type: 'username',
+            type: 'text',
             minLength: 5,
             errorId: 'newUsernameError',
             errorMessages: {
                 empty: "Kullanıcı adı boş bırakılamaz.",
                 short: "Kullanıcı adı en az 5 karakter olmalıdır.",
-            }
+            },
         },
         {
             id: 'newEmail',
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             errorMessages: {
                 empty: "E-posta alanı boş bırakılamaz.",
                 invalid: "Geçerli bir e-posta adresi giriniz.",
-            }
+            },
         },
         {
             id: 'newPassword',
@@ -27,135 +27,113 @@ document.addEventListener('DOMContentLoaded', () => {
             errorMessages: {
                 empty: "Şifre alanı boş bırakılamaz.",
                 short: "Şifre en az 5 karakter olmalıdır.",
-                matchUsername: "Kullanıcı adı ve şifre aynı olamaz.",
-            }
-        }
+                sameAsUsername: "Kullanıcı adı ve şifre aynı olamaz.",
+            },
+        },
     ];
 
-    inputsConfig.forEach((inputConfig) => {
-        const inputElement = document.getElementById(inputConfig.id);
-        if (!inputElement) return;
+    const validateAll = () => {
+        const allValid = inputsConfig.every((config) => ValidationService.validateField(config));
+        if (!allValid) return false;
 
-        inputElement.addEventListener('input', () => validateAndTranslateError(inputConfig));
+        const username = document.getElementById('newUsername').value.trim();
+        const password = document.getElementById('newPassword').value.trim();
 
-        inputElement.addEventListener('keydown', (event) => {
+        if (username === password) {
+            const errorElement = document.getElementById('newPasswordError');
+            const errorMessage = inputsConfig.find((config) => config.id === 'newPassword').errorMessages.sameAsUsername;
+
+            // Çeviri yapılacak olan hata mesajını gösteriyoruz
+            ValidationService.customTranslateText(errorMessage, 'auto', ValidationService.getTargetLang(), (translatedError) => {
+                ValidationService.showTranslatedError(translatedError || errorMessage, errorElement);
+            });
+
+            return false;
+        }
+        return true;
+    };
+
+    const submitRegistration = () => {
+        if (!validateAll()) return;
+
+        const username = document.getElementById('newUsername').value.trim();
+        const email = document.getElementById('newEmail').value.trim();
+        const password = document.getElementById('newPassword').value.trim();
+
+        fetch("http://localhost:3000/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.message === "Kayıt başarılı!") {
+                    sessionStorage.setItem("userEmail", email);
+                    closePopup("kayitPopup");
+                    setVisibility(true);
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch((error) => console.error("Kayıt sırasında bir hata oluştu:", error));
+    };
+
+    // Enter tuşuyla bir sonraki input alanına geçiş fonksiyonu
+    const handleKeyPress = (event, nextInputId) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const nextInput = document.getElementById(nextInputId);
+            if (nextInput) {
+                nextInput.focus();
+            }
+        }
+    };
+
+    return {
+        submitRegistration,
+        handleKeyPress,  // handleKeyPress fonksiyonunu dışarıya açıyoruz
+    };
+})();
+
+window.submitRegistration = RegisterService.submitRegistration;
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Username alanında Enter tuşuna basıldığında Email alanına geçiş
+    const usernameInput = document.getElementById('newUsername');
+    if (usernameInput) {
+        usernameInput.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 event.preventDefault();
-                submitRegistration();
-                return false;
+                const emailInput = document.getElementById('newEmail');
+                if (emailInput) {
+                    emailInput.focus();
+                }
             }
         });
-    });
-});
-
-// Genel doğrulama ve hata çevirisi
-function validateAndTranslateError({ id, type, minLength, errorId, errorMessages }) {
-    const inputElement = document.getElementById(id);
-    const errorElement = document.getElementById(errorId);
-    const value = inputElement.value.trim();
-    const username = document.getElementById('newUsername').value.trim();
-    const sourceLang = 'auto'; // Varsayılan hata mesajlarının dili
-
-    const browserLang = navigator.language.split('-')[0];
-    const storedLang = sessionStorage.getItem('selectedLanguage');
-    const targetLang = storedLang || browserLang;
-
-    let errorMessage = "";
-
-    if (!value) {
-        errorMessage = errorMessages.empty;
-    } else if (minLength && value.length < minLength) {
-        errorMessage = errorMessages.short;
-    } else if (type === 'email' && !validateEmail(value)) {
-        errorMessage = errorMessages.invalid;
-    } else if (type === 'password' && username === value) {
-        errorMessage = errorMessages.matchUsername;
     }
 
-    if (errorMessage) {
-        // Hata mesajını çevir ve göster
-        translateText(errorMessage, sourceLang, targetLang, (translatedError) => {
-            errorElement.textContent = translatedError || errorMessage; // Çeviri başarısızsa varsayılan hata
-            errorElement.classList.add('active');
+    // Email alanında Enter tuşuna basıldığında Password alanına geçiş
+    const emailInput = document.getElementById('newEmail');
+    if (emailInput) {
+        emailInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const passwordInput = document.getElementById('newPassword');
+                if (passwordInput) {
+                    passwordInput.focus();
+                }
+            }
         });
-        return false;
-    } else {
-        errorElement.textContent = "";
-        errorElement.classList.remove('active');
-        return true;
-    }
-}
-
-// E-posta doğrulama fonksiyonu
-function validateEmail(email) {
-    return email.endsWith('@gmail.com') || email.endsWith('@hotmail.com');
-}
-
-// Kayıt gönderme
-function submitRegistration() {
-    const username = document.getElementById('newUsername').value.trim();
-    const email = document.getElementById('newEmail').value.trim();
-    const password = document.getElementById('newPassword').value.trim();
-    
-    const usernameError = document.getElementById('newUsernameError');
-    const emailError = document.getElementById('newEmailError');
-    const passwordError = document.getElementById('newPasswordError');
-    
-    let hasError = false;
-
-    if (!username) {
-        usernameError.textContent = "Kullanıcı adı boş bırakılamaz.";
-        usernameError.classList.add('active');
-        hasError = true;
-    } else {
-        usernameError.textContent = "";
-        usernameError.classList.remove('active');
     }
 
-    if (!email) {
-        emailError.textContent = "E-posta alanı boş bırakılamaz.";
-        emailError.classList.add('active');
-        hasError = true;
-    } else {
-        emailError.textContent = "";
-        emailError.classList.remove('active');
+    // Password alanında Enter tuşuna basıldığında kayıt işlemi tetiklenir
+    const passwordInput = document.getElementById('newPassword');
+    if (passwordInput) {
+        passwordInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                RegisterService.submitRegistration();
+            }
+        });
     }
-
-    if (!password) {
-        passwordError.textContent = "Şifre alanı boş bırakılamaz.";
-        passwordError.classList.add('active');
-        hasError = true;
-    } else {
-        passwordError.textContent = "";
-        passwordError.classList.remove('active');
-    }
-
-    if (hasError) return;
-
-    const isValid = ['newUsername', 'newEmail', 'newPassword'].every(id => {
-        const inputConfig = inputsConfig.find(config => config.id === id);
-        return validateAndTranslateError(inputConfig);
-    });
-
-    if (!isValid) return;
-
-    fetch("http://localhost:3000/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
-    })
-    .then((response) => response.json())
-    .then((data) => {
-        if (data.message === "Kayıt başarılı!") {
-            sessionStorage.setItem("userEmail", email);
-            closePopup("kayitPopup");
-            setVisibility(true);
-        } else {
-            alert(data.message);
-        }
-    })
-    .catch((error) => {
-        console.error("Kayıt hatası:", error);
-        alert("Bir hata oluştu. Lütfen tekrar deneyin.");
-    });
-}
+});

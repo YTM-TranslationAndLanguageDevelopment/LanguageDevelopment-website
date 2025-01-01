@@ -86,7 +86,7 @@ class Header extends HTMLElement { //HTMLElement sınıfından Header adında bi
                 <input type="password" id="password" name="password" placeholder="Şifrenizi girin">
                 <span id="passwordError" class="error-message"></span>
             </div>
-                <button type="button" onclick="submitLogin()">Giriş Yap</button>
+                <button type="button" onclick="LoginService.submitLogin()">Giriş Yap</button>
             <p>Hesabınız yok mu? <a href="" id="signupFromLogin" onclick="closePopup('girisPopup'); openPopup('kayitPopup');">Kayıt Ol</a></p>
         </div>
     </div>
@@ -111,7 +111,7 @@ class Header extends HTMLElement { //HTMLElement sınıfından Header adında bi
                 <input type="password" id="newPassword" name="newPassword" placeholder="Şifrenizi girin">
                 <span id="newPasswordError" class="error-message"></span>
             </div>
-                <button class="submit-button" onclick="submitRegistration()">Kayıt Ol</button>
+                <button class="submit-button" onclick="RegisterService.submitRegistration()">Kayıt Ol</button>
         </div>
     </div>
         <div class="header-container">
