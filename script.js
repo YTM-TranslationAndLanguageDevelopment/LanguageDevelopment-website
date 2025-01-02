@@ -39,6 +39,8 @@ function hidePanel() {
     sharePanel.classList.add("hidden");
     savedPanel.classList.remove("visible");
     savedPanel.classList.add("hidden");
+    backdrop.classList.remove("visible");
+    backdrop.classList.add("hidden");
 }
 
 document.addEventListener("click", (event) => {
@@ -65,8 +67,12 @@ document.addEventListener("click", (event) => {
     if (savedPanelVisible && !savedPanel.contains(event.target) && event.target !== savedIcon) {
         savedPanel.classList.remove("visible");
         savedPanel.classList.add("hidden");
+        backdrop.classList.remove("visible");
+        backdrop.classList.add("hidden");
     }
 });
+
+let hideTimeout;
 
 //copy panel
 const copyIcon = document.getElementById("copy");
@@ -114,8 +120,6 @@ function showSharePanel() {
 const dereceleIcon = document.getElementById("derecele");
 const derecelePanel = document.getElementById("derecele-panel");
 
-let hideTimeout;
-
 dereceleIcon.addEventListener("click", (event) => {
     event.stopPropagation();
     showDerecelePanel();
@@ -137,27 +141,27 @@ const savedIcon = document.getElementById("yıldız");
 const savedPanel = document.getElementById("saved-panel");
 const dismissButton = document.getElementById("dismiss-button");
 const savedloginButton = document.getElementById("saved-login-button");
+const backdrop = document.getElementById("backdrop");
 
 function showSavedPanel() {
-    const rect = savedIcon.getBoundingClientRect();
-    savedPanel.style.top = `${rect.bottom + window.scrollY +115}px`;
-    savedPanel.style.left = `${rect.left + window.scrollX - 335}px`;
+    backdrop.classList.add("visible");
+    backdrop.classList.remove("hidden");
 
     savedPanel.classList.add("visible");
     savedPanel.classList.remove("hidden");
 
     clearTimeout(hideTimeout);
-    hideTimeout = setTimeout(hidePanel, 8000); 
+    hideTimeout = setTimeout(hidePanel, 10000); 
 }
 
 // Şimdi değil butonuna tıklanınca panel kapanır
 dismissButton.addEventListener("click", () => {
-savedPanel.classList.remove("visible");
+hidePanel()
 });
 
 // Oturum aç butonuna tıklanınca giriş fonksiyonu çağrılır ve panel kapanır
 savedloginButton.addEventListener("click", () => {
-    savedPanel.classList.remove("visible");
+    hidePanel()
     openPopup("girisPopup");
 });
 
@@ -671,3 +675,31 @@ function hideDictionaryText() {
     const dictionaryText = document.getElementById("dictionaryText");
     dictionaryText.style.display = "none"; // Görünürlüğü kapat
 }
+
+document.getElementById("historyIcon").addEventListener("click", (event) => {
+    event.stopPropagation();
+
+    // Kullanıcının giriş yapıp yapmadığını kontrol et
+    const userEmail = sessionStorage.getItem('userEmail');
+    if (userEmail) {
+        // Kullanıcı giriş yapmışsa admin.html'e yönlendir
+        window.location.href = 'admin.html';
+    } else {
+        showSavedPanel();
+    }
+
+});
+
+
+document.getElementById('savedLink').addEventListener('click', function(event) {
+    event.stopPropagation();
+
+    // Kullanıcının giriş yapıp yapmadığını kontrol et
+    const userEmail = sessionStorage.getItem('userEmail');
+    if (userEmail) {
+        // Kullanıcı giriş yapmışsa admin.html'e yönlendir
+        window.location.href = 'admin.html';
+    } else {  
+        showSavedPanel();
+    }console.log(savedIcon.getBoundingClientRect());
+});
