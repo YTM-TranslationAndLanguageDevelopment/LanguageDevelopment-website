@@ -39,24 +39,6 @@ async function getCollection(collectionName) {
     }
 }
 
-// Kullanıcı ismini getirme - deneme için saved.html ve admin.html de kullanıldı sonradan silinebilir
-app.get("/user", async (req, res) => {
-    const { email } = req.query;
-
-    try {
-        const collection = await getCollection("user");
-        const user = await collection.findOne({ email });
-        if (user) {
-            res.status(200).send({ username: user.username, email: user.email });
-        } else {
-            res.status(404).send({ message: "Kullanıcı bulunamadı." });
-        }
-    } catch (err) {
-        console.error("Backend Hatası:", err.message);
-        res.status(500).send({ message: "Bir hata oluştu.", error: err.message });
-    }
-});
-
 app.get('/get-user-info', async (req, res) => {
     const { email } = req.query;
 

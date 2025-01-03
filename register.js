@@ -67,8 +67,11 @@ const RegisterService = (() => {
         })
             .then((response) => response.json())
             .then((data) => {
+
                 if (data.message === "Kayıt başarılı!") {
                     sessionStorage.setItem("userEmail", email);
+                    sessionStorage.setItem('authority', 'user');
+                    startTimer();
                     closePopup("kayitPopup");
                     setVisibility(true);
                 } else {

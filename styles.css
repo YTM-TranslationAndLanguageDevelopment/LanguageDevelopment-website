@@ -1058,13 +1058,40 @@ header button:hover {
     color: #1A73E8;
     transition: background-color 0.3s, color 0.3s;
     background-color: transparent; /* Şeffaf arka plan */
+    overflow: hidden; /* Taşmayı gizle */
+    position: relative;
+    transition: color 0.3s ease;
 }
 
-#saved-panel .panel-button:hover {
+#saved-panel .panel-button:hover:not(:active) {
     background-color: #F6FAFE;
-    color: #3264B1;
+    color: #174EA6;
 }
 
+#saved-panel .panel-button:active::after {
+    content: '';
+    position: absolute;
+    top: 0; /* Ripple yukarıdan başlar */
+    left: 50%; /* Yatay olarak ortalanır */
+    width: 0; /* Başlangıçta dar bir alan */
+    height: 100%;
+    background-color: #DBE9FB;
+    transform: translateX(-50%);
+    animation: ripple-horizontal-expand 0.1s ease-out forwards;
+    z-index: -1; /* Metnin üstüne çıkmaz */
+}
+
+@keyframes ripple-horizontal-expand {
+    0% {
+        width: 30%; /* Ripple başlangıç genişliği */
+    }
+    30% {
+        width: 90%; /* Orta noktada genişleme */
+    }
+    100% {
+        width: 100%; /* Butonun tamamını kaplar */
+    }
+}
 
 #backdrop {
     position: fixed;

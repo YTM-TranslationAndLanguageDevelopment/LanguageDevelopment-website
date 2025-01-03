@@ -3,31 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
     <title>Admin Paneli</title>
-    <script src="admin.js" defer></script>
-    <script src="timecalculator.js"></script>
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-    <style>
-        body{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        font-size: 19px;
-        }
-        #userEmailLabel{
-            display: none;
-            }
-            #userNameLabel{
-                display: none;
-            }
-    </style>
+    <div class="sidebar">
+        <h2>Admin Paneli</h2>
+        <ul>
+            
+            <li><a href="#users" id="usersBtn">Kullanıcı Yönetimi</a></li>
+            <li><a href="#roles" id="rolesBtn">Rol Yönetimi</a></li>
+            <li><a href="#translations" id="translationsBtn">Çeviri Yönetimi</a></li>
+            <li><a href="#exercises" id="exercisesBtn">Egzersiz Yönetimi</a></li>
+            <li><a href="#reports" id="reportsBtn">Raporlar</a></li>
+            <li><a href="#settings" id="settingsBtn">Ayarlar</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <header>
+            <h1>Admin Panel Sayfası</h1>
+        </header>
+        <section id="content">
+            <!-- Dinamik içerik buraya yüklenecek -->
+        </section>
+    </div>
 
-    <h1>Admin Sayfası</h1>
-    <label id="userEmailLabel">Eposta: Bilinmiyor</label>
-    <br>
-    <label id="userNameLabel">İsim: Bilinmiyor</label>
+    <script>
+        // Menüye tıklanıldığında dinamik içerik yükleme
+        const dashboardBtn = document.getElementById('dashboardBtn');
+        const usersBtn = document.getElementById('usersBtn');
+        const rolesBtn = document.getElementById('rolesBtn');
+        const translationsBtn = document.getElementById('translationsBtn');
+        const exercisesBtn = document.getElementById('exercisesBtn');
+        const reportsBtn = document.getElementById('reportsBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const contentDiv = document.getElementById('content');
+
+        // Dinamik içerik yükleme fonksiyonu
+        function loadContent(section) {
+            fetch(`http://localhost:3000/${section}`)
+                .then(response => response.json())
+                .then(data => {
+                    contentDiv.innerHTML = `<h2>${data.title}</h2><p>${data.description}</p>`;
+                })
+                .catch(err => console.error('Error loading content:', err));
+        }
+
+        // Menü butonlarına tıklanınca içerik yüklenmesi
+        dashboardBtn.addEventListener('click', () => loadContent('dashboard'));
+        usersBtn.addEventListener('click', () => loadContent('users'));
+        rolesBtn.addEventListener('click', () => loadContent('roles'));
+        translationsBtn.addEventListener('click', () => loadContent('translations'));
+        exercisesBtn.addEventListener('click', () => loadContent('exercises'));
+        reportsBtn.addEventListener('click', () => loadContent('reports'));
+        settingsBtn.addEventListener('click', () => loadContent('settings'));
+    </script>
 </body>
 </html>
