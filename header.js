@@ -194,6 +194,14 @@ class Header extends HTMLElement { //HTMLElement sınıfından Header adında bi
 // Header sınıfı <my-header> adlı özel bir HTML elementi olarak kaydedilir.
 customElements.define('my-header', Header);
 
+document.addEventListener("DOMContentLoaded", function () {
+    // sessionStorage'da 'userEmail' var mı kontrol et
+    const userEmail = sessionStorage.getItem('userEmail');
+
+    if (userEmail) {
+        setVisibility(true);
+    }
+});
 
 //yan menüyü açma 
 function openMenu() {
