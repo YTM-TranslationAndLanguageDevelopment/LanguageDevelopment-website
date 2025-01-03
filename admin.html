@@ -5,59 +5,186 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Paneli</title>
     <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
+
     <link rel="stylesheet" href="admin.css">
+    <script src="timecalculator.js"></script>
+    <script src="admin.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Admin Paneli</h2>
-        <ul>
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <span class="menu-toggle">☰</span>
+            <a href="index.html" target="_blank" class="header-title">
+                <h2>Translate and Language Development</h2>
+            </a>
+        </div>
+        <div class="header-right">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" placeholder="Ara..." class="search-input">
+            </div>
             
-            <li><a href="#users" id="usersBtn">Kullanıcı Yönetimi</a></li>
-            <li><a href="#roles" id="rolesBtn">Rol Yönetimi</a></li>
-            <li><a href="#translations" id="translationsBtn">Çeviri Yönetimi</a></li>
-            <li><a href="#exercises" id="exercisesBtn">Egzersiz Yönetimi</a></li>
-            <li><a href="#reports" id="reportsBtn">Raporlar</a></li>
-            <li><a href="#settings" id="settingsBtn">Ayarlar</a></li>
-        </ul>
+            <div class="header-icons">
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+                
+                <div class="profile-dropdown">
+                    <div class="profile-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="dropdown-content">
+                        <div class="profile-info">
+                            <i class="fas fa-user-circle profile-avatar"></i>
+                            <div class="user-details">
+                                <h4>Admin Kullanıcı</h4>
+                                <p>admin@email.com</p>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-user-cog"></i> Profil Ayarları
+                        </a>
+                        <a href="#" class="dropdown-item logout">
+                            <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                        </a>
+                    </div>
+                </div>
+
+                <div class="additional-settings ">
+                    <div id="settings" class="button settings">
+                        <div class="inner">
+                            <a id="setting" aria-label="Settings">
+                                <img src="images/logo.png" title="" class="logo" alt="Dil">
+                            </a>
+                    </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Ana Container -->
+    <div class="container">
+        <!-- Yan Menü -->
+        <nav class="sidebar">
+            <ul>
+                <li class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Ana Sayfa</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-cookie"></i>
+                    <span>Çerez Politikası</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Gizlilik Politikası</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Hakkımızda</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Genel Ayarlar</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-users-cog"></i>
+                    <span>Kullanıcı Yönetimi</span>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- İçerik Alanı -->
+        <main class="content">
+            <div class="content-header">
+                <h3>Ana Sayfa Yönetimi</h3>
+            </div>
+            
+            <!-- İçerik Alanları -->
+            <div class="content-body">
+                <!-- Ana Sayfa İçeriği -->
+                <div id="anasayfa-content" class="page-content">
+                    <h3>Hoş Geldiniz</h3>
+                    <p>Bu bölümde ana sayfa içeriğini düzenleyebilirsiniz.</p>
+                    <ul>
+                        <li>Hero bölümü ayarları</li>
+                        <li>Öne çıkan içerikler</li>
+                        <li>Başlık ve metinler</li>
+                    </ul>
+                </div>
+
+                <!-- Çerez Politikası İçeriği -->
+                <div id="cerezpolitikasi-content" class="page-content hidden">
+                    <h3>Çerez Politikası Yönetimi</h3>
+                    <p>Bu bölümde çerez politikası sayfasının içeriğini düzenleyebilirsiniz.</p>
+                    <div class="policy-section">
+                        <h4>Mevcut Çerez Bildirimi</h4>
+                        <textarea rows="4" style="width: 100%">Örnek çerez politikası metni...</textarea>
+                    </div>
+                </div>
+
+                <!-- Gizlilik Politikası İçeriği -->
+                <div id="gizlilikpolitikasi-content" class="page-content hidden">
+                    <h3>Gizlilik Politikası Yönetimi</h3>
+                    <p>Bu bölümde gizlilik politikası sayfasının içeriğini düzenleyebilirsiniz.</p>
+                    <div class="policy-section">
+                        <h4>Gizlilik İlkeleri</h4>
+                        <textarea rows="4" style="width: 100%">Örnek gizlilik politikası metni...</textarea>
+                    </div>
+                </div>
+
+                <!-- Hakkımızda İçeriği -->
+                <div id="hakkimizda-content" class="page-content hidden">
+                    <h3>Hakkımızda Sayfa Yönetimi</h3>
+                    <p>Bu bölümde hakkımızda sayfasının içeriğini düzenleyebilirsiniz.</p>
+                    <div class="about-section">
+                        <h4>Şirket Bilgileri</h4>
+                        <input type="text" placeholder="Şirket Adı" style="width: 100%; margin-bottom: 10px">
+                        <textarea rows="4" style="width: 100%">Şirket açıklaması...</textarea>
+                    </div>
+                </div>
+
+                <!-- Genel Ayarlar İçeriği -->
+                <div id="genelayarlar-content" class="page-content hidden">
+                    <h3>Site Genel Ayarları</h3>
+                    <p>Bu bölümde sitenin genel ayarlarını yapılandırabilirsiniz.</p>
+                    <div class="settings-section">
+                        <h4>Logo Ayarları</h4>
+                        <input type="file" accept="image/*">
+                        <h4>Renk Şeması</h4>
+                        <input type="color" value="#2b3a4a">
+                    </div>
+                </div>
+
+                <!-- Kullanıcı Yönetimi İçeriği -->
+                <div id="kullaniciyonetimi-content" class="page-content hidden">
+                    <h3>Kullanıcı Yönetimi</h3>
+                    <p>Bu bölümde kullanıcıları yönetebilirsiniz.</p>
+                    <div class="users-section">
+                        <h4>Kullanıcı Listesi</h4>
+                        <table style="width: 100%">
+                            <tr>
+                                <th>Kullanıcı Adı</th>
+                                <th>E-posta</th>
+                                <th>İşlemler</th>
+                            </tr>
+                            <tr>
+                                <td>Örnek Kullanıcı</td>
+                                <td>ornek@mail.com</td>
+                                <td><button>Düzenle</button></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-    <div class="main-content">
-        <header>
-            <h1>Admin Panel Sayfası</h1>
-        </header>
-        <section id="content">
-            <!-- Dinamik içerik buraya yüklenecek -->
-        </section>
-    </div>
-
-    <script>
-        // Menüye tıklanıldığında dinamik içerik yükleme
-        const dashboardBtn = document.getElementById('dashboardBtn');
-        const usersBtn = document.getElementById('usersBtn');
-        const rolesBtn = document.getElementById('rolesBtn');
-        const translationsBtn = document.getElementById('translationsBtn');
-        const exercisesBtn = document.getElementById('exercisesBtn');
-        const reportsBtn = document.getElementById('reportsBtn');
-        const settingsBtn = document.getElementById('settingsBtn');
-        const contentDiv = document.getElementById('content');
-
-        // Dinamik içerik yükleme fonksiyonu
-        function loadContent(section) {
-            fetch(`http://localhost:3000/${section}`)
-                .then(response => response.json())
-                .then(data => {
-                    contentDiv.innerHTML = `<h2>${data.title}</h2><p>${data.description}</p>`;
-                })
-                .catch(err => console.error('Error loading content:', err));
-        }
-
-        // Menü butonlarına tıklanınca içerik yüklenmesi
-        dashboardBtn.addEventListener('click', () => loadContent('dashboard'));
-        usersBtn.addEventListener('click', () => loadContent('users'));
-        rolesBtn.addEventListener('click', () => loadContent('roles'));
-        translationsBtn.addEventListener('click', () => loadContent('translations'));
-        exercisesBtn.addEventListener('click', () => loadContent('exercises'));
-        reportsBtn.addEventListener('click', () => loadContent('reports'));
-        settingsBtn.addEventListener('click', () => loadContent('settings'));
-    </script>
 </body>
 </html>
