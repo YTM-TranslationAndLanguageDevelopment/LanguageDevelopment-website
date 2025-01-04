@@ -2,8 +2,12 @@
 
 // Sayfa yüklendiğinde ilk olarak yetki kontrolü yap
 document.addEventListener('DOMContentLoaded', function() {
-    if (!sessionStorage.getItem('userEmail')) {
-        window.location.href = 'login.html';
+    // "authority" değeri kontrol edilir
+    const authority = sessionStorage.getItem('authority');
+
+    if (authority !== 'admin') {
+        // Eğer "authority" admin değilse, index.html sayfasına yönlendir
+        window.location.href = 'index.html';
     } else {
         // Yan menü seçenekleri için kontrol
         const navItems = document.querySelectorAll('.nav-item');
