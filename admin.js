@@ -1,8 +1,5 @@
-// Admin panel işlevleri buraya eklenecek 
-
-// Sayfa yüklendiğinde ilk olarak yetki kontrolü yap
 document.addEventListener('DOMContentLoaded', function() {
-    // "authority" değeri kontrol edilir
+    // Sayfa yüklendiğinde ilk olarak yetki kontrolü yap
     const authority = sessionStorage.getItem('authority');
 
     if (authority !== 'admin') {
@@ -34,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 .replace(/ş/g, 's')
                 .replace(/ü/g, 'u') + '-content';
 
-            console.log('Aranan content ID:', contentId); // Debug için
 
             pageContents.forEach(content => {
                 if (content.id === contentId) {
@@ -108,5 +104,192 @@ document.addEventListener('DOMContentLoaded', function() {
             // Ana sayfaya yönlendir
             window.location.href = 'index.html';
         });
+
+
+            // Çerez Politikası güncelleme
+            async function updateCerezPolicy() {
+                const data = {
+                    page: 'ÇerezPolitikası',
+                    backgroundColor: document.getElementById('cerezBackgroundColor').value,
+                    fontSize: document.getElementById('cerezFontSize').value,
+                    color: document.getElementById('cerezColor').value,
+                    content: document.getElementById('cerezContent').value
+                };
+    
+                try {
+                    const response = await fetch('/update-policy', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+    
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Çerez Politikası başarıyla güncellendi.');
+                    } else {
+                        alert('Güncelleme başarısız: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Güncelleme hatası:', error);
+                    alert('Sunucu hatası.');
+                }
+            }
+
+        // Gizlilik Politikası güncelleme
+        async function updateGizlilikPolicy() {
+            const data = {
+                page: 'GizlilikPolitikası',
+                backgroundColor: document.getElementById('gizlilikBackgroundColor').value,
+                fontSize: document.getElementById('gizlilikFontSize').value,
+                color: document.getElementById('gizlilikColor').value,
+                content: document.getElementById('gizlilikContent').value
+            };
+
+            try {
+                const response = await fetch('/update-policy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Gizlilik Politikası başarıyla güncellendi.');
+                } else {
+                    alert('Güncelleme başarısız: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Güncelleme hatası:', error);
+                alert('Sunucu hatası.');
+            }
+        }
+
+        // Hakkımızda güncelleme
+        async function updateHakkimizdaPolicy() {
+            const data = {
+                page: 'Hakkımızda',
+                backgroundColor: document.getElementById('hakkimizdaBackgroundColor').value,
+                fontSize: document.getElementById('hakkimizdaFontSize').value,
+                color: document.getElementById('hakkimizdaColor').value,
+                content: document.getElementById('hakkimizdaContent').value
+            };
+
+            try {
+                const response = await fetch('/update-policy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Hakkımızda sayfası başarıyla güncellendi.');
+                } else {
+                    alert('Güncelleme başarısız: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Güncelleme hatası:', error);
+                alert('Sunucu hatası.');
+            }
+        }
+
+        const backgroundColorInput = document.getElementById("cerezBackgroundColor");
+        const backgroundColorValue = document.getElementById("cerezBackgroundColorValue");
+        const textColorInput = document.getElementById("cerezColor");
+        const textColorValue = document.getElementById("cerezColorValue");
+    
+        // Renk değeri güncellemeleri
+        backgroundColorInput.addEventListener("input", () => {
+            backgroundColorValue.textContent = backgroundColorInput.value;
+        });
+    
+        textColorInput.addEventListener("input", () => {
+            textColorValue.textContent = textColorInput.value;
+        });
+    
+
+        // Renk seçim alanları için değişiklik dinleyicileri
+        const cerezBackgroundColorInput = document.getElementById('cerezBackgroundColor');
+        const cerezBackgroundColorValue = document.getElementById('cerezBackgroundColorValue');
+        const cerezColorInput = document.getElementById('cerezColor');
+        const cerezColorValue = document.getElementById('cerezColorValue');
+
+        cerezBackgroundColorInput.addEventListener('input', function() {
+            cerezBackgroundColorValue.textContent = cerezBackgroundColorInput.value;
+        });
+
+        cerezColorInput.addEventListener('input', function() {
+            cerezColorValue.textContent = cerezColorInput.value;
+        });
+
+        const gizlilikBackgroundColorInput = document.getElementById('gizlilikBackgroundColor');
+        const gizlilikBackgroundColorValue = document.getElementById('gizlilikBackgroundColorValue');
+        const gizlilikColorInput = document.getElementById('gizlilikColor');
+        const gizlilikColorValue = document.getElementById('gizlilikColorValue');
+
+        gizlilikBackgroundColorInput.addEventListener('input', function() {
+            gizlilikBackgroundColorValue.textContent = gizlilikBackgroundColorInput.value;
+        });
+
+        gizlilikColorInput.addEventListener('input', function() {
+            gizlilikColorValue.textContent = gizlilikColorInput.value;
+        });
+
+        const hakkimizdaBackgroundColorInput = document.getElementById('hakkimizdaBackgroundColor');
+        const hakkimizdaBackgroundColorValue = document.getElementById('hakkimizdaBackgroundColorValue');
+        const hakkimizdaColorInput = document.getElementById('hakkimizdaColor');
+        const hakkimizdaColorValue = document.getElementById('hakkimizdaColorValue');
+
+        hakkimizdaBackgroundColorInput.addEventListener('input', function() {
+            hakkimizdaBackgroundColorValue.textContent = hakkimizdaBackgroundColorInput.value;
+        });
+
+        hakkimizdaColorInput.addEventListener('input', function() {
+            hakkimizdaColorValue.textContent = hakkimizdaColorInput.value;
+        });
+
+        // Metin kutusunun yüksekliğini otomatik ayarlayan fonksiyon
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto'; // Yüksekliği sıfırla
+            textarea.style.height = textarea.scrollHeight + 'px'; // İçeriğe göre yüksekliği ayarla
+        }
+
+        // Tüm textarea elemanlarını seç
+        const textareas = document.querySelectorAll('textarea');
+
+        // Her bir textarea için input olayını dinle
+        textareas.forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                autoResizeTextarea(this);
+            });
+
+            // Sayfa yüklendiğinde mevcut içeriğe göre yüksekliği ayarla
+            autoResizeTextarea(textarea);
+        });
+
+
+        // Form submit olaylarını dinle
+        document.getElementById('cerezPolicyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            updateCerezPolicy();
+        });
+
+        document.getElementById('gizlilikPolicyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            updateGizlilikPolicy();
+        });
+
+        document.getElementById('hakkimizdaPolicyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            updateHakkimizdaPolicy();
+        });
+
     }
 }); 
+

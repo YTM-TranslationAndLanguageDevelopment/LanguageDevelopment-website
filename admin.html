@@ -98,6 +98,22 @@
                     <i class="fas fa-users-cog"></i>
                     <span>Kullanıcı Yönetimi</span>
                 </li>
+                <li class="nav-item">
+                    <i class="fas fa-language"></i>
+                    <span>Çeviri Yönetimi</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>İçerik Yönetimi</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Egzersiz Yönetimi</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Raporlama ve İstatistikler</span>
+                </li>
             </ul>
         </nav>
 
@@ -121,34 +137,87 @@
                 </div>
 
                 <!-- Çerez Politikası İçeriği -->
-                <div id="cerezpolitikasi-content" class="page-content hidden">
-                    <h3>Çerez Politikası Yönetimi</h3>
-                    <p>Bu bölümde çerez politikası sayfasının içeriğini düzenleyebilirsiniz.</p>
-                    <div class="policy-section">
-                        <h4>Mevcut Çerez Bildirimi</h4>
-                        <textarea rows="4" style="width: 100%">Örnek çerez politikası metni...</textarea>
-                    </div>
-                </div>
+<div id="cerezpolitikasi-content" class="page-content hidden">
+    <h3>Çerez Politikası Yönetimi</h3>
+    <form id="cerezPolicyForm">
+        <input type="hidden" name="page" value="ÇerezPolitikası">
+        <!-- Arka Plan Rengi -->
+        <label for="cerezBackgroundColor">Arka Plan Rengi:</label>
+        <div class="yanyana">
+            <input type="color" id="cerezBackgroundColor" name="backgroundColor" value="#ffffff">
+            <span id="cerezBackgroundColorValue">#ffffff</span>
+        </div>
+        
+        <!-- Yazı Boyutu -->
+        <label for="cerezFontSize">Yazı Boyutu:</label>
+        <input type="text" id="cerezFontSize" name="fontSize" placeholder="Örn: 16px">
+        
+        <!-- Yazı Rengi -->
+        <label for="cerezColor">Yazı Rengi:</label>
+        <div class="yanyana">
+            <input type="color" id="cerezColor" name="color" value="#333333">
+            <span id="cerezColorValue">#333333</span>
+        </div>
+        
+        <!-- İçerik -->
+        <label for="cerezContent">İçerik:</label>
+        <textarea id="cerezContent" name="content" rows="4" placeholder="Sayfa içeriğini buraya girin..."></textarea>
+        
+        <!-- Güncelle Butonu -->
+        <button type="submit">Güncelle</button>
+    </form>
+</div>
 
                 <!-- Gizlilik Politikası İçeriği -->
                 <div id="gizlilikpolitikasi-content" class="page-content hidden">
                     <h3>Gizlilik Politikası Yönetimi</h3>
-                    <p>Bu bölümde gizlilik politikası sayfasının içeriğini düzenleyebilirsiniz.</p>
-                    <div class="policy-section">
-                        <h4>Gizlilik İlkeleri</h4>
-                        <textarea rows="4" style="width: 100%">Örnek gizlilik politikası metni...</textarea>
-                    </div>
+                    <form id="gizlilikPolicyForm">
+                        <label for="gizlilikBackgroundColor">Arka Plan Rengi:</label>
+                        <div class="yanyana">
+                            <input type="color" id="gizlilikBackgroundColor" name="backgroundColor">
+                            <span id="gizlilikBackgroundColorValue">#ffffff</span>
+                        </div>
+                        
+                        <label for="gizlilikFontSize">Yazı Boyutu:</label>
+                        <input type="text" id="gizlilikFontSize" name="fontSize" placeholder="Örn: 16px">
+                        
+                        <label for="gizlilikColor">Yazı Rengi:</label>
+                        <div class="yanyana">
+                            <input type="color" id="gizlilikColor" name="color">
+                            <span id="gizlilikColorValue">#333333</span>
+                        </div>
+                        
+                        <label for="gizlilikContent">İçerik:</label>
+                        <textarea id="gizlilikContent" name="content" rows="4"></textarea>
+                        
+                        <button type="submit">Güncelle</button>
+                    </form>
                 </div>
 
                 <!-- Hakkımızda İçeriği -->
                 <div id="hakkimizda-content" class="page-content hidden">
                     <h3>Hakkımızda Sayfa Yönetimi</h3>
-                    <p>Bu bölümde hakkımızda sayfasının içeriğini düzenleyebilirsiniz.</p>
-                    <div class="about-section">
-                        <h4>Şirket Bilgileri</h4>
-                        <input type="text" placeholder="Şirket Adı" style="width: 100%; margin-bottom: 10px">
-                        <textarea rows="4" style="width: 100%">Şirket açıklaması...</textarea>
-                    </div>
+                    <form id="hakkimizdaPolicyForm">
+                        <label for="hakkimizdaBackgroundColor">Arka Plan Rengi:</label>
+                        <div class="yanyana">
+                            <input type="color" id="hakkimizdaBackgroundColor" name="backgroundColor">
+                            <span id="hakkimizdaBackgroundColorValue">#ffffff</span>
+                        </div>
+                        
+                        <label for="hakkimizdaFontSize">Yazı Boyutu:</label>
+                        <input type="text" id="hakkimizdaFontSize" name="fontSize" placeholder="Örn: 16px">
+                        
+                        <label for="hakkimizdaColor">Yazı Rengi:</label>
+                        <div class="yanyana">
+                            <input type="color" id="hakkimizdaColor" name="color">
+                            <span id="hakkimizdaColorValue">#333333</span>
+                        </div>
+                        
+                        <label for="hakkimizdaContent">İçerik:</label>
+                        <textarea id="hakkimizdaContent" name="content" rows="4"></textarea>
+                        
+                        <button type="submit">Güncelle</button>
+                    </form>
                 </div>
 
                 <!-- Genel Ayarlar İçeriği -->

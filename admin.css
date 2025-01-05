@@ -70,7 +70,7 @@ header {
 
 /* Yan Menü Stili */
 .sidebar {
-    width: 250px;
+    width: 255px;
     background-color: #354b60;
     color: #e9ecef;
     padding: 20px 0;
@@ -377,4 +377,47 @@ header {
 .nav-item:hover, .nav-item.active {
     background-color: #4a6583;
     color: #ffffff;
+}
+
+/* Form alanları için stil */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+form label {
+    font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="color"],
+form textarea {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+form textarea {
+    overflow: hidden; /* Kaydırma çubuğunu kaldır */
+    resize: none; /* Kullanıcının yeniden boyutlandırmasını engelle */
+    min-height: 100px; /* Minimum yüksekliği ayarla */
+}
+
+.yanyana{
+    display: inline-flex;
+    gap: 10px;
+}
+
+form button {
+    padding: 10px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #219a52;
 }

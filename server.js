@@ -476,6 +476,42 @@ app.post('/check-translation', async (req, res) => {
 });
 
 
+// Politika güncelleme API'si
+app.post('/update-policy', async (req, res) => {
+    const { page, backgroundColor, fontSize, color, content } = req.body; 
+
+    // Eksik alan kontrolü
+    if (!page || !backgroundColor || !fontSize || !color || !content) {
+        return res.status(400).json({ error: "Eksik alanlar var." });
+    }
+
+    try {
+        const policiesCollection = await getCollection("politikalar");
+
+        const updateData = {
+            backgroundColor,
+            fontSize,
+            color,
+            content
+        };
+
+        const result = await policiesCollection.updateOne(
+            { page },
+            { $set: updateData },
+            { upsert: true }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: "Politika başarıyla güncellendi.",
+            result,
+        });
+    } catch (error) {
+        console.error("Politika güncellenirken hata oluştu:", error);
+        res.status(500).json({ error: "Sunucu hatası." });
+    }
+});
+
 // Sunucuyu başlat
 app.listen(port, () => {
     console.log(`Sunucu http://localhost:${port} üzerinde çalışıyor`);
