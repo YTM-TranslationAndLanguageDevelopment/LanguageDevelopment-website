@@ -7,6 +7,7 @@ const axios = require('axios');
 const express = require("express");
 const path = require("path");
 const multer = require('multer');
+const fs = require('fs');
 
 const app = express();
 const port = 3000;
@@ -697,6 +698,20 @@ app.delete('/delete-user', async (req, res) => {
         console.error('Kullanıcı silinirken hata oluştu:', error);
         res.status(500).json({ message: 'Sunucu hatası oluştu.' });
     }
+});
+
+// Resim değiştirme endpoint'i
+app.post('/change-image', upload.single('image'), (req, res) => {
+    const { imageName } = req.body;
+    const imagePath = path.join(__dirname, 'images', `${imageName}.png`);
+
+    fs.rename(req.file.path, imagePath, (err) => {
+        if (err) {
+            console.error('Resim değiştirilirken hata oluştu:', err);
+            return res.status(500).json({ success: false, message: 'Resim değiştirilemedi.' });
+        }
+        res.json({ success: true });
+    });
 });
 
 // Sunucuyu başlat

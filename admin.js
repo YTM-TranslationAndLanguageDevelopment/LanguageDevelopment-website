@@ -31,8 +31,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 .replace(/ş/g, 's')
                 .replace(/ü/g, 'u') + '-content';
 
+            const normalizedContentId = contentId.normalize('NFC');
+
             pageContents.forEach(content => {
-                if (content.id === contentId) {
+                const normalizedContentElementId = content.id.normalize('NFC');
+
+                if (normalizedContentElementId === normalizedContentId) {
                     content.classList.remove('hidden');
                 } else {
                     content.classList.add('hidden');
@@ -44,6 +48,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadTranslationManagementContent();
             }else if(contentId === 'kullaniciyonetimi-content'){
                 loadUserManagementContent();
+            }else if(contentId === 'gorselyonetimi-content'){
+                loadContentManagementContent();
             }
         }
 
@@ -579,4 +585,54 @@ function getColumnIndex(sortKey) {
     };
     return columns[sortKey];
 }
+
+
+
+async function loadContentManagementContent() {
+    const contentManagementContent = document.getElementById('gorselyonetimi-content');
+    if (contentManagementContent) {
+        try {
+            document.querySelectorAll('.change-image-btn').forEach(button => {
+                button.addEventListener('click', async function() {
+                    const imageName = this.dataset.image;
+                    const fileInput = document.createElement('input');
+                    fileInput.type = 'file';
+                    fileInput.accept = 'image/png';
+            
+                    fileInput.onchange = async () => {
+                        const file = fileInput.files[0];
+                        if (file) {
+                            const formData = new FormData();
+                            formData.append('image', file);
+                            formData.append('imageName', imageName);
+            
+                            try {
+                                const response = await fetch('/change-image', {
+                                    method: 'POST',
+                                    body: formData
+                                });
+            
+                                const result = await response.json();
+                                if (result.success) {
+                                    alert('Resim başarıyla değiştirildi.');
+                                    // Görüntüyü güncelle
+                                    this.previousElementSibling.src = `images/${imageName}.png?${new Date().getTime()}`;
+                                } else {
+                                    alert('Resim değiştirilemedi.');
+                                }
+                            } catch (error) {
+                                console.error('Resim değiştirilirken hata oluştu:', error);
+                            }
+                        }
+                    };
+            
+                    fileInput.click();
+                });
+            });
+        } catch (error) {
+            console.error('İçerik yönetimi verileri alınamadı:', error);
+        }
+    }
+}
+
 
