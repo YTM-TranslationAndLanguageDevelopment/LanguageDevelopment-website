@@ -6,6 +6,7 @@ const cors = require("cors");
 const axios = require('axios');
 const express = require("express");
 const path = require("path");
+const multer = require('multer');
 
 const app = express();
 const port = 3000;
@@ -13,6 +14,21 @@ const port = 3000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
+
+// Multer ayarları
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'images'); // Dosyaların kaydedileceği klasör
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const originalName = file.originalname;
+        const newFileName = uniqueSuffix + '-' + originalName;
+        cb(null, newFileName);
+    }
+});
+
+const upload = multer({ storage: storage });
 
 // Ana sayfayı yönlendirme
 app.get("/", (req, res) => {
@@ -509,6 +525,28 @@ app.post('/update-policy', async (req, res) => {
     } catch (error) {
         console.error("Politika güncellenirken hata oluştu:", error);
         res.status(500).json({ error: "Sunucu hatası." });
+    }
+});
+
+// Resim yükleme endpoint'i
+app.post('/upload-image', upload.single('backgroundImage'), (req, res) => {
+    const imageName = req.file.filename; // Yüklenen dosyanın adı
+    res.json({ imageName }); // Resim adını JSON olarak döndür
+});
+
+// Doküman güncelleme endpoint'i
+app.post('/update-document', async (req, res) => {
+    const { page, imageName } = req.body;
+
+    try {
+        const collection = await getCollection('politikalar'); // 'politikalar' koleksiyonunu kullan
+        await collection.updateOne({ page }, { $set: { imageName } });
+
+        console.log(`Doküman güncellendi: ${page}, Resim Adı: ${imageName}`);
+        res.send('Doküman başarıyla güncellendi!');
+    } catch (error) {
+        console.error('Doküman güncellenirken hata oluştu:', error);
+        res.status(500).send('Sunucu hatası oluştu.');
     }
 });
 

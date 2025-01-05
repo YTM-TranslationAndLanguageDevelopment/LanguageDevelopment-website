@@ -421,3 +421,39 @@ form button {
 form button:hover {
     background-color: #219a52;
 }
+
+/* Font boyutunu ayarlama */
+input[name="fontSize"] {
+    font-size: 16px;
+}
+
+/* Form alanları arasında dikey boşluk */
+form label,
+form input[type="text"],
+form input[type="color"],
+form input[type="number"],
+form textarea,
+form button {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+/* input[type="color"] için stil */
+input[type="color"] {
+    appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: none;
+}

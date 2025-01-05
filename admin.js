@@ -198,20 +198,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Sunucu hatası.');
             }
         }
-
-        const backgroundColorInput = document.getElementById("cerezBackgroundColor");
-        const backgroundColorValue = document.getElementById("cerezBackgroundColorValue");
-        const textColorInput = document.getElementById("cerezColor");
-        const textColorValue = document.getElementById("cerezColorValue");
-    
-        // Renk değeri güncellemeleri
-        backgroundColorInput.addEventListener("input", () => {
-            backgroundColorValue.textContent = backgroundColorInput.value;
-        });
-    
-        textColorInput.addEventListener("input", () => {
-            textColorValue.textContent = textColorInput.value;
-        });
     
 
         // Renk seçim alanları için değişiklik dinleyicileri
@@ -288,6 +274,74 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('hakkimizdaPolicyForm').addEventListener('submit', function(e) {
             e.preventDefault();
             updateHakkimizdaPolicy();
+        });
+
+        const forms = document.querySelectorAll('form');
+
+        // Form id'sini dokümanlardaki page değerine eşleyen bir obje
+        const pageMapping = {
+            cerezPolicyForm: 'ÇerezPolitikası',
+            gizlilikPolicyForm: 'GizlilikPolitikası',
+            hakkimizdaPolicyForm: 'Hakkımızda'
+        };
+
+        forms.forEach(form => {
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Sayfanın yeniden yüklenmesini engelle
+
+                const formData = new FormData(form); // Form verilerini al
+
+                try {
+                    const response = await fetch('/upload-image', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        const imageName = result.imageName; // Sunucudan dönen resim adı
+
+                        // Form id'sini dokümanlardaki page değerine dönüştür
+                        const page = pageMapping[form.id];
+
+                        const updateData = {
+                            page,
+                            imageName
+                        };
+
+                        const updateResponse = await fetch('/update-document', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(updateData)
+                        });
+
+                        if (updateResponse.ok) {
+                            alert('Doküman başarıyla güncellendi!');
+                        } else {
+                            alert('Doküman güncellenirken bir hata oluştu.');
+                        }
+                    } else {
+                        alert('Resim yüklenirken bir hata oluştu.');
+                    }
+                } catch (error) {
+                    console.error('Hata:', error);
+                    alert('Resim yüklenirken bir hata oluştu.');
+                }
+            });
+        });
+
+        const colorInputs = document.querySelectorAll('input[type="color"]');
+
+        colorInputs.forEach(input => {
+            // Başlangıçta arka plan rengini ayarla
+            input.style.backgroundColor = input.value;
+
+            // Renk değiştiğinde arka plan rengini güncelle
+            input.addEventListener('input', (event) => {
+                event.target.style.backgroundColor = event.target.value;
+            });
         });
 
     }
