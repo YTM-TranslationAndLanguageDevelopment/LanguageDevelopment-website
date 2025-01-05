@@ -399,18 +399,31 @@ form textarea {
 }
 
 form textarea {
+    font-size: 16px;
+    padding: 15px;    
     overflow: hidden; /* Kaydırma çubuğunu kaldır */
     resize: none; /* Kullanıcının yeniden boyutlandırmasını engelle */
-    min-height: 100px; /* Minimum yüksekliği ayarla */
+    min-height: 150px; /* Minimum yüksekliği ayarla */
 }
 
-.yanyana{
+.yanyana {
     display: inline-flex;
+    align-items: center; /* Dikey hizalama */
+    gap: 10px;
+}
+
+.content-section{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 13px;
+    margin-left: 10px;
     gap: 10px;
 }
 
 form button {
-    padding: 10px;
+    width: 100px;
+    padding: 8px;
+    font-size: 17px;
     background-color: #27ae60;
     color: white;
     border: none;
@@ -425,17 +438,21 @@ form button:hover {
 /* Font boyutunu ayarlama */
 input[name="fontSize"] {
     font-size: 16px;
+    width: 80px;
+    height: 25px;
+    text-align: center;
+}
+
+form input[type="file"]{
+    font-size: 15px;
 }
 
 /* Form alanları arasında dikey boşluk */
 form label,
 form input[type="text"],
 form input[type="color"],
-form input[type="number"],
-form textarea,
-form button {
-    margin-bottom: 10px;
-    font-size: 16px;
+form input[type="number"] {
+    font-size: 19px;
 }
 
 /* input[type="color"] için stil */

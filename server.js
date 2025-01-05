@@ -494,37 +494,20 @@ app.post('/check-translation', async (req, res) => {
 
 // Politika güncelleme API'si
 app.post('/update-policy', async (req, res) => {
-    const { page, backgroundColor, fontSize, color, content } = req.body; 
-
-    // Eksik alan kontrolü
-    if (!page || !backgroundColor || !fontSize || !color || !content) {
-        return res.status(400).json({ error: "Eksik alanlar var." });
-    }
+    const { page, backgroundColor, fontSize, color, content, imageName } = req.body;
 
     try {
-        const policiesCollection = await getCollection("politikalar");
-
-        const updateData = {
-            backgroundColor,
-            fontSize,
-            color,
-            content
-        };
-
-        const result = await policiesCollection.updateOne(
+        const collection = await getCollection('politikalar');
+        await collection.updateOne(
             { page },
-            { $set: updateData },
-            { upsert: true }
+            { $set: { backgroundColor, fontSize, color, content, imageName } }
         );
 
-        res.status(200).json({
-            success: true,
-            message: "Politika başarıyla güncellendi.",
-            result,
-        });
+
+        res.json({ success: true, message: 'Doküman başarıyla güncellendi!' });
     } catch (error) {
-        console.error("Politika güncellenirken hata oluştu:", error);
-        res.status(500).json({ error: "Sunucu hatası." });
+        console.error('Doküman güncellenirken hata oluştu:', error);
+        res.status(500).json({ success: false, message: 'Sunucu hatası oluştu.' });
     }
 });
 
@@ -534,19 +517,41 @@ app.post('/upload-image', upload.single('backgroundImage'), (req, res) => {
     res.json({ imageName }); // Resim adını JSON olarak döndür
 });
 
-// Doküman güncelleme endpoint'i
-app.post('/update-document', async (req, res) => {
-    const { page, imageName } = req.body;
+// Sayfa verilerini getiren endpoint
+app.get('/get-page-data/:page', async (req, res) => {
+    const { page } = req.params;
 
     try {
-        const collection = await getCollection('politikalar'); // 'politikalar' koleksiyonunu kullan
-        await collection.updateOne({ page }, { $set: { imageName } });
+        const collection = await getCollection('politikalar');
+        const pageData = await collection.findOne({ page });
 
-        console.log(`Doküman güncellendi: ${page}, Resim Adı: ${imageName}`);
-        res.send('Doküman başarıyla güncellendi!');
+        if (pageData) {
+            res.json(pageData);
+        } else {
+            res.status(404).json({ message: 'Sayfa bulunamadı.' });
+        }
     } catch (error) {
-        console.error('Doküman güncellenirken hata oluştu:', error);
-        res.status(500).send('Sunucu hatası oluştu.');
+        console.error('Veri alınırken hata oluştu:', error);
+        res.status(500).json({ message: 'Sunucu hatası oluştu.' });
+    }
+});
+
+// Sayfa verilerini getiren endpoint
+app.get('/get-policy-data/:page', async (req, res) => {
+    const { page } = req.params;
+
+    try {
+        const collection = await getCollection('politikalar');
+        const pageData = await collection.findOne({ page });
+
+        if (pageData) {
+            res.json(pageData);
+        } else {
+            res.status(404).json({ message: 'Sayfa bulunamadı.' });
+        }
+    } catch (error) {
+        console.error('Veri alınırken hata oluştu:', error);
+        res.status(500).json({ message: 'Sunucu hatası oluştu.' });
     }
 });
 

@@ -136,96 +136,150 @@
                     </ul>
                 </div>
 
-                <!-- Çerez Politikası İçeriği -->
-<div id="cerezpolitikasi-content" class="page-content hidden">
-    <form id="cerezPolicyForm" action="/upload-image" method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="page" value="ÇerezPolitikası">
-        <!-- Arka Plan Rengi -->
-        <label for="cerezBackgroundColor">Arka Plan Rengi:</label>
-        <div class="yanyana">
-            <input type="color" id="cerezBackgroundColor" name="backgroundColor" value="#ffffff">
-            <span id="cerezBackgroundColorValue">#ffffff</span>
-        </div>
-        
-        <!-- Arka Plan Resmi -->
-        <label for="cerezBackgroundImage">Arka Plan Resmi:</label>
-        <input type="file" id="cerezBackgroundImage" name="backgroundImage" accept="image/*">
-        
-        <!-- Yazı Boyutu -->
-        <label for="cerezFontSize">Yazı Boyutu:</label>
-        <input type="number" id="cerezFontSize" name="fontSize" placeholder="Örn: 16" min="1">
-        
-        <!-- Yazı Rengi -->
-        <label for="cerezColor">Yazı Rengi:</label>
-        <div class="yanyana">
-            <input type="color" id="cerezColor" name="color" value="#333333">
-            <span id="cerezColorValue">#333333</span>
-        </div>
-        
-        <!-- İçerik -->
-        <label for="cerezContent">İçerik:</label>
-        <textarea id="cerezContent" name="content" rows="4" placeholder="Sayfa içeriğini buraya girin..."></textarea>
-        
-        <!-- Güncelle Butonu -->
-        <button type="submit">Güncelle</button>
-    </form>
-</div>
+                    <!-- Çerez Politikası İçeriği -->
+                <div id="cerezpolitikasi-content" class="page-content hidden">
+                    <form id="cerezPolicyForm" action="/upload-image" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="page" value="ÇerezPolitikası">
+                        <!-- Arka Plan Rengi -->
+                    <div class="content-section">
+                        <label for="cerezBackgroundColor">Arka Plan Rengi:</label>
+                        <div class="yanyana">
+                            <input type="color" id="cerezBackgroundColor" name="backgroundColor" value="#ffffff">
+                            <span id="cerezBackgroundColorValue">#ffffff</span>
+                        </div>
+                    </div>
+
+                        <!-- Arka Plan Resmi -->
+                    <div class="content-section">
+                        <label for="cerezBackgroundImage">Arka Plan Resmi:</label>
+                        <input type="file" id="cerezBackgroundImage" name="backgroundImage" accept="image/*">
+                        <div class="image-preview"></div>
+                    </div>   
+
+                        <!-- Yazı Boyutu -->
+                    <div class="content-section">
+                        <label for="cerezFontSize">Yazı Boyutu:</label>
+                        <div class="yanyana">
+                        <input type="number" id="cerezFontSize" name="fontSize" placeholder="Örn: 16" min="1">
+                        <p style="color: rgb(0, 0, 0);">px</p>
+                        </div>
+                    </div>
+
+                        <!-- Yazı Rengi -->
+                    <div class="content-section">
+                        <label for="cerezColor">Yazı Rengi:</label>
+                        <div class="yanyana">
+                            <input type="color" id="cerezColor" name="color" value="#333333">
+                            <span id="cerezColorValue">#333333</span>
+                        </div>
+                    </div>
+
+                        <!-- İçerik -->
+                    <div class="content-section">
+                        <label for="cerezContent">İçerik:</label>
+                        <textarea id="cerezContent" name="content" rows="4" placeholder="Sayfa içeriğini buraya girin..."></textarea>
+                    
+                        <!-- Güncelle Butonu -->
+                        <button type="submit">Güncelle</button>
+                    </div>
+                    </form>
+                </div>
 
                 <!-- Gizlilik Politikası İçeriği -->
                 <div id="gizlilikpolitikasi-content" class="page-content hidden">
-                    <form id="gizlilikPolicyForm" action="/upload-image" method="POST" enctype="multipart/form-data>
+                    <form id="gizlilikPolicyForm" action="/upload-image" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="page" value="GizlilikPolitikası">
+                        <!-- Arka Plan Rengi -->
+                    <div class="content-section">
                         <label for="gizlilikBackgroundColor">Arka Plan Rengi:</label>
                         <div class="yanyana">
                             <input type="color" id="gizlilikBackgroundColor" name="backgroundColor">
                             <span id="gizlilikBackgroundColorValue">#ffffff</span>
                         </div>
+                    </div>
 
                         <!-- Arka Plan Resmi -->
+                        <div class="content-section">
                         <label for="gizlilikBackgroundImage">Arka Plan Resmi:</label>
                         <input type="file" id="gizlilikBackgroundImage" name="backgroundImage" accept="image/*">
-                        
+                        <div class="image-preview" ></div>
+                        </div>
+
+                        <!-- Yazı Boyutu -->
+                    <div class="content-section">
                         <label for="gizlilikFontSize">Yazı Boyutu:</label>
+                        <div class="yanyana">
                         <input type="number" id="gizlilikFontSize" name="fontSize" placeholder="Örn: 16" min="1">
-                        
+                        <p style="color: rgb(0, 0, 0);">px</p>
+                        </div>
+                    </div>
+
+                      <!-- Yazı Rengi -->
+                    <div class="content-section">
                         <label for="gizlilikColor">Yazı Rengi:</label>
                         <div class="yanyana">
                             <input type="color" id="gizlilikColor" name="color">
                             <span id="gizlilikColorValue">#333333</span>
                         </div>
-                        
+                    </div>
+
+                      <!-- İçerik -->
+                    <div class="content-section">
                         <label for="gizlilikContent">İçerik:</label>
                         <textarea id="gizlilikContent" name="content" rows="4"></textarea>
                         
+                        <!-- Güncelle Butonu -->
                         <button type="submit">Güncelle</button>
+                    </div>
                     </form>
                 </div>
 
                 <!-- Hakkımızda İçeriği -->
                 <div id="hakkimizda-content" class="page-content hidden">
                     <form id="hakkimizdaPolicyForm" action="/upload-image" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="page" value="Hakkımızda">
+                        <!-- Arka Plan Rengi -->
+                    <div class="content-section">
                         <label for="hakkimizdaBackgroundColor">Arka Plan Rengi:</label>
                         <div class="yanyana">
                             <input type="color" id="hakkimizdaBackgroundColor" name="backgroundColor">
                             <span id="hakkimizdaBackgroundColorValue">#ffffff</span>
                         </div>
-                        
+                    </div>  
+
                         <!-- Arka Plan Resmi -->
+                    <div class="content-section">
                         <label for="hakkimizdaBackgroundImage">Arka Plan Resmi:</label>
                         <input type="file" id="hakkimizdaBackgroundImage" name="backgroundImage" accept="image/*">
-                
+                        <div class="image-preview" ></div>
+                    </div>
+
+                         <!-- Yazı Boyutu -->
+                    <div class="content-section">
                         <label for="hakkimizdaFontSize">Yazı Boyutu:</label>
+                        <div class="yanyana">
                         <input type="number" id="hakkimizdaFontSize" name="fontSize" placeholder="Örn: 16" min="1">
-                        
-                        <label for="hakkimizdaColor">Yazı Rengi:</label>
+                        <p style="color: rgb(0, 0, 0);">px</p>
+                        </div>
+                    </div>
+
+                         <!-- Yazı Rengi -->
+                    <div class="content-section">
+                    <label for="hakkimizdaColor">Yazı Rengi:</label>
                         <div class="yanyana">
                             <input type="color" id="hakkimizdaColor" name="color">
                             <span id="hakkimizdaColorValue">#333333</span>
                         </div>
-                        
+                    </div>
+
+                        <!-- İçerik -->
+                    <div class="content-section">
                         <label for="hakkimizdaContent">İçerik:</label>
                         <textarea id="hakkimizdaContent" name="content" rows="4"></textarea>
                         
+                        <!-- Güncelle Butonu -->
                         <button type="submit">Güncelle</button>
+                    </div>
                     </form>
                 </div>
 

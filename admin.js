@@ -105,99 +105,6 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = 'index.html';
         });
 
-
-            // Çerez Politikası güncelleme
-            async function updateCerezPolicy() {
-                const data = {
-                    page: 'ÇerezPolitikası',
-                    backgroundColor: document.getElementById('cerezBackgroundColor').value,
-                    fontSize: document.getElementById('cerezFontSize').value,
-                    color: document.getElementById('cerezColor').value,
-                    content: document.getElementById('cerezContent').value
-                };
-    
-                try {
-                    const response = await fetch('/update-policy', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    });
-    
-                    const result = await response.json();
-                    if (result.success) {
-                        alert('Çerez Politikası başarıyla güncellendi.');
-                    } else {
-                        alert('Güncelleme başarısız: ' + result.message);
-                    }
-                } catch (error) {
-                    console.error('Güncelleme hatası:', error);
-                    alert('Sunucu hatası.');
-                }
-            }
-
-        // Gizlilik Politikası güncelleme
-        async function updateGizlilikPolicy() {
-            const data = {
-                page: 'GizlilikPolitikası',
-                backgroundColor: document.getElementById('gizlilikBackgroundColor').value,
-                fontSize: document.getElementById('gizlilikFontSize').value,
-                color: document.getElementById('gizlilikColor').value,
-                content: document.getElementById('gizlilikContent').value
-            };
-
-            try {
-                const response = await fetch('/update-policy', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert('Gizlilik Politikası başarıyla güncellendi.');
-                } else {
-                    alert('Güncelleme başarısız: ' + result.message);
-                }
-            } catch (error) {
-                console.error('Güncelleme hatası:', error);
-                alert('Sunucu hatası.');
-            }
-        }
-
-        // Hakkımızda güncelleme
-        async function updateHakkimizdaPolicy() {
-            const data = {
-                page: 'Hakkımızda',
-                backgroundColor: document.getElementById('hakkimizdaBackgroundColor').value,
-                fontSize: document.getElementById('hakkimizdaFontSize').value,
-                color: document.getElementById('hakkimizdaColor').value,
-                content: document.getElementById('hakkimizdaContent').value
-            };
-
-            try {
-                const response = await fetch('/update-policy', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert('Hakkımızda sayfası başarıyla güncellendi.');
-                } else {
-                    alert('Güncelleme başarısız: ' + result.message);
-                }
-            } catch (error) {
-                console.error('Güncelleme hatası:', error);
-                alert('Sunucu hatası.');
-            }
-        }
     
 
         // Renk seçim alanları için değişiklik dinleyicileri
@@ -260,21 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
 
-        // Form submit olaylarını dinle
-        document.getElementById('cerezPolicyForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            updateCerezPolicy();
-        });
-
-        document.getElementById('gizlilikPolicyForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            updateGizlilikPolicy();
-        });
-
-        document.getElementById('hakkimizdaPolicyForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            updateHakkimizdaPolicy();
-        });
 
         const forms = document.querySelectorAll('form');
 
@@ -288,46 +180,61 @@ document.addEventListener('DOMContentLoaded', function() {
         forms.forEach(form => {
             form.addEventListener('submit', async (event) => {
                 event.preventDefault(); // Sayfanın yeniden yüklenmesini engelle
-
+        
                 const formData = new FormData(form); // Form verilerini al
-
-                try {
-                    const response = await fetch('/upload-image', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (response.ok) {
-                        const result = await response.json();
-                        const imageName = result.imageName; // Sunucudan dönen resim adı
-
-                        // Form id'sini dokümanlardaki page değerine dönüştür
-                        const page = pageMapping[form.id];
-
-                        const updateData = {
-                            page,
-                            imageName
-                        };
-
-                        const updateResponse = await fetch('/update-document', {
+                const page = pageMapping[form.id]; // Form id'sini page değerine eşle
+        
+                // Resim seçilmişse, resim yükle
+                let imageName = null;
+                if (formData.get('backgroundImage') && formData.get('backgroundImage').size > 0) {
+                    try {
+                        const uploadResponse = await fetch('/upload-image', {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(updateData)
+                            body: formData
                         });
-
-                        if (updateResponse.ok) {
-                            alert('Doküman başarıyla güncellendi!');
+        
+                        if (uploadResponse.ok) {
+                            const uploadResult = await uploadResponse.json();
+                            imageName = uploadResult.imageName; // Sunucudan dönen resim adı
                         } else {
-                            alert('Doküman güncellenirken bir hata oluştu.');
+                            alert('Resim yüklenirken bir hata oluştu.');
+                            return;
                         }
-                    } else {
+                    } catch (error) {
+                        console.error('Resim yüklenirken bir hata oluştu:', error);
                         alert('Resim yüklenirken bir hata oluştu.');
+                        return;
+                    }
+                }
+        
+                // Politika güncelleme verisi
+                const data = {
+                    page,
+                    backgroundColor: formData.get('backgroundColor'),
+                    fontSize: formData.get('fontSize'),
+                    color: formData.get('color'),
+                    content: formData.get('content'),
+                    imageName // Eğer resim yüklenmemişse null gönderilecek
+                };
+        
+                try {
+                    const response = await fetch('/update-policy', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+        
+                    const result = await response.json();
+                    if (result.success) {
+                        alert(`${page} başarıyla güncellendi.`);
+                    } else {
+                        alert(`Güncelleme başarısız: ${result.message}`);
                     }
                 } catch (error) {
-                    console.error('Hata:', error);
-                    alert('Resim yüklenirken bir hata oluştu.');
+                    console.error('Politika güncellenirken hata oluştu:', error);
+                    alert('Sunucu hatası oluştu.');
                 }
             });
         });
@@ -346,4 +253,104 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
 }); 
+
+document.addEventListener('DOMContentLoaded', () => {
+    const forms = document.querySelectorAll('form');
+
+    // Form id'lerini veritabanındaki page değerleriyle eşleştiren bir obje
+    const pageMapping = {
+        cerezPolicyForm: 'ÇerezPolitikası',
+        gizlilikPolicyForm: 'GizlilikPolitikası',
+        hakkimizdaPolicyForm: 'Hakkımızda'
+    };
+
+    forms.forEach(async form => {
+        const pageName = pageMapping[form.id];
+
+        try {
+            const response = await fetch(`/get-policy-data/${pageName}`);
+            if (response.ok) {
+                const data = await response.json();
+
+                const backgroundColorInput = form.querySelector('input[name="backgroundColor"]');
+                const backgroundColorSpan = form.querySelector('span#cerezBackgroundColorValue');
+                const fontSizeInput = form.querySelector('input[name="fontSize"]');
+                const colorInput = form.querySelector('input[name="color"]');
+                const colorSpan = form.querySelector('span#cerezColorValue');
+                const contentTextarea = form.querySelector('textarea[name="content"]');
+                const imagePreview = form.querySelector('.image-preview');
+                const fileInput = form.querySelector('input[name="backgroundImage"]');
+
+                if (backgroundColorInput) {
+                    backgroundColorInput.value = data.backgroundColor;
+                    backgroundColorInput.style.backgroundColor = data.backgroundColor;
+                    if (backgroundColorSpan) backgroundColorSpan.textContent = data.backgroundColor;
+                }
+
+                if (colorInput) {
+                    colorInput.value = data.color;
+                    colorInput.style.backgroundColor = data.color;
+                    if (colorSpan) colorSpan.textContent = data.color;
+                }
+
+                if (fontSizeInput) fontSizeInput.value = parseInt(data.fontSize);
+                if (contentTextarea) contentTextarea.value = data.content;
+                
+
+                if (data.imageName) {
+                    const img = document.createElement('img');
+                    img.src = `/images/${data.imageName}`;
+                    img.alt = 'Mevcut Resim';
+                    img.style.width = '200px';
+                    img.style.height = '200px';
+                    img.style.objectFit = 'cover'; // Resmi cover yap
+                    imagePreview.innerHTML = ''; // Önceki resmi temizle
+                    imagePreview.appendChild(img);
+                    imagePreview.style.display = 'block'; // Görünür yap
+                } else {
+                    imagePreview.style.display = 'none'; // Gizle
+                }
+
+                fileInput.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.alt = 'Yeni Resim';
+                            img.style.width = '200px';
+                            img.style.height = '200px';
+                            img.style.objectFit = 'cover'; // Resmi cover yap
+                            imagePreview.innerHTML = ''; // Önceki resmi temizle
+                            imagePreview.appendChild(img);
+                            imagePreview.style.display = 'block'; // Görünür yap
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        imagePreview.innerHTML = ''; // Resim seçilmezse önizlemeyi temizle
+                        imagePreview.style.display = 'none'; // Görünürlüğü kapat
+                    }
+                });
+
+                // Renk değiştiğinde metni güncelle
+                const colorInputs = form.querySelectorAll('input[type="color"]');
+                colorInputs.forEach(input => {
+                    input.addEventListener('input', (event) => {
+                        const span = event.target.nextElementSibling;
+                        if (span) {
+                            span.textContent = event.target.value;
+                        }
+                    });
+                });
+
+            } else {
+                console.error('Sayfa verileri alınamadı.');
+            }
+        } catch (error) {
+            console.error('Hata:', error);
+        }
+    });
+
+});
 
