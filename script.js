@@ -694,3 +694,33 @@ document.getElementById('savedLink').addEventListener('click', function(event) {
         showSavedPanel();
     }
 });
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const sourceLanguages = await fetchLanguages('source');
+        const targetLanguages = await fetchLanguages('target');
+
+        populateSelectBox(document.getElementById('sourceLanguage'), sourceLanguages);
+        populateSelectBox(document.getElementById('targetLanguage'), targetLanguages);
+    } catch (error) {
+        console.error('Diller yüklenirken hata oluştu:', error);
+    }
+});
+
+async function fetchLanguages(type) {
+    const response = await fetch(`/get-languages/${type}`);
+    if (!response.ok) {
+        throw new Error('Dil verileri alınamadı.');
+    }
+    return response.json();
+}
+
+function populateSelectBox(selectElement, languages) {
+    selectElement.innerHTML = ''; // Mevcut seçenekleri temizle
+    for (const [code, name] of Object.entries(languages)) {
+        const option = document.createElement('option');
+        option.value = code;
+        option.textContent = name;
+        selectElement.appendChild(option);
+    }
+}
