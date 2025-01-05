@@ -634,6 +634,71 @@ function getLanguageName(code) {
     return languageMap[code];
 }
 
+// Kullanıcı verilerini getiren endpoint
+app.get('/get-users', async (req, res) => {
+    try {
+        const usersCollection = await getCollection('user');
+        const users = await usersCollection.find({}, {
+            projection: {
+                email: 1,
+                username: 1,
+                totalScore: 1,
+                streak: 1,
+                studiedTime: 1,
+                createDate: 1,
+                lastLoginDay: 1,
+                authority: 1
+            }
+        }).toArray();
+
+        res.json(users);
+    } catch (error) {
+        console.error('Kullanıcı verileri alınırken hata oluştu:', error);
+        res.status(500).json({ message: 'Sunucu hatası oluştu.' });
+    }
+});
+
+// Kullanıcı yetkisini güncelleyen endpoint
+app.post('/update-user-authority', async (req, res) => {
+    const { email, authority } = req.body;
+
+    try {
+        const usersCollection = await getCollection('user');
+        const result = await usersCollection.updateOne(
+            { email },
+            { $set: { authority } }
+        );
+
+        if (result.modifiedCount > 0) {
+            res.json({ success: true });
+        } else {
+            res.json({ success: false, message: 'Yetki güncellenemedi.' });
+        }
+    } catch (error) {
+        console.error('Yetki güncellenirken hata oluştu:', error);
+        res.status(500).json({ message: 'Sunucu hatası oluştu.' });
+    }
+});
+
+// Kullanıcıyı silen endpoint
+app.delete('/delete-user', async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const usersCollection = await getCollection('user');
+        const result = await usersCollection.deleteOne({ email });
+
+        if (result.deletedCount > 0) {
+            res.json({ success: true });
+        } else {
+            res.json({ success: false, message: 'Kullanıcı silinemedi.' });
+        }
+    } catch (error) {
+        console.error('Kullanıcı silinirken hata oluştu:', error);
+        res.status(500).json({ message: 'Sunucu hatası oluştu.' });
+    }
+});
+
 // Sunucuyu başlat
 app.listen(port, () => {
     console.log(`Sunucu http://localhost:${port} üzerinde çalışıyor`);

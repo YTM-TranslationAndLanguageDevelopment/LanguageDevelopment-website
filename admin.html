@@ -297,28 +297,31 @@
 
                 <!-- Kullanıcı Yönetimi İçeriği -->
                 <div id="kullaniciyonetimi-content" class="page-content hidden">
-                    <h3>Kullanıcı Yönetimi</h3>
-                    <p>Bu bölümde kullanıcıları yönetebilirsiniz.</p>
                     <div class="users-section">
                         <h4>Kullanıcı Listesi</h4>
-                        <table style="width: 100%">
-                            <tr>
-                                <th>Kullanıcı Adı</th>
-                                <th>E-posta</th>
-                                <th>İşlemler</th>
-                            </tr>
-                            <tr>
-                                <td>Örnek Kullanıcı</td>
-                                <td>ornek@mail.com</td>
-                                <td><button>Düzenle</button></td>
-                            </tr>
+                        <table id="userTable" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th data-sort="email">E-posta</th>
+                                    <th data-sort="username">Kullanıcı Adı</th>
+                                    <th data-sort="totalScore">Toplam Puan</th>
+                                    <th data-sort="streak">Seri</th>
+                                    <th data-sort="studiedTime">Çalışma Süresi</th>
+                                    <th data-sort="createDate">Oluşturma Tarihi</th>
+                                    <th data-sort="lastLoginDay">Son Giriş</th>
+                                    <th>Yetki</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Kullanıcı verileri buraya yüklenecek -->
+                            </tbody>
                         </table>
                     </div>
                 </div>
 
                 <!-- Çeviri Yönetimi İçeriği -->
                 <div id="ceviriyonetimi-content" class="page-content hidden">
-                    <h3>Çeviri Yönetimi</h3>
                     <div class="language-management">
                         <div class="language-section">
                             <h4>Kaynak Diller</h4>

@@ -545,3 +545,94 @@ input[type="color"]::-webkit-color-swatch {
     font-size: 16px;
     text-align: center;
 }
+
+#ceviriyonetimi-content button#removeSourceLanguage,
+#ceviriyonetimi-content button#removeTargetLanguage {
+    background-color: #dc3545; /* Kırmızı renk */
+    color: white;
+}
+
+#ceviriyonetimi-content button#removeSourceLanguage:hover,
+#ceviriyonetimi-content button#removeTargetLanguage:hover {
+    background-color: #c82333; /* Daha koyu kırmızı */
+}
+
+.users-section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.users-section th, .users-section td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.users-section th {
+    background-color: #f2f2f2;
+    cursor: pointer;
+    text-align: center; /* Başlıkları ortala */
+}
+
+.users-section td:nth-child(3), /* Toplam Puan */
+.users-section td:nth-child(4), /* Seri */
+.users-section td:nth-child(5), /* Çalışma Süresi */
+.users-section td:nth-child(6), /* Oluşturma Tarihi */
+.users-section td:nth-child(7)  /* Son Giriş */
+{
+    text-align: center; /* Hücreleri ortala */
+}
+
+.authority-input {
+    width: 80px; /* Genişliği azalt */
+    text-align: center; /* Yazıyı ortala */
+    padding: 5px; /* İç boşluk ekle */
+    border: 1px solid #ccc; /* Kenarlık ekle */
+    border-radius: 4px; /* Kenarları yuvarla */
+    background-color: #f9f9f9; /* Arka plan rengi */
+    transition: border-color 0.3s; /* Kenarlık rengini geçişli yap */
+}
+
+.authority-input:focus {
+    border-color: #4CAF50; /* Odaklandığında kenarlık rengi */
+    outline: none; /* Varsayılan odak çizgisini kaldır */
+}
+
+.users-section tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.users-section tr:hover {
+    background-color: #ddd;
+}
+
+.users-section .edit-btn, .users-section .delete-btn {
+    padding: 8px 12px; /* Buton boyutunu artır */
+    border: none;
+    border-radius: 4px; /* Kenarları yuvarla */
+    cursor: pointer;
+    font-size: 14px; /* Yazı boyutunu ayarla */
+    transition: background-color 0.3s, transform 0.2s; /* Geçiş efektleri ekle */
+}
+
+.users-section .edit-btn {
+    background-color: #4CAF50; /* Yeşil renk */
+    color: white;
+    margin-right: 5px; /* Sağ boşluk ekle */
+}
+
+.users-section .edit-btn:hover {
+    background-color: #45a049; /* Hover durumunda daha koyu yeşil */
+    transform: scale(1.05); /* Hover durumunda büyüt */
+}
+
+.users-section .delete-btn {
+    background-color: #f44336; /* Kırmızı renk */
+    color: white;
+}
+
+.users-section .delete-btn:hover {
+    background-color: #e53935; /* Hover durumunda daha koyu kırmızı */
+    transform: scale(1.05); /* Hover durumunda büyüt */
+}

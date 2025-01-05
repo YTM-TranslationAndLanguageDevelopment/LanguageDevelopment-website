@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Başlığı güncelle
             const pageName = clickedItem.querySelector('span').textContent;
-            contentHeader.textContent = pageName + ' Yönetimi';
+            contentHeader.textContent = pageName.endsWith('Yönetimi') ? pageName : pageName + ' Yönetimi';
 
             // İçeriği göster/gizle
             const contentId = pageName.toLowerCase()
@@ -42,6 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Eğer "Çeviri Yönetimi" seçildiyse, ilgili içeriği yükle
             if (contentId === 'ceviriyonetimi-content') {
                 loadTranslationManagementContent();
+            }else if(contentId === 'kullaniciyonetimi-content'){
+                loadUserManagementContent();
             }
         }
 
@@ -436,5 +438,145 @@ async function loadTranslationManagementContent() {
             console.error('Hata:', error);
         }
     }
+}
+
+async function loadUserManagementContent() {
+    try {
+        const response = await fetch('/get-users');
+        if (response.ok) {
+            const users = await response.json();
+            populateUserTable(users);
+        } else {
+            console.error('Kullanıcı verileri alınamadı.');
+        }
+    } catch (error) {
+        console.error('Hata:', error);
+    }
+}
+
+function populateUserTable(users) {
+    const userTableBody = document.querySelector('#userTable tbody');
+    userTableBody.innerHTML = ''; // Mevcut satırları temizle
+
+    users.forEach(user => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${user.email}</td>
+            <td>${user.username}</td>
+            <td>${user.totalScore}</td>
+            <td>${user.streak}</td>
+            <td>${user.studiedTime}</td>
+            <td>${new Date(user.createDate.$date).toLocaleDateString()}</td>
+            <td>${new Date(user.lastLoginDay.$date).toLocaleDateString()}</td>
+            <td>
+                <input type="text" value="${user.authority}" data-email="${user.email}" class="authority-input">
+            </td>
+            <td>
+                <button class="edit-btn" data-email="${user.email}">Güncelle</button>
+                <button class="delete-btn" data-email="${user.email}">Sil</button>
+            </td>
+        `;
+        userTableBody.appendChild(row);
+    });
+
+    // Güncelle ve sil butonlarına olay dinleyicileri ekle
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', updateUserAuthority);
+    });
+
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', deleteUser);
+    });
+
+    // Sıralama için başlıklara olay dinleyicileri ekle
+    document.querySelectorAll('#userTable th[data-sort]').forEach(header => {
+        header.addEventListener('click', () => sortTable(header.dataset.sort));
+    });
+}
+
+async function updateUserAuthority(event) {
+    const email = event.target.dataset.email;
+    const authorityInput = document.querySelector(`input[data-email="${email}"]`);
+    const newAuthority = authorityInput.value;
+
+    try {
+        const response = await fetch('/update-user-authority', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, authority: newAuthority }),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert('Yetki başarıyla güncellendi.');
+        } else {
+            alert('Yetki güncellenemedi.');
+        }
+    } catch (error) {
+        console.error('Yetki güncellenirken hata oluştu:', error);
+    }
+}
+
+async function deleteUser(event) {
+    const email = event.target.dataset.email;
+
+    if (!confirm('Bu kullanıcıyı silmek istediğinizden emin misiniz?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/delete-user', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            loadUserManagementContent(); // Tabloyu güncelle
+        } else {
+            alert('Kullanıcı silinemedi.');
+        }
+    } catch (error) {
+        console.error('Kullanıcı silinirken hata oluştu:', error);
+    }
+}
+
+function sortTable(sortKey) {
+    const userTableBody = document.querySelector('#userTable tbody');
+    const rows = Array.from(userTableBody.rows);
+
+    rows.sort((a, b) => {
+        const aValue = a.querySelector(`td:nth-child(${getColumnIndex(sortKey)})`).textContent;
+        const bValue = b.querySelector(`td:nth-child(${getColumnIndex(sortKey)})`).textContent;
+
+        if (sortKey === 'createDate' || sortKey === 'lastLoginDay') {
+            return new Date(aValue) - new Date(bValue);
+        } else if (sortKey === 'totalScore' || sortKey === 'streak' || sortKey === 'studiedTime') {
+            return parseInt(bValue) - parseInt(aValue);
+        } else {
+            return aValue.localeCompare(bValue);
+        }
+    });
+
+    userTableBody.innerHTML = '';
+    rows.forEach(row => userTableBody.appendChild(row));
+}
+
+function getColumnIndex(sortKey) {
+    const columns = {
+        email: 1,
+        username: 2,
+        totalScore: 3,
+        streak: 4,
+        studiedTime: 5,
+        createDate: 6,
+        lastLoginDay: 7,
+    };
+    return columns[sortKey];
 }
 
