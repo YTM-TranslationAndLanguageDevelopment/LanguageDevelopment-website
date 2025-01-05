@@ -474,3 +474,74 @@ input[type="color"]::-webkit-color-swatch-wrapper {
 input[type="color"]::-webkit-color-swatch {
     border: none;
 }
+
+
+#ceviriyonetimi-content .language-management {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+#ceviriyonetimi-content .language-section {
+    width: 45%;
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#ceviriyonetimi-content .language-section h4 {
+    margin-bottom: 10px;
+    color: #333;
+    text-align: center;
+}
+
+#ceviriyonetimi-content select {
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+#ceviriyonetimi-content button {
+    width: 48%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 17px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#ceviriyonetimi-content button:hover {
+    background-color: #45a049;
+}
+
+#ceviriyonetimi-content .language-options {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#ceviriyonetimi-content .language-options h4 {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 22px;
+}
+
+#ceviriyonetimi-content .language-options select {
+    width: 30%;
+    height: 30%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 16px;
+    text-align: center;
+}

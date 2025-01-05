@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 .replace(/ş/g, 's')
                 .replace(/ü/g, 'u') + '-content';
 
-
             pageContents.forEach(content => {
                 if (content.id === contentId) {
                     content.classList.remove('hidden');
@@ -39,6 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     content.classList.add('hidden');
                 }
             });
+
+            // Eğer "Çeviri Yönetimi" seçildiyse, ilgili içeriği yükle
+            if (contentId === 'ceviriyonetimi-content') {
+                loadTranslationManagementContent();
+            }
         }
 
         // Her menü öğesine tıklama olayı ekle
@@ -353,4 +357,84 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+
+
+function populateSelect(selectElement, languages) {
+    selectElement.innerHTML = ''; // Mevcut seçenekleri temizle
+    for (const [code, name] of Object.entries(languages)) {
+        const option = document.createElement('option');
+        option.value = code;
+        option.textContent = name;
+        selectElement.appendChild(option);
+    }
+}
+
+async function modifyLanguages(type, action, languageCode) {
+    try {
+        const response = await fetch(`/modify-languages/${type}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ action, languageCode }),
+        });
+
+        if (response.ok) {
+            const updatedLanguages = await response.json();
+            const selectElement = document.getElementById(type === 'source' ? 'sourceLanguageList' : 'targetLanguageList');
+            populateSelect(selectElement, updatedLanguages);
+        } else {
+            console.error('Dil güncellenemedi.');
+        }
+    } catch (error) {
+        console.error('Hata:', error);
+    }
+}
+
+// "Çeviri Yönetimi" içeriğini yükleyen fonksiyon
+async function loadTranslationManagementContent() {
+    const ceviriYonetimiContent = document.getElementById('ceviriyonetimi-content');
+
+    if (ceviriYonetimiContent) {
+        try {
+            const sourceResponse = await fetch('/get-languages/source');
+            const targetResponse = await fetch('/get-languages/target');
+
+            if (sourceResponse.ok && targetResponse.ok) {
+                const sourceLanguages = await sourceResponse.json();
+                const targetLanguages = await targetResponse.json();
+
+                const sourceSelect = document.getElementById('sourceLanguageList');
+                const targetSelect = document.getElementById('targetLanguageList');
+                const availableSelect = document.getElementById('availableLanguages');
+
+                populateSelect(sourceSelect, sourceLanguages);
+                populateSelect(targetSelect, targetLanguages);
+
+                document.getElementById('addSourceLanguage').addEventListener('click', () => {
+                    modifyLanguages('source', 'add', availableSelect.value);
+                });
+
+                document.getElementById('removeSourceLanguage').addEventListener('click', () => {
+                    modifyLanguages('source', 'remove', sourceSelect.value);
+                });
+
+                document.getElementById('addTargetLanguage').addEventListener('click', () => {
+                    modifyLanguages('target', 'add', availableSelect.value);
+                });
+
+                document.getElementById('removeTargetLanguage').addEventListener('click', () => {
+                    modifyLanguages('target', 'remove', targetSelect.value);
+                });
+
+                ceviriYonetimiContent.classList.remove('hidden');
+            } else {
+                console.error('Dil verileri alınamadı.');
+            }
+        } catch (error) {
+            console.error('Hata:', error);
+        }
+    }
+}
 

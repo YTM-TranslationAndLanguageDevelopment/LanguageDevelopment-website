@@ -555,6 +555,85 @@ app.get('/get-policy-data/:page', async (req, res) => {
     }
 });
 
+app.get('/get-languages/:type', async (req, res) => {
+    const { type } = req.params;
+    const collection = await getCollection('languageSelections');
+
+    try {
+        const languageData = await collection.findOne({ name: type === 'source' ? 'sourceLanguage' : 'targetLanguage' });
+
+        if (languageData) {
+            res.json(languageData.languages);
+        } else {
+            res.status(404).json({ message: 'Diller bulunamadı.' });
+        }
+    } catch (error) {
+        console.error('Veri alınırken hata oluştu:', error);
+        res.status(500).json({ message: 'Sunucu hatası oluştu.' });
+    }
+});
+
+app.post('/modify-languages/:type', async (req, res) => {
+    const { type } = req.params;
+    const { action, languageCode } = req.body;
+    const collection = await getCollection('languageSelections');
+    const documentName = type === 'source' ? 'sourceLanguage' : 'targetLanguage';
+
+    try {
+        const languageData = await collection.findOne({ name: documentName });
+
+        if (!languageData) {
+            return res.status(404).json({ message: 'Dil dokümanı bulunamadı.' });
+        }
+
+        const languages = languageData.languages;
+
+        if (action === 'add') {
+            if (!languages[languageCode]) {
+                // Yeni dil ekle
+                languages[languageCode] = getLanguageName(languageCode);
+            }
+        } else if (action === 'remove') {
+            if (languages[languageCode]) {
+                // Dili sil
+                delete languages[languageCode];
+            }
+        }
+
+        await collection.updateOne(
+            { name: documentName },
+            { $set: { languages } }
+        );
+
+        res.json(languages);
+    } catch (error) {
+        console.error('Dil güncellenirken hata oluştu:', error);
+        res.status(500).json({ message: 'Sunucu hatası oluştu.' });
+    }
+});
+
+function getLanguageName(code) {
+    const languageMap = {
+        "auto": "Dili algıla",
+        "es": "Spanish",
+        "fr": "French",
+        "de": "German",
+        "it": "Italian",
+        "en": "English",
+        "ja": "Japanese",
+        "zh": "Chinese",
+        "ru": "Russian",
+        "ko": "Korean",
+        "pt": "Portuguese",
+        "ar": "Arabic",
+        "sv": "Swedish",
+        "nb": "Norwegian",
+        "tr": "Türkçe",
+        "vi": "Vietnamese"
+    };
+    return languageMap[code];
+}
+
 // Sunucuyu başlat
 app.listen(port, () => {
     console.log(`Sunucu http://localhost:${port} üzerinde çalışıyor`);
