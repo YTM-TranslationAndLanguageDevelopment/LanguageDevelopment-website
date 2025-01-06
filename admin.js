@@ -263,6 +263,36 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
+        // Sayfa yüklendiğinde iframe'i göster
+        document.getElementById('cerezPreview').src = 'ÇerezPolitikası.html';
+
+        // Form gönderildiğinde iframe'i yenile
+        document.getElementById('cerezPolicyForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Form gönderme işlemleri burada yapılır
+            document.getElementById('cerezPreview').contentWindow.location.reload();
+        });
+
+        // Sayfa yüklendiğinde iframe'i göster
+        document.getElementById('gizlilikPreview').src = 'GizlilikPolitikası.html';
+
+        // Form gönderildiğinde iframe'i yenile
+        document.getElementById('gizlilikPolicyForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Form gönderme işlemleri burada yapılır
+            document.getElementById('gizlilikPreview').contentWindow.location.reload();
+        });
+
+        // Sayfa yüklendiğinde iframe'i göster
+        document.getElementById('hakkimizdaPreview').src = 'Hakkımızda.html';
+
+        // Form gönderildiğinde iframe'i yenile
+        document.getElementById('hakkimizdaPolicyForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Form gönderme işlemleri burada yapılır
+            document.getElementById('hakkimizdaPreview').contentWindow.location.reload();
+        });
+
     }
 }); 
 

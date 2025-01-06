@@ -403,7 +403,7 @@ form textarea {
     padding: 15px;    
     overflow: hidden; /* Kaydırma çubuğunu kaldır */
     resize: none; /* Kullanıcının yeniden boyutlandırmasını engelle */
-    min-height: 150px; /* Minimum yüksekliği ayarla */
+    min-height: 220px; /* Minimum yüksekliği ayarla */
 }
 
 .yanyana {
@@ -415,10 +415,23 @@ form textarea {
 .content-section {
     display: flex;
     flex-direction: column;
-    margin-bottom: 13px;
+    margin-bottom: 20px;
     margin-left: 10px;
     gap: 10px;
+    flex: 1;
 }
+.content-politika{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.content-politika-left {
+    flex: 1;
+    flex: 0 0 150px;
+}
+
 
 .image-section {
     display: flex;
@@ -451,19 +464,6 @@ form button:hover {
     margin: 10px;
 }
 
-.content-image {
-    width: 80px; /* Resim genişliği */
-    height: 80px; /* Resim yüksekliği */
-    display: block;
-    margin-bottom: 8px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    transition: transform 0.3s;
-}
-
-.content-image:hover {
-    transform: scale(1.1);
-}
 
 .change-image-btn {
     width: 100px; /* Buton genişliği */
@@ -691,12 +691,6 @@ input[type="color"]::-webkit-color-swatch {
     transform: scale(1.05); /* Hover durumunda büyüt */
 }
 
-.content-image {
-    width: 50px;
-    height: 50px;
-    display: block;
-    margin: 0 auto;
-}
 
 .change-image-btn {
     margin-top: 5px;
@@ -713,14 +707,6 @@ input[type="color"]::-webkit-color-swatch {
     background-color: #0056b3;
 }
 
-/* Resim Yönetimi İçeriği Stilleri */
-#resimyonetimi-content .content-section {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    padding: 20px;
-}
 
 .content-item {
     display: flex;
