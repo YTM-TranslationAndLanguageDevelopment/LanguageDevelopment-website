@@ -414,6 +414,14 @@ form textarea {
 
 .content-section {
     display: flex;
+    flex-direction: column;
+    margin-bottom: 13px;
+    margin-left: 10px;
+    gap: 10px;
+}
+
+.image-section {
+    display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
@@ -421,6 +429,20 @@ form textarea {
     max-width: 100%;
 }
 
+form button {
+    width: 100px;
+    padding: 8px;
+    font-size: 17px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #219a52;
+}
 .content-item {
     display: flex;
     flex-direction: column;
