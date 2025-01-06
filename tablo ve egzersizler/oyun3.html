@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hafıza Kartları Oyunu</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #5cb4e7,#5ce7c9, #a4ea18);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .game-container {
+            background-color: #e0a655;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+        h1 {
+            color: #5e50bb;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        .flashcard {
+            width: 100%;
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #e88528;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            border-radius: 12px;
+            border: 2px solid #844005;
+            margin-bottom: 25px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .flashcard-flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard .card-front, .flashcard .card-back {
+            position: absolute;
+            backface-visibility: hidden;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .flashcard .card-back {
+            background-color: #9370db;
+            transform: rotateY(180deg);
+            border-radius: 12px;
+            border: 2px solid #632fc9;
+        }
+        input[type="text"] {
+            padding: 12px;
+            font-size: 1.2rem;
+            margin: 15px 0;
+            width: 100%;
+            border: 2px solid #4169e1;
+            border-radius: 8px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            background-color: #be41e1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s ease-in-out;
+        }
+        button:hover {
+            background-color: #5a74b1;
+        }
+        #feedback {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        #score {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #9370db;
+        }
+        #timer {
+            font-size: 1.5rem;
+            color: #ff4400d2;
+            font-weight: bolder;
+            margin-top: 15px;
+        }
+        .result-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(133, 133, 133, 0.664);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+        .result-popup h2 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        .result-popup button {
+            margin-top: 10px;
+        }
+        .big-feedback {
+            font-size: 4rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .big-feedback.show {
+            opacity: 1;
+        }
+        .big-feedback.correct {
+            color: green;
+        }
+        .big-feedback.incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Hafıza Kartları Oyunu</h1>
+        <h2>5 Kart için 30 saniyeniz var!</h2>
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+            <div class="card-front">Apple</div>
+            <div class="card-back">Elma</div>
+        </div>
+        <input type="text" id="userAnswer" placeholder="Cevabınızı girin" />
+        <button onclick="checkAnswer()">Cevapla</button>
+        <p id="feedback"></p>
+        <p id="score">Puan: 0</p>
+        <p id="timer">Süre: 30 saniye</p>
+    </div>
+
+    <div class="big-feedback" id="bigFeedback">✔</div>
+
+    <div class="result-popup" id="resultPopup">
+        <h2>Oyun Bitti!</h2>
+        <p id="finalScore">Doğru: 0, Yanlış: 0</p>
+        <button onclick="restartGame()">Tekrar Oyna</button>
+        <button onclick="goHome()">Anasayfa</button>
+    </div>
+
+    <script>
+        const flashcards = [
+            { word: "Apple", definition: "Elma" },
+            { word: "Dog", definition: "Köpek" },
+            { word: "House", definition: "Ev" },
+            { word: "Cat", definition: "Kedi" },
+            { word: "Car", definition: "Araba" }
+        ];
+
+        let currentCardIndex = 0;
+        let score = 0;
+        let wrong = 0;
+        let timeLeft = 30;
+        let timer;
+
+        function startTimer() {
+            timer = setInterval(function() {
+                timeLeft--;
+                document.getElementById("timer").textContent = `Süre: ${timeLeft} saniye`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function flipCard() {
+            const flashcard = document.getElementById("flashcard");
+            flashcard.classList.toggle("flashcard-flipped");
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById("userAnswer").value.trim();
+            const correctAnswer = flashcards[currentCardIndex].definition;
+
+            const feedbackElement = document.getElementById("bigFeedback");
+            if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                feedbackElement.textContent = "✔";
+                feedbackElement.className = "big-feedback correct show";
+                score++;
+            } else {
+                feedbackElement.textContent = "✘";
+                feedbackElement.className = "big-feedback incorrect show";
+                wrong++;
+            }
+
+            setTimeout(() => {
+                feedbackElement.className = "big-feedback";
+                nextCard();
+            }, 1000);
+
+            document.getElementById("score").textContent = `Puan: ${score}`;
+            document.getElementById("userAnswer").value = "";
+        }
+
+        function nextCard() {
+            currentCardIndex++;
+            if (currentCardIndex >= flashcards.length) {
+                endGame();
+            } else {
+                updateFlashcard();
+            }
+        }
+
+        function updateFlashcard() {
+            const card = flashcards[currentCardIndex];
+            document.querySelector(".card-front").textContent = card.word;
+            document.querySelector(".card-back").textContent = card.definition;
+            document.getElementById("flashcard").classList.remove("flashcard-flipped");
+        }
+
+        function endGame() {
+            clearInterval(timer);
+            document.getElementById("resultPopup").style.display = "block";
+            document.getElementById("finalScore").textContent = `Doğru: ${score}, Yanlış: ${wrong}`;
+        }
+
+        function restartGame() {
+            location.reload();
+        }
+
+        function goHome() {
+            alert("Anasayfa fonksiyonuna yönlendirin.");
+        }
+
+        window.onload = function() {
+            updateFlashcard();
+            startTimer();
+        };
+    </script>
+</body>
+</html>

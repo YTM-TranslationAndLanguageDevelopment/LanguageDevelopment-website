@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writing Practice</title>
+    <link rel="stylesheet" href="yazma.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Yazma Egzersizi</h1>
+        <div id="task-container">
+            <p id="task">Task: Aşağıdaki kelimeleri kullanarak bir cümle yazın:</p>
+            <ul id="word-list"></ul>
+        </div>
+        <textarea id="user-input" placeholder="Write your sentence here..."></textarea>
+        <button id="check-button">Check Sentence</button>
+        <div id="feedback"></div>
+        <div id="progress">
+            <p>Question <span id="current-question">1</span>/<span id="total-questions"></span></p>
+        </div>
+        <div id="button-container">
+            <button id="prev-button" style="display:none;">Önceki</button>
+            <button id="next-button" style="display:none;">Sonraki</button>
+        </div>
+    </div>
+
+    <script src="yazma.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dinleme egzersizi</title>
+    <link rel="stylesheet" href="dinleme2.css">
+</head>
+<body>
+    <header>
+        <h1>Dinleme Egzersizi</h1>
+    </header>
+    <div class="container">
+        <!-- Skor Bölümü -->
+        <div class="score">
+            <h2>Score: <span id="score">0</span></h2>
+        </div>
+
+        <!-- Dinamik Dinleme Alıştırmaları -->
+        <div class="exercise-container" id="exercise-container">
+            <h2>Dinleme Egzersizi</h2>
+        </div>
+
+        <div id="navigation-buttons" class="navigation-buttons">
+            <button id="previous-button" onclick="goToPreviousExercise()" disabled>⬅</button>
+            <button id="next-button" onclick="goToNextExercise()">⮕</button>
+        </div>
+    </div>
+
+    <script src="dinleme2.js"></script>
+</body>
+</html>

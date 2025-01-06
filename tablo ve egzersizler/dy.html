@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doğru-Yanlış Oyunu</title>
+    <link rel="stylesheet" href="dy.css">
+</head>
+<body>
+    <div id="game-container">
+        <h1>Doğru-Yanlış Oyunu</h1>
+        <h2>10 soru için 30 saniyeniz var acele edin!</h2>
+        <div id="question-container">
+            <p id="question"></p>
+        </div>
+        <button id="true-button">True</button>
+        <button id="false-button">False</button>
+        <p id="feedback"></p>
+        <p>Zaman Kalan: <span id="timer"></span></p>
+        <button id="next-button" style="display:none;">Sonraki</button>
+    </div>
+
+<div id="popup">
+    <h2>Oyun Bitti!</h2>
+    <p>Zamanınız bitti. Tekrar oynamak ister misiniz?</p>
+    <p>Doğru: <span id="correct-count">0</span></p>
+    <p>Yanlış: <span id="incorrect-count">0</span></p>
+    <button id="play-again">Tekrar Oyna</button>
+    <button id="home">Ana Sayfaya Dön</button>
+</div>
+
+    <script src="dy.js"></script>
+</body>
+</html>

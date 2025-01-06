@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelime Eşleştirme Oyunu</title>
+    <link rel="stylesheet" href="oyun1.css">
+</head>
+<body>
+    <div class="container" id="page1">
+        <h1>Kelime Eşleştirme Oyunu - Sayfa 1</h1>
+        <div class="game">
+            <div class="words">
+                <div class="word" id="word1" draggable="true">Ev</div>
+                <div class="word" id="word2" draggable="true">Kitap</div>
+                <div class="word" id="word3" draggable="true">Araba</div>
+            </div>
+            <div class="translations">
+                <div class="translation" id="trans1" ondrop="drop(event)" ondragover="allowDrop(event)">House</div>
+                <div class="translation" id="trans2" ondrop="drop(event)" ondragover="allowDrop(event)">Book</div>
+                <div class="translation" id="trans3" ondrop="drop(event)" ondragover="allowDrop(event)">Car</div>
+            </div>
+        </div>
+        <button onclick="goToPage(2)">Sonraki Sayfa</button>
+        <div id="score">Puan: 0</div>
+    </div>
+    
+    <div class="container" id="page2" style="display: none;">
+        <h1>Kelime Eşleştirme Oyunu - Sayfa 2</h1>
+        <div class="game">
+            <div class="words">
+                <div class="word" id="word4" draggable="true">Elma</div>
+                <div class="word" id="word5" draggable="true">Kalem</div>
+                <div class="word" id="word6" draggable="true">Bilgisayar</div>
+            </div>
+            <div class="translations">
+                <div class="translation" id="trans4" ondrop="drop(event)" ondragover="allowDrop(event)">Apple</div>
+                <div class="translation" id="trans5" ondrop="drop(event)" ondragover="allowDrop(event)">Pen</div>
+                <div class="translation" id="trans6" ondrop="drop(event)" ondragover="allowDrop(event)">Computer</div>
+            </div>
+        </div>
+        <button onclick="goToPage(1)">Önceki Sayfa</button>
+        <button onclick="goToPage(3)">Sonraki Sayfa</button>
+        <div id="score">Puan: 0</div>
+    </div>
+    
+    <div class="container" id="page3" style="display: none;">
+        <h1>Kelime Eşleştirme Oyunu - Sayfa 3</h1>
+        <div class="game">
+            <div class="words">
+                <div class="word" id="word7" draggable="true">Masa</div>
+                <div class="word" id="word8" draggable="true">Sandalye</div>
+                <div class="word" id="word9" draggable="true">Kapı</div>
+            </div>
+            <div class="translations">
+                <div class="translation" id="trans7" ondrop="drop(event)" ondragover="allowDrop(event)">Table</div>
+                <div class="translation" id="trans8" ondrop="drop(event)" ondragover="allowDrop(event)">Chair</div>
+                <div class="translation" id="trans9" ondrop="drop(event)" ondragover="allowDrop(event)">Door</div>
+            </div>
+        </div>
+        <button onclick="goToPage(2)">Önceki Sayfa</button>
+        <div id="score">Puan: 0</div>
+    </div>
+    
+
+    <script src="oyun1.js"></script>
+</body>
+</html>

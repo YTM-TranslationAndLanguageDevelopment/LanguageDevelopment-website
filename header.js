@@ -125,17 +125,23 @@ class Header extends HTMLElement { //HTMLElement sınıfından Header adında bi
     <aside id="sideMenu" class="side-menu">
         <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
         <div class="politikalar">
+        <div class="politika1">
         <div class="politikadiv"  onclick="window.location.href='GizlilikPolitikası.html';">
-            <img src="images/verified.png" title="verified" class="verified" alt="verified">
+            <img src="images/verified.png" title="verified" alt="verified">
             <a>Gizlilik Politikası</a>
         </div>
+        </div>
+        <div class="politika2">
         <div class="politikadiv" onclick="window.location.href='ÇerezPolitikası.html';">
-            <img src="images/cookie.png" title="cookie" class="cookie" alt="cookie">
+            <img src="images/cookie.png" title="cookie" alt="cookie">
             <a>Çerez Politikası</a>
         </div>
+        </div>
+        <div class="politika3">
         <div class="politikadiv" onclick="window.location.href='Hakkımızda.html';">
-            <img src="images/group.png" title="group" class="group" alt="group">
+            <img src="images/group.png" title="group" alt="group">
             <a>Hakkımızda</a>
+        </div>
         </div>
         </div>
         <div class="social-icons">

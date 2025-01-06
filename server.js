@@ -6,6 +6,8 @@ const cors = require("cors");
 const axios = require('axios');
 const express = require("express");
 const path = require("path");
+const multer = require('multer');
+const fs = require('fs');
 
 const app = express();
 const port = 3000;
@@ -13,6 +15,21 @@ const port = 3000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
+
+// Multer ayarları
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'images'); // Dosyaların kaydedileceği klasör
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const originalName = file.originalname;
+        const newFileName = uniqueSuffix + '-' + originalName;
+        cb(null, newFileName);
+    }
+});
+
+const upload = multer({ storage: storage });
 
 // Ana sayfayı yönlendirme
 app.get("/", (req, res) => {
@@ -475,6 +492,227 @@ app.post('/check-translation', async (req, res) => {
     }
 });
 
+
+// Politika güncelleme API'si
+app.post('/update-policy', async (req, res) => {
+    const { page, backgroundColor, fontSize, color, content, imageName } = req.body;
+
+    try {
+        const collection = await getCollection('politikalar');
+        await collection.updateOne(
+            { page },
+            { $set: { backgroundColor, fontSize, color, content, imageName } }
+        );
+
+
+        res.json({ success: true, message: 'Doküman başarıyla güncellendi!' });
+    } catch (error) {
+        console.error('Doküman güncellenirken hata oluştu:', error);
+        res.status(500).json({ success: false, message: 'Sunucu hatası oluştu.' });
+    }
+});
+
+// Resim yükleme endpoint'i
+app.post('/upload-image', upload.single('backgroundImage'), (req, res) => {
+    const imageName = req.file.filename; // Yüklenen dosyanın adı
+    res.json({ imageName }); // Resim adını JSON olarak döndür
+});
+
+// Sayfa verilerini getiren endpoint
+app.get('/get-page-data/:page', async (req, res) => {
+    const { page } = req.params;
+
+    try {
+        const collection = await getCollection('politikalar');
+        const pageData = await collection.findOne({ page });
+
+        if (pageData) {
+            res.json(pageData);
+        } else {
+            res.status(404).json({ message: 'Sayfa bulunamadı.' });
+        }
+    } catch (error) {
+        console.error('Veri alınırken hata oluştu:', error);
+        res.status(500).json({ message: 'Sunucu hatası oluştu.' });
+    }
+});
+
+// Sayfa verilerini getiren endpoint
+app.get('/get-policy-data/:page', async (req, res) => {
+    const { page } = req.params;
+
+    try {
+        const collection = await getCollection('politikalar');
+        const pageData = await collection.findOne({ page });
+
+        if (pageData) {
+            res.json(pageData);
+        } else {
+            res.status(404).json({ message: 'Sayfa bulunamadı.' });
+        }
+    } catch (error) {
+        console.error('Veri alınırken hata oluştu:', error);
+        res.status(500).json({ message: 'Sunucu hatası oluştu.' });
+    }
+});
+
+app.get('/get-languages/:type', async (req, res) => {
+    const { type } = req.params;
+    const collection = await getCollection('languageSelections');
+
+    try {
+        const languageData = await collection.findOne({ name: type === 'source' ? 'sourceLanguage' : 'targetLanguage' });
+
+        if (languageData) {
+            res.json(languageData.languages);
+        } else {
+            res.status(404).json({ message: 'Diller bulunamadı.' });
+        }
+    } catch (error) {
+        console.error('Veri alınırken hata oluştu:', error);
+        res.status(500).json({ message: 'Sunucu hatası oluştu.' });
+    }
+});
+
+app.post('/modify-languages/:type', async (req, res) => {
+    const { type } = req.params;
+    const { action, languageCode } = req.body;
+    const collection = await getCollection('languageSelections');
+    const documentName = type === 'source' ? 'sourceLanguage' : 'targetLanguage';
+
+    try {
+        const languageData = await collection.findOne({ name: documentName });
+
+        if (!languageData) {
+            return res.status(404).json({ message: 'Dil dokümanı bulunamadı.' });
+        }
+
+        const languages = languageData.languages;
+
+        if (action === 'add') {
+            if (!languages[languageCode]) {
+                // Yeni dil ekle
+                languages[languageCode] = getLanguageName(languageCode);
+            }
+        } else if (action === 'remove') {
+            if (languages[languageCode]) {
+                // Dili sil
+                delete languages[languageCode];
+            }
+        }
+
+        await collection.updateOne(
+            { name: documentName },
+            { $set: { languages } }
+        );
+
+        res.json(languages);
+    } catch (error) {
+        console.error('Dil güncellenirken hata oluştu:', error);
+        res.status(500).json({ message: 'Sunucu hatası oluştu.' });
+    }
+});
+
+function getLanguageName(code) {
+    const languageMap = {
+        "auto": "Dili algıla",
+        "es": "Spanish",
+        "fr": "French",
+        "de": "German",
+        "it": "Italian",
+        "en": "English",
+        "ja": "Japanese",
+        "zh": "Chinese",
+        "ru": "Russian",
+        "ko": "Korean",
+        "pt": "Portuguese",
+        "ar": "Arabic",
+        "sv": "Swedish",
+        "nb": "Norwegian",
+        "tr": "Türkçe",
+        "vi": "Vietnamese"
+    };
+    return languageMap[code];
+}
+
+// Kullanıcı verilerini getiren endpoint
+app.get('/get-users', async (req, res) => {
+    try {
+        const usersCollection = await getCollection('user');
+        const users = await usersCollection.find({}, {
+            projection: {
+                email: 1,
+                username: 1,
+                totalScore: 1,
+                streak: 1,
+                studiedTime: 1,
+                createDate: 1,
+                lastLoginDay: 1,
+                authority: 1
+            }
+        }).toArray();
+
+        res.json(users);
+    } catch (error) {
+        console.error('Kullanıcı verileri alınırken hata oluştu:', error);
+        res.status(500).json({ message: 'Sunucu hatası oluştu.' });
+    }
+});
+
+// Kullanıcı yetkisini güncelleyen endpoint
+app.post('/update-user-authority', async (req, res) => {
+    const { email, authority } = req.body;
+
+    try {
+        const usersCollection = await getCollection('user');
+        const result = await usersCollection.updateOne(
+            { email },
+            { $set: { authority } }
+        );
+
+        if (result.modifiedCount > 0) {
+            res.json({ success: true });
+        } else {
+            res.json({ success: false, message: 'Yetki güncellenemedi.' });
+        }
+    } catch (error) {
+        console.error('Yetki güncellenirken hata oluştu:', error);
+        res.status(500).json({ message: 'Sunucu hatası oluştu.' });
+    }
+});
+
+// Kullanıcıyı silen endpoint
+app.delete('/delete-user', async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const usersCollection = await getCollection('user');
+        const result = await usersCollection.deleteOne({ email });
+
+        if (result.deletedCount > 0) {
+            res.json({ success: true });
+        } else {
+            res.json({ success: false, message: 'Kullanıcı silinemedi.' });
+        }
+    } catch (error) {
+        console.error('Kullanıcı silinirken hata oluştu:', error);
+        res.status(500).json({ message: 'Sunucu hatası oluştu.' });
+    }
+});
+
+// Resim değiştirme endpoint'i
+app.post('/change-image', upload.single('image'), (req, res) => {
+    const { imageName } = req.body;
+    const imagePath = path.join(__dirname, 'images', `${imageName}.png`);
+
+    fs.rename(req.file.path, imagePath, (err) => {
+        if (err) {
+            console.error('Resim değiştirilirken hata oluştu:', err);
+            return res.status(500).json({ success: false, message: 'Resim değiştirilemedi.' });
+        }
+        res.json({ success: true });
+    });
+});
 
 // Sunucuyu başlat
 app.listen(port, () => {
