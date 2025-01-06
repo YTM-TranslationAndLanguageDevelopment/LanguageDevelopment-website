@@ -5,59 +5,479 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Paneli</title>
     <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
+
     <link rel="stylesheet" href="admin.css">
+    <script src="timecalculator.js"></script>
+    <script src="admin.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Admin Paneli</h2>
-        <ul>
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <span class="menu-toggle">☰</span>
+            <a href="index.html" class="header-title">
+                <h2>Translate and Language Development</h2>
+            </a>
+        </div>
+        <div class="header-right">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" placeholder="Ara..." class="search-input">
+            </div>
             
-            <li><a href="#users" id="usersBtn">Kullanıcı Yönetimi</a></li>
-            <li><a href="#roles" id="rolesBtn">Rol Yönetimi</a></li>
-            <li><a href="#translations" id="translationsBtn">Çeviri Yönetimi</a></li>
-            <li><a href="#exercises" id="exercisesBtn">Egzersiz Yönetimi</a></li>
-            <li><a href="#reports" id="reportsBtn">Raporlar</a></li>
-            <li><a href="#settings" id="settingsBtn">Ayarlar</a></li>
-        </ul>
+            <div class="header-icons">
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+                
+                <div class="profile-dropdown">
+                    <div class="profile-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="dropdown-content">
+                        <div class="profile-info">
+                            <i class="fas fa-user-circle profile-avatar"></i>
+                            <div class="user-details">
+                                <h4>Admin Kullanıcı</h4>
+                                <p>admin@email.com</p>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-user-cog"></i> Profil Ayarları
+                        </a>
+                        <a href="#" class="dropdown-item logout">
+                            <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                        </a>
+                    </div>
+                </div>
+
+                <div class="additional-settings ">
+                    <div id="settings" class="button settings">
+                        <div class="inner">
+                            <a id="setting" aria-label="Settings">
+                                <img src="images/logo.png" title="" class="logo" alt="Dil">
+                            </a>
+                    </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Ana Container -->
+    <div class="container">
+        <!-- Yan Menü -->
+        <nav class="sidebar">
+            <ul>
+                <li class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Ana Sayfa</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-cookie"></i>
+                    <span>Çerez Politikası</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Gizlilik Politikası</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Hakkımızda</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Genel Ayarlar</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-users-cog"></i>
+                    <span>Kullanıcı Yönetimi</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-language"></i>
+                    <span>Çeviri Yönetimi</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-image"></i>
+                    <span>Görsel Yönetimi</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Egzersiz Yönetimi</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Raporlama ve İstatistikler</span>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- İçerik Alanı -->
+        <main class="content">
+            <div class="content-header">
+                <h3>Ana Sayfa Yönetimi</h3>
+            </div>
+            
+            <!-- İçerik Alanları -->
+            <div class="content-body">
+                <!-- Ana Sayfa İçeriği -->
+                <div id="anasayfa-content" class="page-content">
+                    <h3>Hoş Geldiniz</h3>
+                    <p>Bu bölümde ana sayfa içeriğini düzenleyebilirsiniz.</p>
+                    <ul>
+                        <li>Hero bölümü ayarları</li>
+                        <li>Öne çıkan içerikler</li>
+                        <li>Başlık ve metinler</li>
+                    </ul>
+                </div>
+
+                    <!-- Çerez Politikası İçeriği -->
+                <div id="cerezpolitikasi-content" class="page-content hidden">
+                    <form id="cerezPolicyForm" action="/upload-image" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="page" value="ÇerezPolitikası">
+                        <div class="content-politika">
+                <div class="content-politika-left">
+                        <!-- Arka Plan Rengi -->
+                    <div class="content-section">
+                        <label for="cerezBackgroundColor">Arka Plan Rengi:</label>
+                        <div class="yanyana">
+                            <input type="color" id="cerezBackgroundColor" name="backgroundColor" value="#ffffff">
+                            <span id="cerezBackgroundColorValue">#ffffff</span>
+                        </div>
+                    </div>
+
+                        <!-- Arka Plan Resmi -->
+                    <div class="content-section">
+                        <label for="cerezBackgroundImage">Arka Plan Resmi:</label>
+                        <input type="file" id="cerezBackgroundImage" name="backgroundImage" accept="image/*">
+                        <div class="image-preview"></div>
+                    </div>   
+
+                        <!-- Yazı Boyutu -->
+                    <div class="content-section">
+                        <label for="cerezFontSize">Yazı Boyutu:</label>
+                        <div class="yanyana">
+                        <input type="number" id="cerezFontSize" name="fontSize"  min="1">
+                        <p style="color: rgb(0, 0, 0);">px</p>
+                        </div>
+                    </div>
+
+                        <!-- Yazı Rengi -->
+                    <div class="content-section">
+                        <label for="cerezColor">Yazı Rengi:</label>
+                        <div class="yanyana">
+                            <input type="color" id="cerezColor" name="color" value="#333333">
+                            <span id="cerezColorValue">#333333</span>
+                        </div>
+                    </div>
+                </div>
+                        <!-- Ön İzleme -->
+                    <div class="content-section">
+                        <iframe id="cerezPreview" src="ÇerezPolitikası.html" width="100%" height="670px"></iframe>
+                    </div>
+                </div>
+
+                        <!-- İçerik -->
+                    <div class="content-section">
+                        <label for="cerezContent">İçerik:</label>
+                        <textarea id="cerezContent" name="content" rows="4" placeholder="Sayfa içeriğini buraya girin..."></textarea>
+                    
+                        <!-- Güncelle Butonu -->
+                        <button type="submit">Güncelle</button>
+                    </div>
+                    </form>
+                </div>
+
+                <!-- Gizlilik Politikası İçeriği -->
+                <div id="gizlilikpolitikasi-content" class="page-content hidden">
+                    <form id="gizlilikPolicyForm" action="/upload-image" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="page" value="GizlilikPolitikası">
+                        <div class="content-politika">
+                            <div class="content-politika-left">
+                        <!-- Arka Plan Rengi -->
+                    <div class="content-section">
+                        <label for="gizlilikBackgroundColor">Arka Plan Rengi:</label>
+                        <div class="yanyana">
+                            <input type="color" id="gizlilikBackgroundColor" name="backgroundColor">
+                            <span id="gizlilikBackgroundColorValue">#ffffff</span>
+                        </div>
+                    </div>
+
+                        <!-- Arka Plan Resmi -->
+                        <div class="content-section">
+                        <label for="gizlilikBackgroundImage">Arka Plan Resmi:</label>
+                        <input type="file" id="gizlilikBackgroundImage" name="backgroundImage" accept="image/*">
+                        <div class="image-preview" ></div>
+                        </div>
+
+                        <!-- Yazı Boyutu -->
+                    <div class="content-section">
+                        <label for="gizlilikFontSize">Yazı Boyutu:</label>
+                        <div class="yanyana">
+                        <input type="number" id="gizlilikFontSize" name="fontSize"  min="1">
+                        <p style="color: rgb(0, 0, 0);">px</p>
+                        </div>
+                    </div>
+
+                      <!-- Yazı Rengi -->
+                    <div class="content-section">
+                        <label for="gizlilikColor">Yazı Rengi:</label>
+                        <div class="yanyana">
+                            <input type="color" id="gizlilikColor" name="color">
+                            <span id="gizlilikColorValue">#333333</span>
+                        </div>
+                    </div>
+                </div>
+
+                    <!-- Ön İzleme -->
+                    <div class="content-section">
+                        <iframe id="gizlilikPreview" src="GizlilikPolitikası.html" width="100%" height="670px"></iframe>
+                    </div>
+                </div>
+
+                      <!-- İçerik -->
+                    <div class="content-section">
+                        <label for="gizlilikContent">İçerik:</label>
+                        <textarea id="gizlilikContent" name="content" rows="4"></textarea>
+                        
+                        <!-- Güncelle Butonu -->
+                        <button type="submit">Güncelle</button>
+                    </div>
+                    </form>
+                </div>
+
+                <!-- Hakkımızda İçeriği -->
+                <div id="hakkimizda-content" class="page-content hidden">
+                    <form id="hakkimizdaPolicyForm" action="/upload-image" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="page" value="Hakkımızda">
+                        <div class="content-politika">
+                            <div class="content-politika-left">
+                        <!-- Arka Plan Rengi -->
+                    <div class="content-section">
+                        <label for="hakkimizdaBackgroundColor">Arka Plan Rengi:</label>
+                        <div class="yanyana">
+                            <input type="color" id="hakkimizdaBackgroundColor" name="backgroundColor">
+                            <span id="hakkimizdaBackgroundColorValue">#ffffff</span>
+                        </div>
+                    </div>  
+
+                        <!-- Arka Plan Resmi -->
+                    <div class="content-section">
+                        <label for="hakkimizdaBackgroundImage">Arka Plan Resmi:</label>
+                        <input type="file" id="hakkimizdaBackgroundImage" name="backgroundImage" accept="image/*">
+                        <div class="image-preview" ></div>
+                    </div>
+
+                         <!-- Yazı Boyutu -->
+                    <div class="content-section">
+                        <label for="hakkimizdaFontSize">Yazı Boyutu:</label>
+                        <div class="yanyana">
+                        <input type="number" id="hakkimizdaFontSize" name="fontSize"  min="1">
+                        <p style="color: rgb(0, 0, 0);">px</p>
+                        </div>
+                    </div>
+
+                         <!-- Yazı Rengi -->
+                    <div class="content-section">
+                    <label for="hakkimizdaColor">Yazı Rengi:</label>
+                        <div class="yanyana">
+                            <input type="color" id="hakkimizdaColor" name="color">
+                            <span id="hakkimizdaColorValue">#333333</span>
+                        </div>
+                    </div>
+                </div>
+
+                    <!-- Ön İzleme -->
+                    <div class="content-section">
+                        <iframe id="hakkimizdaPreview" src="Hakkımızda.html" width="100%" height="670px"></iframe>
+                    </div>
+                </div>
+
+                        <!-- İçerik -->
+                    <div class="content-section">
+                        <label for="hakkimizdaContent">İçerik:</label>
+                        <textarea id="hakkimizdaContent" name="content" rows="4"></textarea>
+                        
+                        <!-- Güncelle Butonu -->
+                        <button type="submit">Güncelle</button>
+                    </div>
+                    </form>
+                </div>
+
+                <!-- Genel Ayarlar İçeriği -->
+                <div id="genelayarlar-content" class="page-content hidden">
+                    <h3>Site Genel Ayarları</h3>
+                    <p>Bu bölümde sitenin genel ayarlarını yapılandırabilirsiniz.</p>
+                    <div class="settings-section">
+                        <h4>Logo Ayarları</h4>
+                        <input type="file" accept="image/*">
+                        <h4>Renk Şeması</h4>
+                        <input type="color" value="#2b3a4a">
+                    </div>
+                </div>
+
+                <!-- Kullanıcı Yönetimi İçeriği -->
+                <div id="kullaniciyonetimi-content" class="page-content hidden">
+                    <div class="users-section">
+                        <h4>Kullanıcı Listesi</h4>
+                        <table id="userTable" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th data-sort="email">E-posta</th>
+                                    <th data-sort="username">Kullanıcı Adı</th>
+                                    <th data-sort="totalScore">Toplam Puan</th>
+                                    <th data-sort="streak">Seri</th>
+                                    <th data-sort="studiedTime">Çalışma Süresi</th>
+                                    <th data-sort="createDate">Oluşturma Tarihi</th>
+                                    <th data-sort="lastLoginDay">Son Giriş</th>
+                                    <th>Yetki</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Kullanıcı verileri buraya yüklenecek -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Çeviri Yönetimi İçeriği -->
+                <div id="ceviriyonetimi-content" class="page-content hidden">
+                    <div class="language-management">
+                        <div class="language-section">
+                            <h4>Kaynak Diller</h4>
+                            <select id="sourceLanguageList" multiple></select>
+                            <button id="addSourceLanguage">Ekle</button>
+                            <button id="removeSourceLanguage">Sil</button>
+                        </div>
+                        <div class="language-section">
+                            <h4>Hedef Diller</h4>
+                            <select id="targetLanguageList" multiple></select>
+                            <button id="addTargetLanguage">Ekle</button>
+                            <button id="removeTargetLanguage">Sil</button>
+                        </div>
+                    </div>
+                    <div class="language-options">
+                        <h4>Mevcut Diller</h4>
+                        <select id="availableLanguages">
+                            <option value="auto">Dili algıla</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="it">Italian</option>
+                            <option value="en">English</option>
+                            <option value="ja">Japanese</option>
+                            <option value="zh">Chinese</option>
+                            <option value="ru">Russian</option>
+                            <option value="ko">Korean</option>
+                            <option value="pt">Portuguese</option>
+                            <option value="ar">Arabic</option>
+                            <option value="sv">Swedish</option>
+                            <option value="nb">Norwegian</option>
+                            <option value="tr">Türkçe</option>
+                            <option value="vi">Vietnamese</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Görsel Yönetimi İçeriği -->
+                <div id="gorselyonetimi-content" class="page-content hidden">
+                    <div class="image-section">
+                        <div class="content-item">
+                            <img src="images/arrow.png" alt="arrow" class="content-image">
+                            <button class="change-image-btn" data-image="arrow">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/delete.png" alt="delete" class="content-image">
+                            <button class="change-image-btn" data-image="delete">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/microfon.png" alt="microphone" class="content-image">
+                            <button class="change-image-btn" data-image="microfon">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/volume.png" alt="volume" class="content-image">
+                            <button class="change-image-btn" data-image="volume">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/random.png" alt="random" class="content-image">
+                            <button class="change-image-btn" data-image="random">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/dictionary.png" alt="dictionary" class="content-image">
+                            <button class="change-image-btn" data-image="dictionary">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/bosyıldız.png" alt="star" class="content-image">
+                            <button class="change-image-btn" data-image="bosyıldız">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/doluyıldız.png" alt="doluyıldız" class="content-image">
+                            <button class="change-image-btn" data-image="doluyıldız">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/copy.png" alt="copy" class="content-image">
+                            <button class="change-image-btn" data-image="copy">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/share.png" alt="share" class="content-image">
+                            <button class="change-image-btn" data-image="share">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/derecele.png" alt="derecele" class="content-image">
+                            <button class="change-image-btn" data-image="derecele">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/history.png" alt="history" class="content-image">
+                            <button class="change-image-btn" data-image="history">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/saved.png" alt="saved" class="content-image">
+                            <button class="change-image-btn" data-image="saved">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/favicon.png" alt="favicon" class="content-image">
+                            <button class="change-image-btn" data-image="favicon">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/logo.png" alt="logo" class="content-image">
+                            <button class="change-image-btn" data-image="logo">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/github.png" alt="github" class="content-image">
+                            <button class="change-image-btn" data-image="github">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/linkedin.png" alt="linkedin" class="content-image">
+                            <button class="change-image-btn" data-image="linkedin">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/youtube.png" alt="youtube" class="content-image">
+                            <button class="change-image-btn" data-image="youtube">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/facebook.png" alt="facebook" class="content-image">
+                            <button class="change-image-btn" data-image="facebook">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/twitter.png" alt="twitter" class="content-image">
+                            <button class="change-image-btn" data-image="twitter">Resim Değiştir</button>
+                        </div>
+                        <div class="content-item">
+                            <img src="images/instagram.png" alt="instagram" class="content-image">
+                            <button class="change-image-btn" data-image="instagram">Resim Değiştir</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
     </div>
-    <div class="main-content">
-        <header>
-            <h1>Panel Sayfası</h1>
-        </header>
-        <section id="content">
-            <!-- Dinamik içerik buraya yüklenecek -->
-        </section>
-    </div>
-
-    <script>
-        // Menüye tıklanıldığında dinamik içerik yükleme
-        const dashboardBtn = document.getElementById('dashboardBtn');
-        const usersBtn = document.getElementById('usersBtn');
-        const rolesBtn = document.getElementById('rolesBtn');
-        const translationsBtn = document.getElementById('translationsBtn');
-        const exercisesBtn = document.getElementById('exercisesBtn');
-        const reportsBtn = document.getElementById('reportsBtn');
-        const settingsBtn = document.getElementById('settingsBtn');
-        const contentDiv = document.getElementById('content');
-
-        // Dinamik içerik yükleme fonksiyonu
-        function loadContent(section) {
-            fetch(`http://localhost:3000/${section}`)
-                .then(response => response.json())
-                .then(data => {
-                    contentDiv.innerHTML = `<h2>${data.title}</h2><p>${data.description}</p>`;
-                })
-                .catch(err => console.error('Error loading content:', err));
-        }
-
-        // Menü butonlarına tıklanınca içerik yüklenmesi
-        dashboardBtn.addEventListener('click', () => loadContent('dashboard'));
-        usersBtn.addEventListener('click', () => loadContent('users'));
-        rolesBtn.addEventListener('click', () => loadContent('roles'));
-        translationsBtn.addEventListener('click', () => loadContent('translations'));
-        exercisesBtn.addEventListener('click', () => loadContent('exercises'));
-        reportsBtn.addEventListener('click', () => loadContent('reports'));
-        settingsBtn.addEventListener('click', () => loadContent('settings'));
-    </script>
 </body>
 </html>
+
