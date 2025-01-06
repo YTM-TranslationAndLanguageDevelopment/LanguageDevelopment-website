@@ -196,6 +196,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const formData = new FormData(form); // Form verilerini al
                 const page = pageMapping[form.id]; // Form id'sini page değerine eşle
         
+                // Font boyutunu kontrol et ve varsayılan değer ata
+                let fontSize = formData.get('fontSize');
+                if (!fontSize || fontSize.trim() === "") {
+                    fontSize = "15"; // Varsayılan değer
+                }
+        
                 // Resim seçilmişse, resim yükle
                 let imageName = null;
                 if (formData.get('backgroundImage') && formData.get('backgroundImage').size > 0) {
@@ -223,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = {
                     page,
                     backgroundColor: formData.get('backgroundColor'),
-                    fontSize: formData.get('fontSize'),
+                    fontSize, // Varsayılan değer atanmış fontSize
                     color: formData.get('color'),
                     content: formData.get('content'),
                     imageName // Eğer resim yüklenmemişse null gönderilecek
@@ -292,6 +298,57 @@ document.addEventListener('DOMContentLoaded', function() {
             // Form gönderme işlemleri burada yapılır
             document.getElementById('hakkimizdaPreview').contentWindow.location.reload();
         });
+
+        function updatePreview(iframeId, backgroundColorId, fontSizeId, colorId, backgroundImageId, contentId) {
+            const iframe = document.getElementById(iframeId);
+            const backgroundColorInput = document.getElementById(backgroundColorId);
+            const fontSizeInput = document.getElementById(fontSizeId);
+            const colorInput = document.getElementById(colorId);
+            const backgroundImageInput = document.getElementById(backgroundImageId);
+            const contentInput = document.getElementById(contentId);
+
+            function applyChanges() {
+                const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+                const mainElement = iframeDocument.querySelector('main');
+                
+                // Arka plan rengi
+                iframeDocument.body.style.backgroundColor = backgroundColorInput.value;
+                
+                // Yazı boyutu
+                mainElement.style.fontSize = fontSizeInput.value + 'px';
+                
+                // Yazı rengi
+                mainElement.style.color = colorInput.value;
+                
+                // Arka plan resmi
+                const file = backgroundImageInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        iframeDocument.body.style.backgroundImage = `url(${e.target.result})`;
+                    };
+                    reader.readAsDataURL(file);
+                }
+
+                // İçerik
+                mainElement.innerHTML = contentInput.value;
+            }
+
+            backgroundColorInput.addEventListener('input', applyChanges);
+            fontSizeInput.addEventListener('input', applyChanges);
+            colorInput.addEventListener('input', applyChanges);
+            backgroundImageInput.addEventListener('change', applyChanges);
+            contentInput.addEventListener('input', applyChanges);
+        }
+
+        // Çerez Politikası
+        updatePreview('cerezPreview', 'cerezBackgroundColor', 'cerezFontSize', 'cerezColor', 'cerezBackgroundImage', 'cerezContent');
+        
+        // Gizlilik Politikası
+        updatePreview('gizlilikPreview', 'gizlilikBackgroundColor', 'gizlilikFontSize', 'gizlilikColor', 'gizlilikBackgroundImage', 'gizlilikContent');
+        
+        // Hakkımızda
+        updatePreview('hakkimizdaPreview', 'hakkimizdaBackgroundColor', 'hakkimizdaFontSize', 'hakkimizdaColor', 'hakkimizdaBackgroundImage', 'hakkimizdaContent');
 
     }
 }); 
