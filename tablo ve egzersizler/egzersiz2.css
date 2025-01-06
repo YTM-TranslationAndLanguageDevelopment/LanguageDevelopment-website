@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(225, 232, 235) !important;
+}
+
+#start-screen {
+    margin-top: 15%;
+}
+#btn-en-to-tr, #btn-tr-to-en,#dinleme0,#okuma,#yazma{
+    width: 250px;
+    height: 250px;
+}
+
+button {
+    padding: 15px 30px;
+    margin: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #36acdb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Metalik etki için hafif gölge */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6); /* Parıltılı beyaz efekt */
+    animation: slideIn 1s forwards;
+    font-weight: bold;
+    text-size-adjust: 40px;
+}
+
+.hidden {
+    display: none;
+}
+
+#quiz-screen {
+    margin-top: 5%;
+}
+
+#question-container {
+    margin-bottom: 20px;
+}
+
+#options-container button {
+    display: block;
+    margin: 10px auto;
+    width: 50%;
+}
+
+#score-board {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(110, 5, 208);
+}
+
+#score-board p {
+    margin: 5px 0;
+    font-size: 18px;
+}
+/*-------------------------------------------------*/
+ 
+#question-container {
+    margin: 20px auto;
+    padding: 20px;
+    width: 50%;
+    background-color: rgba(255, 255, 255, 0.053); /* Beyaz arkaplan */
+    border: 3px solid rgb(63, 148, 181); /* Çerçeve rengi */
+    border-radius: 10px; /* Köşeleri yuvarlatma */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Hafif gölge efekti */
+    font-size: 18px;
+    text-align: center;
+}
+#question-text {
+    font-size: 24px; /* Soru metni boyutu */
+    font-weight: bold; /* Kalın metin */
+    margin-bottom: 20px; /* Alt boşluk */
+    color: rgb(63, 63, 63); /* Koyu gri renk */
+}
+
+
+
+
+

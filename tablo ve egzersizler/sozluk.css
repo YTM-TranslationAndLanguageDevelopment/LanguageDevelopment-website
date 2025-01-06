@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+    background-color: #b9ddf1;
+}
+h1 {
+    font-size: 2em;
+    margin-bottom: 50px;
+    margin-top: 60px;
+}
+.tables {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 100px;
+}
+.table {
+    border: 1px solid #ccc;
+    width: 30%;
+    border-radius: 8px;
+    border-color: #2c3e50;
+    margin: 0 5px;
+    background: linear-gradient(#f5af19, #e86b5d);
+    padding: 20px;
+}
+.table h3 {
+    margin: 0;
+    padding: 10px;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 25px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+table, th, td {
+    border: 1px solid #ccc;
+}
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+
+/* Sütunlar arasına çizgi eklemek için */
+td {
+    border-right: 1px solid #ccc;
+}
+
+/* Son hücredeki sağ çizgiyi kaldırmak için */
+td:last-child {
+    border-right: none;
+}
+
+.add-row {
+    margin-top: 10px;
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+
+#sozluk {
+    background: linear-gradient(#b089d3, #7249c4);
+}
+#onerilenKelime {
+    background: linear-gradient(#f5af19, #e86b5d);
+}
+#hazirKelime {
+    background: linear-gradient(#1cb5e0, #2b40dc);
+}
+
+#sozluk, #onerilenKelime, #hazirKelime {
+    width: 60%; /* Tabloların genişliğini daraltmak */
+    max-width: 350px; /* Maksimum genişliği sınırlamak */
+}

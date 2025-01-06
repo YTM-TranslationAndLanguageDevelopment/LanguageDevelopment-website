@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skor Takip</title>
+    <link rel="stylesheet" href="gelisim.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Gelişim</h1>
+            <span>🔥</span>
+        </div>
+
+        <div class="score-section">
+            <div class="score-box">
+                <h2>34</h2>
+                <p>Kelime</p>
+            </div>
+            <div class="score-box">
+                <h2>9</h2>
+                <p>Çeviri</p>
+            </div>
+        </div>
+
+        <div class="streak">
+            <h3>Seri</h3>
+            <div class="days">
+                <div class="day" id="mon">
+                    <span class="icon"></span>
+                    Pzt
+                </div>
+                <div class="day" id="tue">
+                    <span class="icon"></span>
+                    Sal
+                </div>
+                <div class="day" id="wed">
+                    <span class="icon"></span>
+                    Çar
+                </div>
+                <div class="day" id="thu">
+                    <span class="icon"></span>
+                    Per
+                </div>
+                <div class="day" id="fri">
+                    <span class="icon"></span>
+                    Cum
+                </div>
+                <div class="day" id="sat">
+                    <span class="icon"></span>
+                    Cmt
+                </div>
+                <div class="day" id="sun">
+                    <span class="icon"></span>
+                    Paz
+                </div>
+            </div>
+            <div class="streak-info">
+                <div>Mevcut Seri: <strong>1 gün</strong></div>
+                <div>En Uzun Seri: <strong>4 gün</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dinamik gün bilgisi ekleme
+        const days = document.querySelectorAll('.day');
+        const activeDays = ['mon', 'tue', 'wed']; // Aktif günlerin ID'leri
+
+        days.forEach(day => {
+            if (activeDays.includes(day.id)) {
+                day.classList.add('active');
+                day.querySelector('.icon').textContent = '🔥';
+            }
+        });
+    </script>
+</body>
+</html>

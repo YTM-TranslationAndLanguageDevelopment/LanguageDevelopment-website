@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Çalışma Sayfası</title>
+    <link rel="stylesheet" href="sozluk.css">
+    <script src="sozluk.js" defer></script>
+</head>
+<body>
+    <h1>Çalışma Sayfası</h1>
+    <div class="tables">
+        <div class="table" id="sozluk">
+            <h3>Kullanıcı Sözlüğü</h3>
+            <table id="sozlukTable">
+                <tr>
+                    <th>İngilizce</th>
+                    <th>Türkçe</th>
+                </tr>
+                <!-- Dinamik olarak buraya kelimeler eklenecek -->
+            </table>
+        </div>
+        <div class="table" id="onerilenKelime">
+            <h3>Önerilen Kelimeler</h3>
+            <table id="onerilenTable">
+                <tr>
+                    <th>İngilizce</th>
+                    <th>Türkçe</th>
+                </tr>
+                <!-- Bu tablo da dinamik olarak dolacak -->
+            </table>
+        </div>
+        <div class="table" id="hazirKelime">
+            <h3>Hazır Kelime Tabloları</h3>
+            <table id="hazirTable">
+                <tr>
+                    <th>İngilizce</th>
+                    <th>Türkçe</th>
+                </tr>
+                <!-- Burada da kelimeler eklenebilir -->
+            </table>
+        </div>
+    </div>
+
+    <iframe src="zaman.html" style="border: none; width: 300px; height: 300px; position: fixed;
+    top:0px; left:0px; "></iframe>
+</body>
+</html>

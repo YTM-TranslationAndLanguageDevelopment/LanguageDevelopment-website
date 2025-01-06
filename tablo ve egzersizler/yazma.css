@@ -1,0 +1,171 @@
+/* Genel Sayfa Ayarları */
+body {
+    font-family: 'Roboto', sans-serif; /* Modern ve okunabilir font */
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7fc;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 700px;
+    margin: 40px auto;
+    background: #b9ddf1;
+    border-radius: 15px; /* Daha yuvarlak köşeler */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Daha derin gölge */
+    padding: 30px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 36px;
+    color: #36acdb; /* Sıcak mavi ton */
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+/* Görev Metni ve Kelime Listesi */
+#task {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #555; /* Yumuşak gri */
+}
+
+#word-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+#word-list li {
+    background: #f0f8ff; /* Yumuşak pastel mavi */
+    color: #007acc; /* Mavi metin */
+    padding: 12px 18px;
+    border-radius: 8px; /* Daha yuvarlak köşeler */
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+    transition: all 0.3s ease;
+}
+
+#word-list li:hover {
+    transform: scale(1.05); /* Hoverda hafif büyüme */
+}
+
+/* Kullanıcı Girdisi Alanı */
+#user-input {
+    width: 100%;
+    height: 120px;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    box-sizing: border-box;
+    transition: border 0.3s ease;
+}
+
+#user-input:focus {
+    border-color: #3a82d1; /* Mavi kenarlık odaklanınca */
+    outline: none;
+}
+
+/* Buton Stilleri */
+button {
+    background-color: #4CAF50; /* Yeşil buton */
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 10px;
+}
+
+button:hover {
+    background-color: #45a049; /* Hoverda koyu yeşil */
+    transform: translateY(-2px); /* Hoverda hafif yukarı kayma */
+}
+
+#prev-button {
+    background-color: #ff7043; /* Koyu mercan rengi */
+}
+
+#next-button {
+    background-color: #4db6ac; /* Pastel yeşil mavi */
+}
+
+#prev-button:hover {
+    background-color: #e64a19; /* Hoverda daha koyu mercan */
+}
+
+#next-button:hover {
+    background-color: #26a69a; /* Hoverda daha koyu pastel yeşil mavi */
+}
+
+/* Geribildirim */
+#feedback {
+    margin-top: 20px;
+    font-size: 18px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.success {
+    color: #4CAF50; /* Yeşil başarı mesajı */
+}
+
+.error {
+    color: #ff7043; /* Koyu mercan hata mesajı */
+}
+
+/* Soru Sayısı ve İlerleme */
+#progress {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+}
+
+#button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+/* Gölgeler ve Yumuşak Geçişler */
+.container, button, #user-input, #word-list li {
+    transition: all 0.3s ease; /* Yumuşak geçişler ekledik */
+}
+
+/* Genel Duyarlı Tasarım */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    #user-input {
+        height: 100px;
+        font-size: 16px;
+    }
+
+    button {
+        font-size: 16px;
+        padding: 12px 25px;
+    }
+}

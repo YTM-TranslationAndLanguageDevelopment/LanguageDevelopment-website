@@ -1,0 +1,112 @@
+/* Genel sayfa stil ayarları */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(45deg, #6e7dff, #e0aaff); /* Gradient arka plan */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    color: #333;
+}
+
+.container {
+    text-align: center;
+    background: linear-gradient(45deg,#23e20e,#36d1aa, #1c9fe5); /* Gradient arka plan */
+    border-radius: 20px;
+    padding: 40px 50px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    width: 600px;
+}
+
+h1 {
+    font-size: 28px;
+    color: #4a4a4a;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+/* Oyun bölgesi */
+.game {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+/* Kelimeler ve çeviriler için stil */
+.word, .translation {
+    background-color: #fff;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    font-size: 18px;
+    width: 120px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+}
+
+/* Hover efektleri */
+.word:hover, .translation:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.1);
+}
+
+/* Doğru eşleşme için stil */
+.correct {
+    background-color: #4CAF50;
+    color: white;
+    border: 2px solid #388E3C;
+}
+
+/* Yanlış eşleşme için stil */
+.incorrect {
+    background-color: #f44336;
+    color: white;
+    border: 2px solid #d32f2f;
+}
+
+/* Kelimeler ve çeviriler arasında boşluk */
+.word, .translation {
+    font-weight: bold;
+}
+
+/* Puan göstergesi */
+#score {
+    font-size: 20px;
+    margin-top: 20px;
+    font-weight: 600;
+    color: #555;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Sürükleme için stil */
+.translation {
+    border: 2px dashed #ccc;
+}
+
+/* Küçük cihazlar için duyarlı tasarım */
+@media (max-width: 600px) {
+    .game {
+        flex-direction: column;
+        align-items: center;
+    }
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+}
+button{
+    background-color: #39a9d9;
+    border-radius: 5px;
+    color: #ffffff;
+    font-weight: bold;
+    width: 130px;
+    height: 50px;
+}

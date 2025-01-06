@@ -671,8 +671,8 @@ document.getElementById('savedLink').addEventListener('click', function(event) {
     // Kullanıcının giriş yapıp yapmadığını kontrol et
     const userEmail = sessionStorage.getItem('userEmail');
     if (userEmail) {
-        // Kullanıcı giriş yapmışsa admin.html'e yönlendir
-        window.location.href = 'admin.html';
+        // Kullanıcı giriş yapmışsa a.html'e yönlendir
+        window.location.href = 'tablo ve egzersizler/a.html';
     } else {  
         showSavedPanel();
     }

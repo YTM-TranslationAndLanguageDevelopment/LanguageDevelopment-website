@@ -1,0 +1,117 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f3f4f6;
+    color: #333;
+}
+
+header {
+    background-color: rgb(255, 255, 255);
+    color: #7098cf;
+    text-align: center;
+    padding: 20px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin: 0;
+    font-weight: normal;
+}
+
+.container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #b9ddf1;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.exercise h2 {
+    font-size: 1.8rem;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+input[type="text"] {
+    width: calc(100% - 30px);
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+input[type="text"]:focus {
+    border-color: #3b5998;
+    box-shadow: 0 0 5px rgba(59, 89, 152, 0.5);
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 1.5rem;
+    background-color: #138ab5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #2d4373;
+}
+
+button[disabled] {
+    background-color: transparent;
+    cursor: not-allowed;
+    color: #000000;
+}
+
+.navigation-buttons {
+    margin-top: 20px;
+}
+
+.navigation-buttons button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    margin: 0 10px;
+}
+
+#exercise-container {
+    display: none; /* Başlangıçta gizli */
+}
+
+/* Harf kutucukları için stil */
+.letters-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px; 
+    margin-top: 20px;
+}
+
+.letters-container button {
+    width: 40px;
+    height: 40px; 
+    font-size: 1.2rem; 
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #56b8e5;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.letters-container button:hover {
+    background-color: #dcdcdc; /* Hover efekti */
+}
+
+/*-----------------------------*/
