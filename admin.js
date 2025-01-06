@@ -701,7 +701,6 @@ async function loadContentManagementContent() {
             
                                 const result = await response.json();
                                 if (result.success) {
-                                    alert('Resim başarıyla değiştirildi.');
                                     // Görüntüyü güncelle
                                     this.previousElementSibling.src = `images/${imageName}.png?${new Date().getTime()}`;
                                 } else {
