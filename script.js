@@ -1,12 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-    // sessionStorage'da 'userEmail' var mı kontrol et
-    const userEmail = sessionStorage.getItem('userEmail');
-
-    if (userEmail) {
-        setVisibility(true);
-    }
-});
-
 function adjustHeight() {
     const sourceTextarea = document.getElementById('sourceText');
     const resultTextarea = document.getElementById('resultText');
@@ -30,19 +21,51 @@ document.getElementById('sourceText').addEventListener('input', adjustHeight);
 document.getElementById('resultText').addEventListener('input', adjustHeight);
 
 
-// Çeviri sonucunu panoya kopyala
-$('#copy').click(function () {
-    const resultText = $('#resultText').val();
-    if (resultText.trim()) {
-        navigator.clipboard.writeText(resultText).then(() => {
-        }).catch(() => {
-            alert('Panoya kopyalama başarısız oldu.');
-        });
+function togglePanel(panel, isVisible) {
+    if (isVisible) {
+        panel.classList.add("visible");
+        panel.classList.remove("hidden");
     } else {
-        alert('Kopyalanacak metin bulunamadı.');
+        panel.classList.remove("visible");
+        panel.classList.add("hidden");
+    }
+}
+
+function hideAllPanels() {
+    togglePanel(derecelePanel, false);
+    togglePanel(copyPanel, false);
+    togglePanel(sharePanel, false);
+    togglePanel(savedPanel, false);
+    togglePanel(backdrop, false);
+}
+
+document.addEventListener("click", (event) => {
+    const derecelePanelVisible = derecelePanel.classList.contains("visible");
+    const copyPanelVisible = copyPanel.classList.contains("visible");
+    const sharePanelVisible = sharePanel.classList.contains("visible");
+    const savedPanelVisible = savedPanel.classList.contains("visible");
+
+    if (derecelePanelVisible && !derecelePanel.contains(event.target) && event.target !== dereceleIcon) {
+        togglePanel(derecelePanel, false);
+    }
+
+    if (copyPanelVisible && !copyPanel.contains(event.target) && event.target !== copyIcon) {
+        togglePanel(copyPanel, false);
+    }
+
+    if (sharePanelVisible && !sharePanel.contains(event.target) && event.target !== shareIcon) {
+        togglePanel(sharePanel, false);
+    }
+
+    if (savedPanelVisible && !savedPanel.contains(event.target) && event.target !== savedIcon) {
+        togglePanel(savedPanel, false);
+        togglePanel(backdrop, false);
     }
 });
 
+let hideTimeout;
+
+//copy panel
 const copyIcon = document.getElementById("copy");
 const copyPanel = document.getElementById("copy-panel");
 
@@ -56,13 +79,13 @@ function showCopyPanel() {
     copyPanel.style.top = `${rect.bottom + window.scrollY + 5}px`;
     copyPanel.style.left = `${rect.left + window.scrollX - 22}px`;
 
-    copyPanel.classList.add("visible");
-    copyPanel.classList.remove("hidden");
+    togglePanel(copyPanel, true);
 
     clearTimeout(hideTimeout);
-    hideTimeout = setTimeout(hidePanel, 2000);
+    hideTimeout = setTimeout(hideAllPanels, 2000);
 }
 
+//share panel
 const shareIcon = document.getElementById("share");
 const sharePanel = document.getElementById("share-panel");
 
@@ -76,143 +99,93 @@ function showSharePanel() {
     sharePanel.style.top = `${rect.bottom + window.scrollY + 4}px`;
     sharePanel.style.left = `${rect.left + window.scrollX - 66}px`;
 
-    sharePanel.classList.add("visible");
-    sharePanel.classList.remove("hidden");
+    togglePanel(sharePanel, true);
 
     clearTimeout(hideTimeout);
-    hideTimeout = setTimeout(hidePanel, 8000);
+    hideTimeout = setTimeout(hideAllPanels, 8000);
 }
 
-const derecele = document.getElementById("derecele");
+//derecele panel
+const dereceleIcon = document.getElementById("derecele");
 const derecelePanel = document.getElementById("derecele-panel");
 
-let hideTimeout;
-
-derecele.addEventListener("click", (event) => {
+dereceleIcon.addEventListener("click", (event) => {
     event.stopPropagation();
     showDerecelePanel();
 });
 
 function showDerecelePanel() {
-    const rect = derecele.getBoundingClientRect();
-    derecelePanel.style.top = `${rect.bottom + window.scrollY -250}px`;
+    const rect = dereceleIcon.getBoundingClientRect();
+    derecelePanel.style.top = `${rect.bottom + window.scrollY - 250}px`;
     derecelePanel.style.left = `${rect.left + window.scrollX - 440}px`;
 
-    derecelePanel.classList.add("visible");
-    derecelePanel.classList.remove("hidden");
+    togglePanel(derecelePanel, true);
 
     clearTimeout(hideTimeout);
-    hideTimeout = setTimeout(hidePanel, 8000);
+    hideTimeout = setTimeout(hideAllPanels, 8000);
 }
 
-function hidePanel() {
-    derecelePanel.classList.remove("visible");
-    derecelePanel.classList.add("hidden");
-    copyPanel.classList.remove("visible");
-    copyPanel.classList.add("hidden");
-    sharePanel.classList.remove("visible");
-    sharePanel.classList.add("hidden");
+const savedIcon = document.getElementById("yıldız");
+const savedPanel = document.getElementById("saved-panel");
+const dismissButton = document.getElementById("dismiss-button");
+const savedloginButton = document.getElementById("saved-login-button");
+const backdrop = document.getElementById("backdrop");
+
+function showSavedPanel() {
+    togglePanel(backdrop, true);
+    togglePanel(savedPanel, true);
+
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(hideAllPanels, 10000);
 }
 
-document.addEventListener("click", (event) => {
-    const derecelePanelVisible = derecelePanel.classList.contains("visible");
-    const copyPanelVisible = copyPanel.classList.contains("visible");
-    const sharePanelVisible = sharePanel.classList.contains("visible");
-
-    if (derecelePanelVisible && !derecelePanel.contains(event.target) && event.target !== derecele) {
-        derecelePanel.classList.remove("visible");
-        derecelePanel.classList.add("hidden");
-    }
-
-    if (copyPanelVisible && !copyPanel.contains(event.target) && event.target !== copyIcon) {
-        copyPanel.classList.remove("visible");
-        copyPanel.classList.add("hidden");
-    }
-
-    if (sharePanelVisible && !sharePanel.contains(event.target) && event.target !== shareIcon) {
-        sharePanel.classList.remove("visible");
-        sharePanel.classList.add("hidden");
-    }
+// Şimdi değil butonuna tıklanınca panel kapanır
+dismissButton.addEventListener("click", () => {
+    hideAllPanels();
 });
 
-    
+// Oturum aç butonuna tıklanınca giriş fonksiyonu çağrılır ve panel kapanır
+savedloginButton.addEventListener("click", () => {
+    hideAllPanels();
+    openPopup("girisPopup");
+});
+
 //Share-panel ikonlar tıklanınca ilgili bağlantıyı açma
-const resultTextElement = document.querySelector("#resultText"); // #resultText textarea öğesini seç
-    const mailtoLink = document.querySelector("#mailto"); // Mailto bağlantısını seç
-    const tweettoLink = document.querySelector("#tweetto"); // Tweetto bağlantısını seç
+const resultTextElement = document.querySelector("#resultText");
+const mailtoLink = document.querySelector("#mailto");
+const tweettoLink = document.querySelector("#tweetto");
 
-    if (resultTextElement) {
-        const getText = () => resultTextElement.value.trim(); // #resultText'teki metni al ve boşlukları temizle
+if (resultTextElement) {
+    const getText = () => resultTextElement.value.trim();
 
-        // Mailto linkini güncelle
-        mailtoLink.addEventListener("click", function (event) {
-            const text = getText();
-            if (text) {
-                this.href = `mailto:?body=${encodeURIComponent(text)}`;
-            } else {
-                alert("Gönderilecek bir metin bulunamadı.");
-                event.preventDefault(); // Varsayılan davranışı engelle
-            }
-        });
+    // Mailto linkini güncelle
+    mailtoLink.addEventListener("click", function (event) {
+        const text = getText();
+        if (text) {
+            this.href = `mailto:?body=${encodeURIComponent(text)}`;
+        } else {
+            alert("Gönderilecek bir metin bulunamadı.");
+            event.preventDefault();
+        }
+    });
 
-        // Tweetto linkini güncelle
-        tweettoLink.addEventListener("click", function (event) {
-            const text = getText();
-            if (text) {
-                this.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-            } else {
-                alert("Gönderilecek bir metin bulunamadı.");
-                event.preventDefault(); // Varsayılan davranışı engelle
-            }
-        });
-    } else {
-        console.error("#resultText öğesi bulunamadı.");
-    }
-
-
-// Dil değiştirme ikonuna tıklanıp dillerin ve metinlerin yer değiştirilmesi
-$('#swapLanguages').click(function () {
-    // sourceLanguage değeri "auto" değilse işlemleri gerçekleştir
-    const sourceLang = $('#sourceLanguage').val();
-    const targetLang = $('#targetLanguage').val();
-
-    if (sourceLang !== 'auto') {
-        closeRecognizing();  
-        resetStarIcon();     
-
-        // Dilleri değiştir
-        $('#sourceLanguage').val(targetLang);
-        $('#targetLanguage').val(sourceLang);
-
-        // Çeviriyi yeniden başlat
-        $('#sourceText').val($('#resultText').val());
-
-        translate(); // Çeviriyi yeniden başlat
-    }
-});
-
-// ComboBox tıklanıp değeri değiştirildiğinde
-$('#sourceLanguage, #targetLanguage').change(function () {
-    resetStarIcon();
-    closeRecognizing(); 
-    translate();
-
-    const selectedLanguage = document.getElementById("sourceLanguage").value;
-    recognition.lang = selectedLanguage; // Yeni dili ayarla
-    console.log('dil değişti: '+selectedLanguage);
-});
-
-// Silme butonuna tıklama işlevi
-$('.delete-icon').click(function () {
-    $('#sourceText').val(''); // Kaynak metni temizle
-    $('#resultText').val(''); // Çeviri metnini temizle
-    adjustHeight();
-    toggleElementsVisibility();
-    resetStarIcon();
-});
+    // Tweetto linkini güncelle
+    tweettoLink.addEventListener("click", function (event) {
+        const text = getText();
+        if (text) {
+            this.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+        } else {
+            alert("Gönderilecek bir metin bulunamadı.");
+            event.preventDefault();
+        }
+    });
+} else {
+    console.error("#resultText öğesi bulunamadı.");
+}
 
 
-// Yıldız simgesi tıklanınca işlem yapma
+    //Ana menü ikonları işlevleri
+// Yıldız simgesi tıklanınca
 $('.star-icon').click(async function () {
     const starIcon = $(this);
     const sourceText = $('#sourceText').val().trim().toLowerCase();
@@ -222,15 +195,14 @@ $('.star-icon').click(async function () {
     const userEmail = sessionStorage.getItem('userEmail');
 
     // Kullanıcı girişi kontrolü
-    if (!userEmail) {
-        alert('Çeviriyi kaydetmek için giriş yapmalısınız.');
+    if (!userEmail) { 
+        showSavedPanel();
         starIcon.attr('src', 'images/bosyıldız.png');
         return;
     }
 
     // Çeviri verilerinin kontrolü
     if (!sourceText || !resultText) {
-        alert('Kaydetmek için çeviri yapmalısınız.');
         starIcon.attr('src', 'images/bosyıldız.png');
         return;
     }
@@ -298,7 +270,6 @@ function resetStarIcon() {
     }
 }
 
-
 //  Kaynak metin - source text değiştiğinde
 let debounceTimeout;
 
@@ -325,6 +296,11 @@ document.getElementById("sourceText").addEventListener("input", async () => {
 
                 // Çeviri tamamlandıktan sonra resultText'i al
                 const resultTextValue = document.getElementById("resultText").value.trim();
+
+                // Kullanıcı girişi kontrolü
+                if (!userEmail) { 
+                    return;
+                }
 
                 // Çeviri işlemi tamamlandığında, veri tabanında mevcut olup olmadığını kontrol et
                 const response = await fetch('http://localhost:3000/check-translation', {
@@ -357,15 +333,60 @@ document.getElementById("sourceText").addEventListener("input", async () => {
     }, 100); // 100ms sonra işlemi yap
 });
 
-// Yıldız simgesini sıfırlama fonksiyonu
-function resetStarIcon() {
-    const starIcon = $('.star-icon');
-    if (starIcon.attr('src') === 'images/doluyıldız.png') {
-        starIcon.attr('src', 'images/bosyıldız.png'); // Bosyıldız.png'ye döndür
+// Çeviri sonucunu panoya kopyala
+$('#copy').click(function () {
+    const resultText = $('#resultText').val();
+    if (resultText.trim()) {
+        navigator.clipboard.writeText(resultText).then(() => {
+        }).catch(() => {
+            alert('Panoya kopyalama başarısız oldu.');
+        });
+    } else {
+        alert('Kopyalanacak metin bulunamadı.');
     }
-}
+});
 
+// Dil değiştirme ikonuna tıklanıp dillerin ve metinlerin yer değiştirilmesi
+$('#swapLanguages').click(function () {
+    // sourceLanguage değeri "auto" değilse işlemleri gerçekleştir
+    const sourceLang = $('#sourceLanguage').val();
+    const targetLang = $('#targetLanguage').val();
 
+    if (sourceLang !== 'auto') {
+        closeRecognizing();  
+        resetStarIcon();     
+
+        // Dilleri değiştir
+        $('#sourceLanguage').val(targetLang);
+        $('#targetLanguage').val(sourceLang);
+
+        // Çeviriyi yeniden başlat
+        $('#sourceText').val($('#resultText').val());
+
+        translate(); // Çeviriyi yeniden başlat
+    }
+});
+
+// ComboBox tıklanıp değeri değiştirildiğinde
+$('#sourceLanguage, #targetLanguage').change(function () {
+    resetStarIcon();
+    closeRecognizing(); 
+    translate();
+
+    const selectedLanguage = document.getElementById("sourceLanguage").value;
+    recognition.lang = selectedLanguage; // Yeni dili ayarla
+    console.log('dil değişti: '+selectedLanguage);
+});
+
+// Silme butonuna tıklama işlevi
+$('.delete-icon').click(function () {
+    $('#sourceText').val(''); // Kaynak metni temizle
+    $('#resultText').val(''); // Çeviri metnini temizle
+    adjustHeight();
+    toggleElementsVisibility();
+    hideDictionaryText();
+    resetStarIcon();
+});
 
 // sourceText'i seslendir (Google Translate TTS)
 $('#volume1').click(function () {
@@ -387,6 +408,7 @@ $('#volume2').click(function () {
     }
 });
 
+//Seslendirme isteği
 function playTTS(text, lang) {
     // Backend üzerindeki /tts endpointine istek göndermek için URL oluştur
     const ttsUrl = `http://localhost:3000/tts?text=${encodeURIComponent(text)}&lang=${lang}`;
@@ -398,7 +420,6 @@ function playTTS(text, lang) {
         alert("Seslendirme başlatılamadı.");
     });
 }
-
 
 // Mikrofon simgesine tıklandığında başlat/durdur
 $('#microfon').on('click', () => {
@@ -474,7 +495,6 @@ function closeRecognizing() { // Ses tanımayı durdur
     }
 }
 
-
 //Ses tanıma başladığında ve durduğunda ikonların görünürlükleri
 function toggleMicrophoneState(isListening) {
     const microphoneIcon = $('#microfon'); // Mikrofon simgesini doğrudan id ile seç
@@ -485,11 +505,11 @@ function toggleMicrophoneState(isListening) {
     if (isListening) {
         microphoneIcon.attr('src', 'images/stopmicrofon.png'); // Mikrofon simgesini "dinleme" durumuna değiştir
         random.style.display = "none";
+        hideDictionaryText();
     } else {
         microphoneIcon.attr('src', 'images/microfon.png'); // Mikrofon simgesini eski haline döndür
     }
 }
-
 
 //İkon görünürlük ayarları
 function toggleElementsVisibility() {
@@ -511,7 +531,6 @@ function toggleElementsVisibility() {
         randomElement.style.display = "block"; // Rastgele kelime ögesini göster
     }
 }
-
 
 //Random kelime getirme
 document.getElementById("random").addEventListener("click", () => {
@@ -614,8 +633,6 @@ document.getElementById("dictionary").addEventListener("click", () => {
     }
 });
 
-
-
 // DictionaryText görünürlüğünü kontrol eden yardımcı fonksiyon
 function toggleDictionaryTextVisibility() {
     const dictionaryText = document.getElementById("dictionaryText");
@@ -635,15 +652,58 @@ function hideDictionaryText() {
     dictionaryText.style.display = "none"; // Görünürlüğü kapat
 }
 
+document.getElementById("historyIcon").addEventListener("click", (event) => {
+    event.stopPropagation();
 
-// Belirtilen ögelere tıklanınca dictionaryText görünürlüğünü kapat
-["microfon", "delete-icon"].forEach((id) => {
-    const element = document.getElementById(id);
-
-    if (element) {
-        element.addEventListener("click", () => {
-            hideDictionaryText();
-        });
+    // Kullanıcının giriş yapıp yapmadığını kontrol et
+    const userEmail = sessionStorage.getItem('userEmail');
+    if (userEmail) {
+        // Kullanıcı giriş yapmışsa admin.html'e yönlendir
+        window.location.href = 'admin.html';
+    } else {
+        showSavedPanel();
     }
 });
 
+document.getElementById('savedLink').addEventListener('click', function(event) {
+    event.stopPropagation();
+
+    // Kullanıcının giriş yapıp yapmadığını kontrol et
+    const userEmail = sessionStorage.getItem('userEmail');
+    if (userEmail) {
+        // Kullanıcı giriş yapmışsa a.html'e yönlendir
+        window.location.href = 'tablo ve egzersizler/a.html';
+    } else {  
+        showSavedPanel();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const sourceLanguages = await fetchLanguages('source');
+        const targetLanguages = await fetchLanguages('target');
+
+        populateSelectBox(document.getElementById('sourceLanguage'), sourceLanguages);
+        populateSelectBox(document.getElementById('targetLanguage'), targetLanguages);
+    } catch (error) {
+        console.error('Diller yüklenirken hata oluştu:', error);
+    }
+});
+
+async function fetchLanguages(type) {
+    const response = await fetch(`/get-languages/${type}`);
+    if (!response.ok) {
+        throw new Error('Dil verileri alınamadı.');
+    }
+    return response.json();
+}
+
+function populateSelectBox(selectElement, languages) {
+    selectElement.innerHTML = ''; // Mevcut seçenekleri temizle
+    for (const [code, name] of Object.entries(languages)) {
+        const option = document.createElement('option');
+        option.value = code;
+        option.textContent = name;
+        selectElement.appendChild(option);
+    }
+}

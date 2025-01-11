@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Uygulaması</title>
+    <link rel="stylesheet" href="egzersiz2.css">
+</head>
+<body>
+    <div id="start-screen">
+        <button id="btn-en-to-tr">En→Tr</button>
+        <button id="btn-tr-to-en">Tr→En</button>
+        <button id="dinleme0">Dinleme</button>
+        <button id="okuma">Okuma</button>
+        <button id="yazma">Yazma</button>
+
+
+    </div>
+    <div id="quiz-screen" class="hidden">
+        <div id="question-container">
+            <h2 id="question-text">Soru burada görünecek</h2>
+            <div id="options-container">
+                <!-- Seçenekler dinamik olarak buraya eklenecek -->
+            </div>
+        </div>
+        <div id="controls">
+            <button id="btn-pass">Pas</button>
+        </div>
+        <div id="score-board">
+            <h3>Skor Tablosu</h3>
+            <p>Skor: <span id="score">0</span></p>
+            <p>Doğru Cevaplar: <span id="correct-answers">0</span></p>
+            <p>Yanlış Cevaplar: <span id="wrong-answers">0</span></p>
+        </div>
+    </div>
+    <div id="result-screen" class="hidden">
+        <h2>Quiz Tamamlandı!</h2>
+        <p>Toplam Skor: <span id="final-score"></span></p>
+        <p>Doğru Cevaplar: <span id="final-correct"></span></p>
+        <p>Yanlış Cevaplar: <span id="final-wrong"></span></p>
+        <button id="btn-restart">Ana Sayfaya Dön</button>
+    </div>
+
+    <script src="egzersiz2.js"></script>
+</body>
+</html>

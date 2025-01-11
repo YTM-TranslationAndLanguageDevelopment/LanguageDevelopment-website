@@ -1,0 +1,102 @@
+h1 {
+    font-size: 2.2em;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+/* Mobil Uyumluluk */
+@media (max-width: 480px) {
+    .score-container {
+        width: 100%;
+        padding: 20px;
+    }
+    
+    .score-card h2 {
+        font-size: 1.3em;
+    }
+    
+    .score-card .score {
+        font-size: 1em;
+    }
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #b9ddf1;
+}
+.container {
+    max-width: 900px;
+    height: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.503);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 8%;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header h1 {
+    font-size: 20px;
+    color: #333;
+}
+.score-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.score-box {
+    text-align: center;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-radius: 8px;
+    flex: 1;
+    margin: 0 5px;
+}
+.score-box h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #4A90E2;
+}
+.score-box p {
+    margin: 5px 0 0;
+    color: #666;
+}
+.streak {
+    margin-top: 20px;
+    background: #f1f1f1;
+    border-radius: 8px;
+    padding: 10px;
+}
+.streak h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+.days {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+.day {
+    text-align: center;
+    flex: 1;
+    color: #999;
+}
+.day.active {
+    color: #FF5722;
+}
+.day .icon {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+.streak-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}

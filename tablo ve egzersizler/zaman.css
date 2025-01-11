@@ -1,0 +1,23 @@
+/* Zamanlayıcı için sabit konum */
+#timer-container {
+    position: fixed;   /* Sabit konum */
+    top: 10px;          /* Sayfanın üstünden 20px mesafe */
+    left: 100px;          /* Sayfanın ortasına yerleştirilmesi için */
+    transform: translateX(-50%); /* Tam ortalamak için */
+    background: linear-gradient(#b089d3,#7249c4);;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;      /* Diğer öğelerin üstünde olması için */
+    font-family: 'Roboto', Arial, sans-serif;
+    color: #333;
+    text-align: center;
+}
+
+/* Zamanlayıcı metni stili */
+#timer-display {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff; /* Mavi renk */
+    border-radius: 55px;
+}

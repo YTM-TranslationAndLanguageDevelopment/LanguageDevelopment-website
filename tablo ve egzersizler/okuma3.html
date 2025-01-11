@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Okuma Bölümü</title>
+    <link rel="stylesheet" href="okuma3.css">
+</head>
+<body>
+    <div id="reading-section">
+        <h1>Okuma Bölümü</h1>
+
+        <div id="levels">
+            <div class="level" id="beginner">
+                <h2>Başlangıç Seviyesi</h2>
+                <div class="text-box" onclick="loadText('beginner', 0)">
+                    <h3>Metin 1</h3>
+                </div>
+                <div class="text-box" onclick="loadText('beginner', 1)">
+                    <h3>Metin 2</h3>
+                </div>
+                <div class="text-box" onclick="loadText('beginner', 2)">
+                    <h3>Metin 3</h3>
+                </div>
+            </div>
+            <div class="level" id="intermediate">
+                <h2>Orta Seviye</h2>
+                <div class="text-box" onclick="loadText('intermediate', 0)">
+                    <h3>Metin 1</h3>
+                </div>
+                <div class="text-box" onclick="loadText('intermediate', 1)">
+                    <h3>Metin 2</h3>
+                </div>
+                <div class="text-box" onclick="loadText('intermediate', 2)">
+                    <h3>Metin 3</h3>
+                </div>
+            </div>
+            <div class="level" id="advanced">
+                <h2>İleri Seviye</h2>
+                <div class="text-box" onclick="loadText('advanced', 0)">
+                    <h3>Metin 1</h3>
+                </div>
+                <div class="text-box" onclick="loadText('advanced', 1)">
+                    <h3>Metin 2</h3>
+                </div>
+                <div class="text-box" onclick="loadText('advanced', 2)">
+                    <h3>Metin 3</h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="text-container"></div> <!-- Burada metinler dinamik olarak yüklenecek -->
+
+        <div id="completion-status" class="hidden">✅ Bu metin tamamlandı!</div>
+
+        <div id="controls" style="display: none;">
+            <button id="btn-mark-complete">Tamamlandı Olarak İşaretle</button>
+            <button id="btn-back" onclick="goBack()">Geri Dön</button>
+        </div>
+        
+    </div>
+
+    <div id="meaning-box" class="hidden"></div>
+
+    <script src="okuma3.js"></script>
+</body>
+</html>

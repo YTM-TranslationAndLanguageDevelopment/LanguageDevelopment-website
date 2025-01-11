@@ -2,6 +2,7 @@ let timerInterval = null;
 
 function startTimer() {
     if (sessionStorage.getItem("timerRunning") === "true") return; // Timer zaten çalışıyorsa yeniden başlatma
+    
     const userEmail = sessionStorage.getItem("userEmail");
     if (!userEmail) return; // Kullanıcı giriş yapmamışsa Timer çalışmasın
 

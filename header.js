@@ -86,7 +86,7 @@ class Header extends HTMLElement { //HTMLElement sınıfından Header adında bi
                 <input type="password" id="password" name="password" placeholder="Şifrenizi girin">
                 <span id="passwordError" class="error-message"></span>
             </div>
-                <button type="button" onclick="submitLogin()">Giriş Yap</button>
+                <button type="button" onclick="LoginService.submitLogin()">Giriş Yap</button>
             <p>Hesabınız yok mu? <a href="" id="signupFromLogin" onclick="closePopup('girisPopup'); openPopup('kayitPopup');">Kayıt Ol</a></p>
         </div>
     </div>
@@ -111,7 +111,7 @@ class Header extends HTMLElement { //HTMLElement sınıfından Header adında bi
                 <input type="password" id="newPassword" name="newPassword" placeholder="Şifrenizi girin">
                 <span id="newPasswordError" class="error-message"></span>
             </div>
-                <button class="submit-button" onclick="submitRegistration()">Kayıt Ol</button>
+                <button class="submit-button" onclick="RegisterService.submitRegistration()">Kayıt Ol</button>
         </div>
     </div>
         <div class="header-container">
@@ -125,17 +125,23 @@ class Header extends HTMLElement { //HTMLElement sınıfından Header adında bi
     <aside id="sideMenu" class="side-menu">
         <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
         <div class="politikalar">
+        <div class="politika1">
         <div class="politikadiv"  onclick="window.location.href='GizlilikPolitikası.html';">
-            <img src="images/verified.png" title="verified" class="verified" alt="verified">
+            <img src="images/verified.png" title="verified" alt="verified">
             <a>Gizlilik Politikası</a>
         </div>
+        </div>
+        <div class="politika2">
         <div class="politikadiv" onclick="window.location.href='ÇerezPolitikası.html';">
-            <img src="images/cookie.png" title="cookie" class="cookie" alt="cookie">
+            <img src="images/cookie.png" title="cookie" alt="cookie">
             <a>Çerez Politikası</a>
         </div>
+        </div>
+        <div class="politika3">
         <div class="politikadiv" onclick="window.location.href='Hakkımızda.html';">
-            <img src="images/group.png" title="group" class="group" alt="group">
+            <img src="images/group.png" title="group" alt="group">
             <a>Hakkımızda</a>
+        </div>
         </div>
         </div>
         <div class="social-icons">
@@ -194,6 +200,14 @@ class Header extends HTMLElement { //HTMLElement sınıfından Header adında bi
 // Header sınıfı <my-header> adlı özel bir HTML elementi olarak kaydedilir.
 customElements.define('my-header', Header);
 
+document.addEventListener("DOMContentLoaded", function () {
+    // sessionStorage'da 'userEmail' var mı kontrol et
+    const userEmail = sessionStorage.getItem('userEmail');
+
+    if (userEmail) {
+        setVisibility(true);
+    }
+});
 
 //yan menüyü açma 
 function openMenu() {

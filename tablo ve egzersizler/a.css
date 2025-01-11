@@ -1,0 +1,78 @@
+a {
+    text-decoration: none; /* Alt çizgiyi kaldırır */
+    color: inherit; /* Metin rengini üst öğeden miras alır */
+}
+/* Genel stiller */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+    background-color: #f3f4f6;
+    overflow: hidden;
+}
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color:  #000000;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6);
+}
+.header {
+    position: relative;
+    top: 100px; /* Başlığı 50px aşağı kaydırır */
+}
+/* Container */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:65vh;
+    gap: 30px;
+}
+/* Composite dseninin olduğu box ın stilleri */
+.box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 10px;
+    cursor: pointer;
+    opacity: 0;
+    animation: slideIn 1s forwards;
+    width: 210px;
+    height: 210px;
+    background-color: #36acdb;
+    color: rgb(255, 255, 255);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Metalik etki için hafif gölge */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6); /* Parıltılı beyaz efekt */
+}
+.box-header {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+.box-images img {
+    width: 85px;
+    margin: 5px;
+}
+/* Animasyon */
+@keyframes slideIn {
+    0% {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+/* Decorator: Hover efekti */
+.box.hovered {
+    background-color: #ff7e5f;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+}
+
+/*---------------------*/
